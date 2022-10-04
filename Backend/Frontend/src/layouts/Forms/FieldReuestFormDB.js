@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-console */
 /* eslint-disable react/destructuring-assignment */
@@ -26,8 +27,9 @@ import axios from "axios";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
+import Error404 from "views/Error404";
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
@@ -65,8 +67,12 @@ const FieldReuestFormDB = () => {
       .get(`http://localhost:5000/hozlaRequests/${params.formID}`)
       .then((response) => {
         // console.log(`the object data`);
+        if (response.data === null) {
+          <Navigate to="/Error404" element={<Error404 />} />;
+        }
         console.log(response.data);
         console.log(params.formID);
+
         setFormData(response.data);
         setdates({
           workGivenDate: response.data.workGivenDate.split("T")[0],
