@@ -1,0 +1,36 @@
+.app__Loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: lightgrey;
+}
+
+svg {
+  position: absolute;
+  top: 25%;
+  left: 35%;
+}
+@media screen and (min-width: 2000px) {
+  svg {
+    top: 25%;
+    left: 35%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  svg {
+    width: 50%;
+    height: 50%;
+    top: 40%;
+    left: 20%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  svg {
+    width: 50%;
+    height: 50%;
+    top: 40%;
+    left: 20%;
+  }
+}
