@@ -70,7 +70,7 @@ import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -197,6 +197,7 @@ export default function App() {
               <Routes>
                 {getRoutes(AdminRoutes)}
                 <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                <Route path="/Error404" element={<Error404 />} />
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />
                 </Route>
@@ -206,6 +207,7 @@ export default function App() {
               <Routes>
                 {getRoutes(routes)}
                 <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                <Route path="/Error404" element={<Error404 />} />
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />
                 </Route>

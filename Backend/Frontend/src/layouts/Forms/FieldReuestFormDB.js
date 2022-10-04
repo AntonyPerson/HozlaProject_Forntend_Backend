@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-empty */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-console */
@@ -61,15 +62,14 @@ const FieldReuestFormDB = () => {
   const params = useParams();
   const [formData, setFormData] = useState({});
   const [errorDB, setErrorDB] = useState(false);
+  const [error404, setError404] = useState(false);
+
   const [dates, setdates] = useState({});
   useEffect(() => {
     axios
       .get(`http://localhost:5000/hozlaRequests/${params.formID}`)
       .then((response) => {
         // console.log(`the object data`);
-        if (response.data === null) {
-          <Navigate to="/Error404" element={<Error404 />} />;
-        }
         console.log(response.data);
         console.log(params.formID);
 
@@ -81,9 +81,20 @@ const FieldReuestFormDB = () => {
       })
       .catch((error) => {
         console.log(error);
-        setErrorDB(true);
+        console.log(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
       });
   }, []);
+
+  const NavigateUser = () => {
+    if (error404) {
+      return <Navigate to="/Error404" />;
+    }
+  };
   const showError = () => (
     <Dialog
       open={errorDB}
@@ -347,6 +358,7 @@ const FieldReuestFormDB = () => {
     <DashboardLayout>
       <DashboardNavbar />
       {showError()}
+      {NavigateUser()}
       {formTamplate()}
       <Footer />
     </DashboardLayout>
