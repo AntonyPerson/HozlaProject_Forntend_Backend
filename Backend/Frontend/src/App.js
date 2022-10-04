@@ -51,6 +51,7 @@ import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
+import AdminRoutes from "AdminRoutes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -69,6 +70,7 @@ import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 
 export default function App() {
+  const [isAdmin, setIsAdmin] = useState(true);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -182,7 +184,7 @@ export default function App() {
                   color={sidenavColor}
                   brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
                   brandName='הוצל"א'
-                  routes={routes}
+                  routes={isAdmin ? AdminRoutes : routes}
                   onMouseEnter={handleOnMouseEnter}
                   onMouseLeave={handleOnMouseLeave}
                 />
@@ -191,14 +193,25 @@ export default function App() {
               </>
             )}
             {/* {layout === "vr" && <Configurator />} */}
-            <Routes>
-              {getRoutes(routes)}
-              <Route path="/" element={<Navigate to="/userRequestsTable" />} />
-              <Route path="/RequestForm">
-                <Route path=":formID" element={<FieldReuestFormDB />} />
-              </Route>
-              <Route path="*" element={<Error404 />} />
-            </Routes>
+            {isAdmin ? (
+              <Routes>
+                {getRoutes(AdminRoutes)}
+                <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                <Route path="/RequestForm">
+                  <Route path=":formID" element={<FieldReuestFormDB />} />
+                </Route>
+                <Route path="*" element={<Error404 />} />
+              </Routes>
+            ) : (
+              <Routes>
+                {getRoutes(routes)}
+                <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                <Route path="/RequestForm">
+                  <Route path=":formID" element={<FieldReuestFormDB />} />
+                </Route>
+                <Route path="*" element={<Error404 />} />
+              </Routes>
+            )}
           </ThemeProvider>
         </CacheProvider>
       )}
