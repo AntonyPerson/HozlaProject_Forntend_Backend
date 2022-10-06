@@ -70,7 +70,7 @@ import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
