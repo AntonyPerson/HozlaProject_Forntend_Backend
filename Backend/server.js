@@ -15,7 +15,7 @@ app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
-
+app.use("/uploads", express.static("uploads")); // to acsses the uploades folder in the server
 // Configure Mongo
 // const dbUrl = "mongodb://localhost/HozlaDB";
 const dbUrl = process.env.DB_URL;

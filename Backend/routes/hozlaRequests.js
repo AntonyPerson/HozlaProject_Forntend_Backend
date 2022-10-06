@@ -53,7 +53,7 @@ router.route("/add").post((req, res) => {
     status,
     order_maker_card_number,
   });
-  let formId = newHozlaRequest.save((err, form) => {
+  const formId = newHozlaRequest.save((err, form) => {
     if (err) {
       return res.status(400).json("Error: " + err);
     } else {
