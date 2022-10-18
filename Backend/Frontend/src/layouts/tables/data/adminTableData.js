@@ -173,7 +173,6 @@ export default function data() {
     ],
 
     rows: [
-                                    
       // {
       //     clearance: alist.clearance,
       //     status: (
@@ -197,24 +196,29 @@ export default function data() {
       //     ),
       // },
       {
-          name: "aaaaaaabc",
-          clearance: "בלמס",
-          status: (
-              <MDBox ml={-1}>
-                  <MDBadge badgeContent="הודפס" color="dark" variant="gradient" size="sm" />
-              </MDBox>
-          ),
-          startDate: "4/11/2021",
-          endDate: "14/11/2021",
-          workName: "bbbbbbb",
-          NameRequester: "0000000",
-          fileID: "aaaaaaaaaa",
-          action: (
-              <MDTypography component="a" href="/adminForm" variant="inherit" color="mekatnar" fontWeight="medium">
-                  עדכן
-              </MDTypography>
-          ),
-          
+        name: "aaaaaaabc",
+        clearance: "בלמס",
+        status: (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="הודפס" color="dark" variant="gradient" size="sm" />
+          </MDBox>
+        ),
+        startDate: "4/11/2021",
+        endDate: "14/11/2021",
+        workName: "bbbbbbb",
+        NameRequester: "0000000",
+        fileID: "aaaaaaaaaa",
+        action: (
+          <MDTypography
+            component="a"
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
       },
       // {
       //     clearance: "סודי-ביותר",
@@ -370,7 +374,7 @@ export default function data() {
       //         </MDButton>
       //     ),
       // },
-  ],
+    ],
     dbError: isError,
     setDBerror: setIsError,
   };
