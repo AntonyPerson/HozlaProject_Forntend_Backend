@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Icon from "@mui/material/Icon";
+// import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -48,13 +48,13 @@ function MoreInfoAdmin() {
         <MDBox mt={0} mb={2}>
           <MDTypography variant="button" color="text" fontWeight="regular">
             <MDTypography display="inline" variant="body2" verticalAlign="middle">
-              <Icon sx={{ color: ({ palette: { success } }) => success.main }}>arrow_upward</Icon>
+              {/* <Icon sx={{ color: ({ palette: { success } }) => success.main }}>arrow_upward</Icon> */}
             </MDTypography>
             &nbsp;
-            <MDTypography variant="button" color="text" fontWeight="medium">
+            {/* <MDTypography variant="button" color="text" fontWeight="medium">
               24%
-            </MDTypography>{" "}
-            this month
+            </MDTypography>{" "} */}
+            {/* this month */}
           </MDTypography>
         </MDBox>
       </MDBox>
@@ -67,19 +67,22 @@ function MoreInfoAdmin() {
         />
         <TimelineItem
           color="error"
-          icon="inventory_2"
+          // icon="inventory_2"
+          icon="weekend"
           title="כמות הדפים שהודפסו השבוע"
           dateTime={dataFromDB.countPrintInWeek}
         />
         <TimelineItem
           color="mekatnar"
-          icon="shopping_cart"
+          // icon="shopping_cart"
+          icon="weekend"
           title="מספר פעימות ביום"
           dateTime={dataFromDB.numBeatsPerDay}
         />
         <TimelineItem
           color="warning"
-          icon="payment"
+          // icon="payment"
+          icon="weekend"
           title="מספר פעימות בשבוע"
           dateTime={dataFromDB.numBeatsPerWeek}
         />
