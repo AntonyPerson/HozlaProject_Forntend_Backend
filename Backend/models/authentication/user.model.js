@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema(
     personalnumber: { type: String, trim: true, unique: true, required: true },
     firstName: { type: String, trim: true, required: true, maxlength: 32 },
     lastLame: { type: String, trim: true, required: true },
-    admin: { type: Boolean, default: false },
+    admin: { type: String, default: "0" }, // 0-not admin, 1-admin with edit permissons,2-admin without edit permissons
     unit: String,
     anaf: String,
     mador: String,
@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       lowercase: true,
     },
-    holzlaRequest: [mongoose.SchemaTypes.ObjectId],
+    holzlaRequest: [String],
   },
   { timestamps: true }
 );

@@ -33,11 +33,15 @@ mongoose
   )
   .catch((err) => console.log(err));
 
+//Hozla Requests routes
 const hozlaRequestsRouter = require("./routes/hozlaRequests");
-const usersRouter = require("./routes/users");
-
 app.use("/hozlaRequests", hozlaRequestsRouter);
-app.use("/users", usersRouter);
+
+//user routes
+const authRoutes = require("./routes/authentication/auth");
+const userRoutes = require("./routes/authentication/users");
+app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

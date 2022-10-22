@@ -137,6 +137,23 @@ const routes = [
     route: "/about-us",
     component: <AboutPage />,
   },
+
+  {
+    type: "collapse",
+    name: "SignIn",
+    key: "SignIn",
+    icon: <Icon fontSize="small">user</Icon>,
+    route: "/SignIn",
+    component: <SignIn />,
+  },
+  {
+    type: "collapse",
+    name: "SignUp",
+    key: "SignUp",
+    icon: <Icon fontSize="small">user</Icon>,
+    route: "/SignUp",
+    component: <SignUp />,
+  },
   // {
   //   // type: "collapse",
   //   // name: "Error404",
