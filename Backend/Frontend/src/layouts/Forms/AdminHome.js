@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 // @mui material components
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
@@ -32,20 +34,68 @@ import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
 import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
+import MoreInfoAdmin from "layouts/dashboard/components/MoreInfoAdmin";
 
 // Data
 import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 
 import nglogo from "assets/images/NG_VR.png";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const [isError, setIsError] = useState(false);
+  const [requestDB, setRequestDB] = useState([]);
+  const [infoSB, setInfoSB] = useState(false);
+
+  const openInfoSB = () => setInfoSB(true);
+  const closeInfoSB = () => setInfoSB(false);
+
+  // * data from database
+  const dataFromDB = {
+    printed: 40,
+    inprint: 10,
+    intreatment: 30,
+    waiting: 20,
+
+    countPrintInDay: 10,
+    countPrintInWeek: 30,
+  };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/AdminHome/`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
+
+  const renderInfoSB = (
+    <MDSnackbar
+      icon="notifications"
+      title="דוח נתונים"
+      content={`הודפס ${dataFromDB.printed}\n
+        בהדפסה ${dataFromDB.inprint}\n
+        בטיפול ${dataFromDB.intreatment}\n
+        ממתין ${dataFromDB.waiting}\n
+        כמות הדפסות היום ${dataFromDB.countPrintInDay}\n
+        כמות הדפסות השבוע ${dataFromDB.countPrintInWeek}\n`}
+      dateTime="עכשיו"
+      open={infoSB}
+      onClose={closeInfoSB}
+      close={closeInfoSB}
+    />
+  );
 
   return (
     <DashboardLayout>
@@ -59,33 +109,45 @@ function Dashboard() {
                 title="ניהול הוצל''א"
                 description="מעקב בקשות להדפסה"
                 chart={{
-                  labels: ["טופל", "ממתין", "הודפס"],
+                  labels: ["ממתין", "בטיפול", "בהדפסה", "הודפס"],
                   datasets: {
                     label: "Projects",
-                    backgroundColors: ["info", "dark", "success"],
-                    data: [60, 30, 10],
+                    backgroundColors: ["dark", "info", "mekatnar", "success"],
+                    data: [
+                      dataFromDB.waiting,
+                      dataFromDB.intreatment,
+                      dataFromDB.inprint,
+                      dataFromDB.printed,
+                    ],
                   },
                 }}
               />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={6} md={8}>
+              <MoreInfoAdmin />
+              {/* <MDBox mb={6} md={8} lg={4}>
                 <ComplexStatisticsCard
-                  icon="leaderboard"
+                  icon="weekend"
                   title="היום"
-                  count="30"
+                  count={dataFromDB.countPrintInDay}
                   percentage={{ color: "success", label: "כמות הדפים שהודפסו היום" }}
                 />
               </MDBox>
 
-              <MDBox mb={6} md={8}>
+              <MDBox mb={6} md={8} lg={4}>
                 <ComplexStatisticsCard
-                  icon="leaderboard"
+                  icon="weekend"
                   title="השבוע"
-                  count="30"
+                  count={dataFromDB.countPrintInWeek}
                   percentage={{ color: "success", label: "כמות הדפים שהודפסו השבוע" }}
                 />
               </MDBox>
+              <Grid item xs={12} sm={12} lg={12}>
+                <MDButton variant="gradient" color="mekatnar" onClick={openInfoSB} fullWidth>
+                  כמות הנתונים
+                </MDButton>
+                {renderInfoSB}
+              </Grid> */}
             </Grid>
           </Grid>
         </MDBox>
@@ -121,7 +183,7 @@ function Dashboard() {
                     },
                     {
                       label: "דפים צבעוניים",
-                      color: "primary",
+                      color: "mekatnar",
                       data: [30, 90, 40, 140, 290, 290, 340, 230, 400, 200],
                     },
                     {
@@ -133,6 +195,7 @@ function Dashboard() {
                 }}
               />
             </Grid>
+
             {/* 
                             
                                 <ReportsBarChart

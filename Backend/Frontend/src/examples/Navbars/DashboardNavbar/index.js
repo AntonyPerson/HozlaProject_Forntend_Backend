@@ -62,7 +62,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-  const [loggedInUser, setLoggedInUser] = useState("אנטוני פרסון");
+  const [loggedInUser, setLoggedInUser] = useState("אורח");
   const loggedInUserString = `ברוך הבא ${loggedInUser}`;
 
   useEffect(() => {

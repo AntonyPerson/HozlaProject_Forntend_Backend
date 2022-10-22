@@ -69,6 +69,9 @@ import WebsiteLoader from "components/WebsiteLoader/WebsiteLoader";
 import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 
+import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
+import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
+
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(true);
   const [controller, dispatch] = useMaterialUIController();
@@ -196,8 +199,10 @@ export default function App() {
             {isAdmin ? (
               <Routes>
                 {getRoutes(AdminRoutes)}
-                <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                <Route path="/" element={<Navigate to="/AdminHome" />} />
                 <Route path="/Error404" element={<Error404 />} />
+                <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} />
+                <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} />
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />
                 </Route>
@@ -269,3 +274,13 @@ export default function App() {
   //   </ThemeProvider>
   // );
 }
+
+/*
+after finish
+git add .
+git commit -m "A commit message Title" -m "description of the commit"
+git push
+
+!if we need to get after merge or update
+  git pull => in the brancg you wish to localiy update
+*/

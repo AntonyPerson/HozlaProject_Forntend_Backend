@@ -48,7 +48,8 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ManagementHoztla from "layouts/tables/adminManagementTable";
-import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
+// import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
+// import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -82,14 +83,22 @@ const AdminRoutes = [
     route: "/managementHoztla",
     component: <ManagementHoztla />,
   },
-  {
-    type: "collapse",
-    name: "טופס הוצל''א",
-    key: "adminForm",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/adminForm",
-    component: <HozlaAdminPrintInfoForm />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "טופס הוצל''א",
+  //   key: "adminForm",
+  //   icon: <Icon fontSize="small">assignment</Icon>,
+  //   route: "/adminForm",
+  //   component: <HozlaAdminPrintInfoForm />,
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "פרטים נוספים",
+  //   key: "adminFieldReuestFormDB",
+  //   icon: <Icon fontSize="small">assignment</Icon>,
+  //   route: "/adminFieldReuestFormDB",
+  //   component: <AdminFieldReuestFormDB />,
+  // },
   {
     type: "collapse",
     name: "אודות",

@@ -87,11 +87,11 @@ export default function HozlaPrintRequestForm() {
     sumNoColourfulPages: 0,
     numPages: 0,
     numColourfulBeats: 0,
-    sumNoColourfulBeats: 0,
+    numNoColourfulBeats: 0,
 
-    printColor: "bw",
+    printColor: "color",
     selected: "none",
-    selectedBW: "none",
+    selectedBW: "A4",
 
     errortype: "",
     error: false,
@@ -101,13 +101,14 @@ export default function HozlaPrintRequestForm() {
   });
 
   const textPlaceHolderInputs = [
-    "סה''כ דפים צבעוני",
-    "סה''כ דפים שחור לבן",
-    "מס' דפים",
-    "מס' פעימות צבעוני",
-    "מס' פעימות שחור לבן",
+    "סה''כ דפים צבעוני:",
+    "סה''כ דפים שחור לבן:",
+    "מס' דפים:",
+    "מס' פעימות צבעוני:",
+    "מס' פעימות שחור לבן:",
     "צילום בצבע:",
     "צילום בשחור לבן:",
+    "סוג הדפסה:"
   ];
 
   function handleChange(evt) {
@@ -127,37 +128,42 @@ export default function HozlaPrintRequestForm() {
     let flag = true;
     const ErrorReason = [];
 
-    if (data.unit === "") {
-      flag = false;
-      ErrorReason.push("יחידה לא צויין");
-      // toast.error(ErrorReason);
+    // if (data.unit === "") {
+    //   flag = false;
+    //   ErrorReason.push("יחידה לא צויין");
+    //   // toast.error(ErrorReason);
+    // }
+    if (data.sumColourfulPages === 0 && data.sumNoColourfulPages === 0) {
+      if (data.sumColourfulPages === 0) {
+        flag = false;
+        ErrorReason.push("כמות הדפים צבעוניים לא צויינה");
+        //toast.error(ErrorReason);
+      }
+      if (data.sumNoColourfulPages === 0) {
+        flag = false;
+        ErrorReason.push("כמות דפיי שחור לבן לא צויינה ");
+        //toast.error(ErrorReason);
+      }
     }
-    if (data.sumColourfulPages === "") {
-      flag = false;
-      ErrorReason.push("כמות הדפים צבעוניים לא צויינה");
-      //toast.error(ErrorReason);
-    }
-    if (data.sumNoColourfulPages === "") {
-      flag = false;
-      ErrorReason.push("כמות דפיי שחור לבן לא צויינה ");
-      //toast.error(ErrorReason);
-    }
-    if (data.numPages === "") {
+    if (data.numPages === 0) {
       flag = false;
       ErrorReason.push("כמות הדפים לא צויינה ");
       //toast.error(ErrorReason);
     }
-    if (data.numColourfulBeats === "") {
-      flag = false;
-      ErrorReason.push("כמות הפעימות צבעוני לא צויינה ");
-      //toast.error(ErrorReason);
+    if (data.numColourfulBeats === 0 && data.numNoColourfulBeats === 0) {
+      if (data.numColourfulBeats === 0) {
+        flag = false;
+        ErrorReason.push("כמות הפעימות צבעוני לא צויינה ");
+        //toast.error(ErrorReason);
+      }
+      if (data.numNoColourfulBeats === 0) {
+        flag = false;
+        ErrorReason.push("כמות הפעימות שחור לבן לא צויינה ");
+        //toast.error(ErrorReason);
+      }
     }
-    if (data.sumNoColourfulBeats === "") {
-      flag = false;
-      ErrorReason.push("כמות הפעימות שחור לבן לא צויינה ");
-      //toast.error(ErrorReason);
-    }
-    if (data.selected === "---" && data.selectedBW === "---") {
+    
+    if (data.selected === "none" && data.selectedBW === "none") {
       flag = false;
       ErrorReason.push("סוג צילום לא צויין");
       //toast.error(ErrorReason);
@@ -187,7 +193,7 @@ export default function HozlaPrintRequestForm() {
       sumNoColourfulPages: data.sumNoColourfulPages,
       numPages: data.numPages,
       numColourfulBeats: data.numColourfulBeats,
-      sumNoColourfulBeats: data.sumNoColourfulBeats,
+      numNoColourfulBeats: data.numNoColourfulBeats,
       selected: data.selected,
       selectedBW: data.selectedBW,
 
@@ -199,31 +205,31 @@ export default function HozlaPrintRequestForm() {
     };
     console.log(requestData);
 
-    // axios
-    //     .post(`http://localhost:5000/adminForm/update`, requestData)
-    //     .then((res) => {
-    //         setData({
-    //             ...data,
-    //             work_id: res.data,
-    //             loading: false,
-    //             error: false,
-    //             successmsg: true,
-    //             NavigateToReferrer: false,
-    //         });
-    //         // toast.success(`הטופס נשלח בהצלחה`);
-    //         // history.push(`/signin`);
-    //         console.log(res.data);
-    //     })
-    //     .catch((error) => {
-    //         // console.log(error);
-    //         setData({
-    //             ...data,
-    //             errortype: error.response,
-    //             loading: false,
-    //             error: true,
-    //             NavigateToReferrer: false,
-    //         });
-    //     });
+    axios
+        .post(`http://localhost:5000/adminForm/update`, requestData)
+        .then((res) => {
+            setData({
+                ...data,
+                work_id: res.data,
+                loading: false,
+                error: false,
+                successmsg: true,
+                NavigateToReferrer: false,
+            });
+            // toast.success(`הטופס נשלח בהצלחה`);
+            // history.push(`/signin`);
+            console.log(res.data);
+        })
+        .catch((error) => {
+            // console.log(error);
+            setData({
+                ...data,
+                errortype: error.response,
+                loading: false,
+                error: true,
+                NavigateToReferrer: false,
+            });
+        });
   };
   const handleCloseSuccsecModal = () => {
     setData({ ...data, loading: false, error: false, successmsg: false, NavigateToReferrer: true });
@@ -384,7 +390,7 @@ export default function HozlaPrintRequestForm() {
                                     <Icon>info</Icon>
                                 </MDButton>
                             </Link> */}
-              <div className="text-center">
+              {/* <div className="text-center">
                 <MDButton
                   color="mekatnar"
                   size="large"
@@ -394,7 +400,7 @@ export default function HozlaPrintRequestForm() {
                 >
                   פתח קובץ
                 </MDButton>
-              </div>
+              </div> */}
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">
                   <FormGroup>
@@ -439,26 +445,26 @@ export default function HozlaPrintRequestForm() {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="sumNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
+                    <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
                     <Input
-                      name="sumNoColourfulBeats"
+                      name="numNoColourfulBeats"
                       type="number"
                       min="0"
-                      value={data.sumNoColourfulBeats}
+                      value={data.numNoColourfulBeats}
                       onChange={handleChange}
                     />
                   </FormGroup>
 
                   <FormGroup>
-                    <Label for="printColor">סוג הדפסה</Label>
+                    <Label for="printColor">{textPlaceHolderInputs[7]}</Label>
                     <Input
                       name="printColor"
                       type="select"
                       value={data.printColor}
                       onChange={handleChange}
                     >
-                      <option value="bw">Black&White</option>
-                      <option value="color">Color</option>
+                      <option value="bw">שחור לבן</option>
+                      <option value="color">צבע</option>
                     </Input>
                   </FormGroup>
 
@@ -473,8 +479,8 @@ export default function HozlaPrintRequestForm() {
                       >
                         <option value="A4BW">A4</option>
                         <option value="A3BW">A3</option>
-                        <option value="BWA4בריסטול">A4 בריסטול</option>
-                        <option value="BWA3בריסטול">A3 בריסטול</option>
+                        <option value="BWA4">A4 בריסטול</option>
+                        <option value="BWA3">A3 בריסטול</option>
                       </Input>
                     </FormGroup>
                   ) : (
@@ -488,75 +494,12 @@ export default function HozlaPrintRequestForm() {
                       >
                         <option value="A4">A4</option>
                         <option value="A3">A3</option>
-                        <option value="A4בריסטול">A4 בריסטול</option>
-                        <option value="A3בריסטול">A3 בריסטול</option>
+                        <option value="A4b">A4 בריסטול</option>
+                        <option value="A3b">A3 בריסטול</option>
                       </Input>
                     </FormGroup>
                   )}
                 </FormGroup>
-                {/* <FormGroup row className="">
-                  <FormGroup>
-                    <Label for="bindingType">{textPlaceHolderInputs[6]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[6]}
-                      name="bindingType"
-                      type="select"
-                      value={data.bindingType}
-                      onChange={handleChange}
-                    >
-                      <option defult value="0">
-                        הידוק
-                      </option>
-                      <option value="1">ספירלה</option>
-                      <option value="2">חירור</option>
-                      <option value="3">אחר</option>
-                    </Input>
-                    {data.bindingType === "3" && (
-                      <Input
-                        name="bindingTypeOther"
-                        type="text"
-                        value={data.bindingTypeOther}
-                        onChange={handleChange}
-                      />
-                    )}
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[7]}
-                      name="copyType"
-                      type="select"
-                      value={data.copyType}
-                      onChange={handleChange}
-                    >
-                      <option defult value="b&w2">
-                        שחור לבן דו צדדי
-                      </option>
-                      <option value="color1">צבעוני יחיד</option>
-                      <option value="color2">צבעוני דו צדדי</option>
-                      <option value="b&w1">שחור לבן יחיד</option>
-                    </Input>
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label for="pageType">{textPlaceHolderInputs[13]}</Label>
-                    <Input
-                      name="pageType"
-                      type="select"
-                      value={data.pageType}
-                      onChange={handleChange}
-                    >
-                      <option defult value="A4">
-                        A4
-                      </option>
-                      <option value="A3">A3</option>
-                      <option value="A4b">A4 בריסטול</option>
-                      <option value="A3b">A3 בריסטול</option>
-                    </Input>
-                  </FormGroup>
-                  </FormGroup> */}
-
                 <div className="text-center">
                   <MDButton
                     color="mekatnar"
@@ -565,7 +508,7 @@ export default function HozlaPrintRequestForm() {
                     className="btn-new-blue"
                     type="submit"
                   >
-                    שלח בקשה
+                    אישור
                   </MDButton>
                 </div>
               </Form>
