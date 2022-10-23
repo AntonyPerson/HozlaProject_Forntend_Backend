@@ -129,7 +129,6 @@ export default function data() {
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
     // </MDTypography>
-    startDate: hozla.startDate,
     endDate: hozla.endDate,
     status: (
       <>
@@ -141,7 +140,24 @@ export default function data() {
     ),
     NameRequester: hozla.fullNameAsker,
     // diliveryDate: hozla.workRecivedDate.split("T")[0],
-    action: (
+    additionalInfo: (
+      <Link to={`/adminFieldReuestFormDB/${hozla._id}`} key={hozla._id}>
+        <MDButton
+          variant="gradient"
+          color="mekatnar"
+          // onClick={() => {
+          //   // setIsInfoPressed(true);
+          //   // setpressedID(hozla._id);
+          // }}
+          circular="true"
+          iconOnly="true"
+          size="medium"
+        >
+          <Icon>info</Icon>
+        </MDButton>
+      </Link>
+    ),
+    update: (
       <Link to={`/adminForm/${hozla._id}`} key={hozla._id}>
         <MDTypography
           component="a"
@@ -170,13 +186,13 @@ export default function data() {
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
-      { Header: "עדכן", accessor: "action", align: "center" },
+      { Header: "עדכן", accessor: "update", align: "center" },
     ],
 
     rows: [
       {
         name: "דביר וסקר",
-        clearance: "בלמס",
+        clearance: "סודי",
         status: (
           <>
             <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
@@ -185,12 +201,11 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
           </>
         ),
-        endDate: "14/11/2021",
+        endDate: "10/11/2022",
         project: "הוצלא",
         NameRequester: "0000000",
         fileID: "aaaaaaaaaa",
         additionalInfo: (
-          // ! Replace with   <Link to={`/adminFieldReuestFormDB/${hozla._id}`} key={hozla._id}>
           <Link to="/adminFieldReuestFormDB">
             <MDButton
               variant="gradient"
@@ -207,7 +222,52 @@ export default function data() {
             </MDButton>
           </Link>
         ),
-        action: (
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+      {
+        name: "אנטוני פרסון",
+        clearance: "שמור",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(50)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
+          </>
+        ),
+        endDate: "14/11/2022",
+        project: "הוצלא",
+        NameRequester: "1111111",
+        fileID: "bbbbbbbbbb",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
           <MDTypography
             component="a"
             // href={`/RequestForm/${hozla._id}`}

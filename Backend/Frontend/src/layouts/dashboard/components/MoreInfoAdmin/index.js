@@ -15,7 +15,8 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Card from "@mui/material/Card";
-// import Icon from "@mui/material/Icon";
+import Icon from "@mui/material/Icon";
+// import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -61,28 +62,28 @@ function MoreInfoAdmin() {
       <MDBox p={1}>
         <TimelineItem
           color="success"
-          icon="weekend"
+          icon={<Icon>access_time</Icon>}
           title="כמות הדפים שהודפסו היום"
           dateTime={dataFromDB.countPrintInDay}
         />
         <TimelineItem
-          color="error"
+          color="mekatnar"
           // icon="inventory_2"
-          icon="weekend"
+          icon={<Icon>print</Icon>}
           title="כמות הדפים שהודפסו השבוע"
           dateTime={dataFromDB.countPrintInWeek}
         />
         <TimelineItem
-          color="mekatnar"
+          color="info"
           // icon="shopping_cart"
-          icon="weekend"
+          icon={<Icon>access_time</Icon>}
           title="מספר פעימות ביום"
           dateTime={dataFromDB.numBeatsPerDay}
         />
         <TimelineItem
           color="warning"
           // icon="payment"
-          icon="weekend"
+          icon={<Icon>opacity_sharp</Icon>}
           title="מספר פעימות בשבוע"
           dateTime={dataFromDB.numBeatsPerWeek}
         />

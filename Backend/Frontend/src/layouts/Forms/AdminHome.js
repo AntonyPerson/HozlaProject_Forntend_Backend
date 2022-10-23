@@ -67,6 +67,40 @@ function Dashboard() {
     countPrintInWeek: 30,
   };
 
+  const dataDB = requestDB.map((hozla, index) => ({
+    labels: [
+      "Jan.",
+      "Feb.",
+      "Mar.",
+      "Apr.",
+      "May.",
+      "Jun.",
+      "Jul.",
+      "Aug.",
+      "Sep.",
+      "Oct.",
+      "Nov.",
+      "Dec.",
+    ],
+    datasets: [
+      {
+        label: "כמות דפים",
+        color: "info",
+        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
+      },
+      {
+        label: "דפים צבעוניים",
+        color: "mekatnar",
+        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
+      },
+      {
+        label: "דפים שחור לבן",
+        color: "dark",
+        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
+      },
+    ],
+  }));
+
   // useEffect(() => {
   //   axios
   //     .get(`http://localhost:5000/AdminHome/`)
@@ -160,39 +194,44 @@ function Dashboard() {
                 icon={{ color: "mekatnar", component: "leaderboard" }}
                 title="דוח מנהלים"
                 description="כמות הדפסת דפים"
-                chart={{
-                  labels: [
-                    "Jan.",
-                    "Feb.",
-                    "Mar.",
-                    "Apr.",
-                    "May.",
-                    "Jun.",
-                    "Jul.",
-                    "Aug.",
-                    "Sep.",
-                    "Oct.",
-                    "Nov.",
-                    "Dec.",
-                  ],
-                  datasets: [
-                    {
-                      label: "כמות דפים",
-                      color: "info",
-                      data: [50, 40, 300, 220, 500, 250, 400, 230, 500, 250],
-                    },
-                    {
-                      label: "דפים צבעוניים",
-                      color: "mekatnar",
-                      data: [30, 90, 40, 140, 290, 290, 340, 230, 400, 200],
-                    },
-                    {
-                      label: "דפים שחור לבן",
-                      color: "dark",
-                      data: [40, 80, 70, 90, 30, 90, 140, 130, 200, 50],
-                    },
-                  ],
-                }}
+                chart={
+                  // {dataDB}
+                  // ! replace with dataDB
+                  {
+                    labels: [
+                      "Jan.",
+                      "Feb.",
+                      "Mar.",
+                      "Apr.",
+                      "May.",
+                      "Jun.",
+                      "Jul.",
+                      "Aug.",
+                      "Sep.",
+                      "Oct.",
+                      "Nov.",
+                      "Dec.",
+                    ],
+                    datasets: [
+                      {
+                        label: "כמות דפים",
+                        color: "info",
+                        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
+                      },
+                      {
+                        label: "דפים צבעוניים",
+                        color: "mekatnar",
+                        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
+                      },
+                      {
+                        label: "דפים שחור לבן",
+                        color: "dark",
+                        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
+                      },
+                    ],
+                  }
+                  // !
+                }
               />
             </Grid>
 
