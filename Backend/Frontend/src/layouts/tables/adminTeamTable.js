@@ -20,8 +20,12 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import Icon from "@mui/material/Icon";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -37,29 +41,56 @@ import DataTable from "examples/Tables/DataTable";
 import authorsTableData from "layouts/tables/data/authorsTableData";
 import projectsTableData from "layouts/tables/data/projectsTableData";
 import regulsrUserRequestsTableData from "layouts/tables/data/regulsrUserRequestsTableData";
-import adminTableData from "layouts/tables/data/adminTableData";
+import adminTableTeamData from "layouts/tables/data/adminTableTeamData";
 import { Dialog, DialogContent } from "@mui/material";
 import { useState } from "react";
+import MDButton from "components/MDButton";
 
 import { CardBody, Col, Container, Form, FormGroup, FormText, Input, Label, Row } from "reactstrap";
 import axios from "axios";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
-const adminManagementTable = () => {
-  const tableTittle = 'ניהול הוצל"א';
+const adminTeamTable = () => {
+  const tableTittle = 'הצוות שלי';
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();
+  const [menu, setMenu] = useState(null);
+
+  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const closeMenu = () => setMenu(null);
+
+  const renderMenu = (
+    <Menu
+      id="simple-menu"
+      anchorEl={menu}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={Boolean(menu)}
+      onClose={closeMenu}
+    >
+      <MenuItem onClick={closeMenu}><Icon>addcircleoutline</Icon>הוסף משתמש</MenuItem>
+      <MenuItem onClick={closeMenu}><Icon>deleteoutline</Icon>מחק הכל</MenuItem>
+    </Menu>
+  );
+
   const {
     columns: pColumns,
     rows: pRows,
     dbError: dbe,
     setDBerror: setDbe,
-  } = adminTableData();
+  } = adminTableTeamData();
   const handleErrorClose = () => {
     setDbError(true);
     setDbe(false);
   };
+
   const showError = () => (
     <Dialog
       open={dbe}
@@ -91,6 +122,7 @@ const adminManagementTable = () => {
     </Dialog>
   );
 
+
   const table = () => (
     <MDBox pt={6} pb={3}>
       <Grid container spacing={6}>
@@ -111,6 +143,12 @@ const adminManagementTable = () => {
               </MDTypography>
             </MDBox>
             <MDBox pt={3}>
+              <MDBox color="text" px={2} dir="ltr">
+                <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+                  more_vert
+                </Icon>
+              </MDBox>
+              {renderMenu}
               {pRows.length !== 0 ? (
                 <DataTable
                   table={{ columns: pColumns, rows: pRows }}
@@ -120,7 +158,6 @@ const adminManagementTable = () => {
                   showTotalEntries={true}
                   noEndBorder={false}
                 />
-
               ) : dbError || dbe ? (
                 <MDTypography mx={30} variant="h3" color="error" textGradient={true}>
                   תקלת שרת{" "}
@@ -147,4 +184,4 @@ const adminManagementTable = () => {
   );
 };
 
-export default adminManagementTable;
+export default adminTeamTable;

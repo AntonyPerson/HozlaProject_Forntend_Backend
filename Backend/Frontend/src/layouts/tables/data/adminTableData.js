@@ -241,15 +241,241 @@ export default function data() {
         status: (
           <>
             <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
-              {getWorkStuts(50)[0]}
+              {getWorkStuts(75)[0]}
             </MDTypography>
-            <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
+            <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
           </>
         ),
         endDate: "14/11/2022",
         project: "הוצלא",
         NameRequester: "1111111",
         fileID: "bbbbbbbbbb",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+
+      {
+        name: "קורן בר יוסף",
+        clearance: "שמור",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(100)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
+          </>
+        ),
+        endDate: "20/11/2022",
+        project: "רפט",
+        NameRequester: "3333333",
+        fileID: "ccccccccc",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+      {
+        name: "רותם ורולקר",
+        clearance: "סודי",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(75)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
+          </>
+        ),
+        endDate: "10/11/2022",
+        project: "רפט",
+        NameRequester: "4444444",
+        fileID: "dddddddddd",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+      {
+        name: "ענת לקוס",
+        clearance: "שמור",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(50)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
+          </>
+        ),
+        endDate: "14/11/2022",
+        project: "מקטנאר",
+        NameRequester: "55555555",
+        fileID: "eeeeeeeee",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+      {
+        name: "נואה גבאי",
+        clearance: "סודי-ביותר",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(75)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
+          </>
+        ),
+        endDate: "10/11/2022",
+        project: "רפט",
+        NameRequester: "66666666",
+        fileID: "ffffffffff",
+        additionalInfo: (
+          <Link to="/adminFieldReuestFormDB">
+            <MDButton
+              variant="gradient"
+              color="mekatnar"
+              // onClick={() => {
+              //   // setIsInfoPressed(true);
+              //   // setpressedID(hozla._id);
+              // }}
+              circular="true"
+              iconOnly="true"
+              size="medium"
+            >
+              <Icon>info</Icon>
+            </MDButton>
+          </Link>
+        ),
+        update: (
+          <MDTypography
+            component="a"
+            // href={`/RequestForm/${hozla._id}`}
+            href="/adminForm"
+            variant="inherit"
+            color="mekatnar"
+            fontWeight="medium"
+          >
+            עדכן
+          </MDTypography>
+        ),
+      },
+      {
+        name: "דניאל פושקרב",
+        clearance: "בלמס",
+        status: (
+          <>
+            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
+              {getWorkStuts(25)[0]}
+            </MDTypography>
+            <Progress variant="gradient" color={getWorkStuts(25)[1]} value={25} />
+          </>
+        ),
+        endDate: "1/12/2022",
+        project: "מקטנאר",
+        NameRequester: "7777777",
+        fileID: "gggggggg",
         additionalInfo: (
           <Link to="/adminFieldReuestFormDB">
             <MDButton

@@ -63,23 +63,19 @@ export default function HozlaPrintRequestForm() {
   let dateString = "";
   if (currentDate.getMonth() + 1 >= 10) {
     if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+        }-${currentDate.getDate()}`;
     } else {
-      dateString = `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-0${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+        }-0${currentDate.getDate()}`;
     }
   } else {
     if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-0${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+        }-${currentDate.getDate()}`;
     } else {
-      dateString = `${currentDate.getFullYear()}-0${
-        currentDate.getMonth() + 1
-      }-0${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+        }-0${currentDate.getDate()}`;
     }
   }
   const [data, setData] = useState({
@@ -162,7 +158,7 @@ export default function HozlaPrintRequestForm() {
         //toast.error(ErrorReason);
       }
     }
-    
+
     if (data.selected === "none" && data.selectedBW === "none") {
       flag = false;
       ErrorReason.push("סוג צילום לא צויין");
@@ -206,30 +202,30 @@ export default function HozlaPrintRequestForm() {
     console.log(requestData);
 
     axios
-        .post(`http://localhost:5000/adminForm/update`, requestData)
-        .then((res) => {
-            setData({
-                ...data,
-                work_id: res.data,
-                loading: false,
-                error: false,
-                successmsg: true,
-                NavigateToReferrer: false,
-            });
-            // toast.success(`הטופס נשלח בהצלחה`);
-            // history.push(`/signin`);
-            console.log(res.data);
-        })
-        .catch((error) => {
-            // console.log(error);
-            setData({
-                ...data,
-                errortype: error.response,
-                loading: false,
-                error: true,
-                NavigateToReferrer: false,
-            });
+      .post(`http://localhost:5000/adminForm/update`, requestData)
+      .then((res) => {
+        setData({
+          ...data,
+          work_id: res.data,
+          loading: false,
+          error: false,
+          successmsg: true,
+          NavigateToReferrer: false,
         });
+        // toast.success(`הטופס נשלח בהצלחה`);
+        // history.push(`/signin`);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        // console.log(error);
+        setData({
+          ...data,
+          errortype: error.response,
+          loading: false,
+          error: true,
+          NavigateToReferrer: false,
+        });
+      });
   };
   const handleCloseSuccsecModal = () => {
     setData({ ...data, loading: false, error: false, successmsg: false, NavigateToReferrer: true });

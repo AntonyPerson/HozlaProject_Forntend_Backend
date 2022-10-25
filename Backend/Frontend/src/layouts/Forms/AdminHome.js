@@ -103,7 +103,7 @@ function Dashboard() {
 
   // useEffect(() => {
   //   axios
-  //     .get(`http://localhost:5000/AdminHome/`)
+  //     .get(`http://localhost:5000/AdminHome`)
   //     .then((response) => {
   //       console.log(response.data);
   //       setRequestDB(response.data);
