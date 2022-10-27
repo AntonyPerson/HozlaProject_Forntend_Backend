@@ -16,6 +16,8 @@
 /* eslint-disable no-unused-vars */
 
 import Icon from "@mui/material/Icon";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -79,15 +81,16 @@ export default function HozlaPrintRequestForm() {
     }
   }
   const [data, setData] = useState({
+    numColourfulBeats: 0,
+    numNoColourfulBeats: 0,
     sumColourfulPages: 0,
     sumNoColourfulPages: 0,
     numPages: 0,
-    numColourfulBeats: 0,
-    numNoColourfulBeats: 0,
+    twoSides: true,
 
     printColor: "color",
-    selected: "none",
-    selectedBW: "A4",
+    selected: "A4",
+    selectedBW: "none",
 
     errortype: "",
     error: false,
@@ -104,13 +107,37 @@ export default function HozlaPrintRequestForm() {
     "מס' פעימות שחור לבן:",
     "צילום בצבע:",
     "צילום בשחור לבן:",
-    "סוג הדפסה:"
+    "סוג הדפסה:",
+    "דו צדדי"
   ];
 
   function handleChange(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
   }
+
+  function handleChangeColourfulBeat(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+    setData({ sumColourfulPages: Math.round(value / 2) });
+    // setData({ numPages: data.sumColourfulPages + data.sumNoColourfulPages });
+  };
+  function handleNoChangeColourfulBeat(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+    setData({ sumNoColourfulPages: Math.round(value / 2) });
+  };
+
+  function handleChangeColourfulPage(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+    setData({ numColourfulBeats: Math.round(value * 2) });
+  };
+  function handleNoChangeColourfulPage(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+    setData({ numNoColourfulBeats: Math.round(value * 2) });
+  };
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -192,6 +219,7 @@ export default function HozlaPrintRequestForm() {
       numNoColourfulBeats: data.numNoColourfulBeats,
       selected: data.selected,
       selectedBW: data.selectedBW,
+      twoSides: data.twoSides,
 
       errortype: data.errortype,
       error: data.error,
@@ -202,7 +230,7 @@ export default function HozlaPrintRequestForm() {
     console.log(requestData);
 
     axios
-      .post(`http://localhost:5000/adminForm/update`, requestData)
+      .post(`http://localhost:5000/adminForm/:id`, requestData)
       .then((res) => {
         setData({
           ...data,
@@ -397,6 +425,39 @@ export default function HozlaPrintRequestForm() {
                   פתח קובץ
                 </MDButton>
               </div> */}
+              <FormGroup>
+
+                <FormControlLabel
+                  // name="twoSides"
+                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                  value={data.twoSides}
+                  control={<Checkbox
+                    defaultChecked
+                    sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                  />}
+                  labelPlacement="start"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
+                <Input
+                  name="numColourfulBeats"
+                  type="number"
+                  min="0"
+                  value={data.numColourfulBeats}
+                  onChange={handleChangeColourfulBeat}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
+                <Input
+                  name="numNoColourfulBeats"
+                  type="number"
+                  min="0"
+                  value={data.numNoColourfulBeats}
+                  onChange={handleNoChangeColourfulBeat}
+                />
+              </FormGroup>
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">
                   <FormGroup>
@@ -406,7 +467,7 @@ export default function HozlaPrintRequestForm() {
                       type="number"
                       min="0"
                       value={data.sumColourfulPages}
-                      onChange={handleChange}
+                      onChange={handleChangeColourfulPage}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -416,7 +477,7 @@ export default function HozlaPrintRequestForm() {
                       type="number"
                       min="0"
                       value={data.sumNoColourfulPages}
-                      onChange={handleChange}
+                      onChange={handleNoChangeColourfulPage}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -428,26 +489,6 @@ export default function HozlaPrintRequestForm() {
                       value={data.numPages}
                       onChange={handleChange}
                       required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
-                    <Input
-                      name="numColourfulBeats"
-                      type="number"
-                      min="0"
-                      value={data.numColourfulBeats}
-                      onChange={handleChange}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
-                    <Input
-                      name="numNoColourfulBeats"
-                      type="number"
-                      min="0"
-                      value={data.numNoColourfulBeats}
-                      onChange={handleChange}
                     />
                   </FormGroup>
 
@@ -473,8 +514,11 @@ export default function HozlaPrintRequestForm() {
                         value={data.selectedBW}
                         onChange={handleChange}
                       >
-                        <option value="A4BW">A4</option>
+                        <option value="A0BW">A0</option>
                         <option value="A3BW">A3</option>
+                        <option value="A4BW">A4</option>
+                        <option value="A5BW">A5</option>
+                        <option value="A6BW">A6</option>
                         <option value="BWA4">A4 בריסטול</option>
                         <option value="BWA3">A3 בריסטול</option>
                       </Input>
@@ -488,8 +532,11 @@ export default function HozlaPrintRequestForm() {
                         value={data.selected}
                         onChange={handleChange}
                       >
-                        <option value="A4">A4</option>
+                        <option value="A0">A0</option>
                         <option value="A3">A3</option>
+                        <option value="A4">A4</option>
+                        <option value="A5">A5</option>
+                        <option value="A6">A6</option>
                         <option value="A4b">A4 בריסטול</option>
                         <option value="A3b">A3 בריסטול</option>
                       </Input>

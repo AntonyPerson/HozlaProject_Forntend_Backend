@@ -30,6 +30,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
+import MDButton from "components/MDButton";
 import Error404 from "views/Error404";
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
@@ -345,6 +346,17 @@ const adminFieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
+                  <div className="text-center">
+                    <MDButton
+                      color="mekatnar"
+                      size="large"
+                      // onClick={clickSubmit}
+                      className="btn-new-blue"
+                      type="submit"
+                    >
+                      {formData.files} פתח קובץ
+                    </MDButton>
+                  </div>
                 </FormGroup>
               </Form>
             </CardBody>

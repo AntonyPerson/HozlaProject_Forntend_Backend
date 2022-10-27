@@ -48,7 +48,7 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ManagementHoztla from "layouts/tables/adminManagementTable";
-import AdminTeamTable from "layouts/tables/adminTeamTable";
+import AdminArchiveTable from "layouts/tables/adminArchiveTable";
 // import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 // import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 
@@ -102,11 +102,11 @@ const AdminRoutes = [
   // },
   {
     type: "collapse",
-    name: "הצוות שלי",
-    key: "adminTeamTable",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/adminTeamTable",
-    component: <AdminTeamTable />,
+    name: "ארכיון",
+    key: "adminArchiveTable",
+    icon: <Icon fontSize="small">archive</Icon>,
+    route: "/adminArchiveTable",
+    component: <AdminArchiveTable />,
   },
   {
     type: "collapse",

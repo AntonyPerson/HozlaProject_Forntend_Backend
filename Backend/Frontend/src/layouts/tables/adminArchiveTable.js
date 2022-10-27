@@ -41,7 +41,7 @@ import DataTable from "examples/Tables/DataTable";
 import authorsTableData from "layouts/tables/data/authorsTableData";
 import projectsTableData from "layouts/tables/data/projectsTableData";
 import regulsrUserRequestsTableData from "layouts/tables/data/regulsrUserRequestsTableData";
-import adminTableTeamData from "layouts/tables/data/adminTableTeamData";
+import AdminArchiveTableData from "layouts/tables/data/adminArchiveTableData";
 import { Dialog, DialogContent } from "@mui/material";
 import { useState } from "react";
 import MDButton from "components/MDButton";
@@ -50,42 +50,18 @@ import { CardBody, Col, Container, Form, FormGroup, FormText, Input, Label, Row 
 import axios from "axios";
 import { Outlet, Link } from "react-router-dom";
 
-const adminTeamTable = () => {
-  const tableTittle = 'הצוות שלי';
+const adminArchiveTable = () => {
+  const tableTittle = 'ארכיון';
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();
-  const [menu, setMenu] = useState(null);
-
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const closeMenu = () => setMenu(null);
-
-  const renderMenu = (
-    <Menu
-      id="simple-menu"
-      anchorEl={menu}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(menu)}
-      onClose={closeMenu}
-    >
-      <MenuItem onClick={closeMenu}><Icon>addcircleoutline</Icon>הוסף משתמש</MenuItem>
-      <MenuItem onClick={closeMenu}><Icon>deleteoutline</Icon>מחק הכל</MenuItem>
-    </Menu>
-  );
 
   const {
     columns: pColumns,
     rows: pRows,
     dbError: dbe,
     setDBerror: setDbe,
-  } = adminTableTeamData();
+  } = AdminArchiveTableData();
   const handleErrorClose = () => {
     setDbError(true);
     setDbe(false);
@@ -143,12 +119,6 @@ const adminTeamTable = () => {
               </MDTypography>
             </MDBox>
             <MDBox pt={3}>
-              <MDBox color="text" px={2} dir="ltr">
-                <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
-                  more_vert
-                </Icon>
-              </MDBox>
-              {renderMenu}
               {pRows.length !== 0 ? (
                 <DataTable
                   table={{ columns: pColumns, rows: pRows }}
@@ -184,4 +154,4 @@ const adminTeamTable = () => {
   );
 };
 
-export default adminTeamTable;
+export default adminArchiveTable;

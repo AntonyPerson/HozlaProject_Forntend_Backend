@@ -145,16 +145,16 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "ממתין";
+      stutus = "התקבלה";
       color = "error";
     } else if (value === 50) {
-      stutus = "בטיפול";
-      color = "mekatnar";
-    } else if (value === 75) {
       stutus = "בהדפסה";
       color = "mekatnar";
+    } else if (value === 75) {
+      stutus = "הסתיימה";
+      color = "mekatnar";
     } else if (value === 100) {
-      stutus = "הודפס";
+      stutus = "נאסף";
       color = "success";
     }
     return [stutus, color];
@@ -217,19 +217,22 @@ export default function data() {
   return {
     //* the tables headers
     columns: [
-      { Header: "שם", accessor: "name", align: "center" },
-      { Header: "מספר אישי", accessor: "numberID", align: "center" },
-      { Header: "דרגה", accessor: "rank", align: "center" },
+      { Header: "אסמכתא", accessor: "fileID", align: "center" },
+      // { Header: "שם", accessor: "name", align: "center" },
+      { Header: "שם האוסף", accessor: "name", align: "center" },
+      { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
+      { Header: "תאריך סיום", accessor: "endDate", align: "center" },
       // { Header: "שם העבודה", accessor: "project", align: "center" },
-      // { Header: "תאריך בקשה", accessor: "startDate", align: "center" },
-      // { Header: "תאריך מסירה", accessor: "endDate", align: "center" },
+      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       // { Header: "סטטוס", accessor: "status", align: "center" },
-      // { Header: "סיווג", accessor: "clearance", align: "center" },
-      { Header: "מחק", accessor: "delete", align: "center" },
-      { Header: "ערוך", accessor: "edit", align: "center" },
+      { Header: "סיווג", accessor: "clearance", align: "center" },
+      // { Header: "מחק", accessor: "delete", align: "center" },
+      // { Header: "ערוך", accessor: "edit", align: "center" },
     ],
     rows: [
       {
+        fileID: "aaaaaaaaaa",
         name: "דביר וסקר",
         clearance: "סודי",
         status: (
@@ -241,9 +244,11 @@ export default function data() {
           </>
         ),
         endDate: "10/11/2022",
+        startDate: "27/10/2022",
         project: "הוצלא",
+        projectFor: "הוצלא",
         numberID: "0000000",
-        rank: "רבט",
+        NameRequester: "0000000",
         delete: (
           // <Link to="/adminFieldReuestFormDB">
           <MDButton
@@ -272,6 +277,7 @@ export default function data() {
         ),
       },
       {
+        fileID: "bbbbbbbb",
         name: "אנטוני פרסון",
         clearance: "שמור",
         status: (
@@ -282,10 +288,12 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "14/11/2022",
         numberID: "1111111",
         project: "הוצלא",
-        rank: "רבט",
+        projectFor: "הוצלא",
+        NameRequester: "1111111",
         delete: (
           // <Link to="/adminFieldReuestFormDB">
           <MDButton

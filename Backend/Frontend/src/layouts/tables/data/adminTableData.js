@@ -105,16 +105,16 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "ממתין";
+      stutus = "התקבלה";
       color = "error";
     } else if (value === 50) {
-      stutus = "בטיפול";
-      color = "mekatnar";
-    } else if (value === 75) {
       stutus = "בהדפסה";
       color = "mekatnar";
+    } else if (value === 75) {
+      stutus = "הסתיימה";
+      color = "mekatnar";
     } else if (value === 100) {
-      stutus = "הודפס";
+      stutus = "נאסף";
       color = "success";
     }
     return [stutus, color];
@@ -125,10 +125,12 @@ export default function data() {
     name: hozla.name,
     fileID: hozla._id,
     project: hozla.workName,
+    projectFor: hozla.projectFor,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
     // </MDTypography>
+    startDate: hozla.startDate,
     endDate: hozla.endDate,
     status: (
       <>
@@ -177,12 +179,14 @@ export default function data() {
   return {
     //* the tables headers
     columns: [
-      { Header: "שם", accessor: "name", align: "center" },
-      { Header: "שם המזמין", accessor: "NameRequester", align: "center" },
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
-      { Header: "שם העבודה", accessor: "project", align: "center" },
-      // { Header: "תאריך בקשה", accessor: "startDate", align: "center" },
-      { Header: "תאריך מסירה", accessor: "endDate", align: "center" },
+      // { Header: "שם", accessor: "name", align: "center" },
+      { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      { Header: "שם האוסף", accessor: "name", align: "center" },
+      { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
+      { Header: "תאריך סיום", accessor: "endDate", align: "center" },
+      // { Header: "שם העבודה", accessor: "project", align: "center" },
+      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
@@ -201,8 +205,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "10/11/2022",
         project: "הוצלא",
+        projectFor: "הוצלא",
         NameRequester: "0000000",
         fileID: "aaaaaaaaaa",
         additionalInfo: (
@@ -246,8 +252,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "14/11/2022",
         project: "הוצלא",
+        projectFor: "הוצלא",
         NameRequester: "1111111",
         fileID: "bbbbbbbbbb",
         additionalInfo: (
@@ -280,7 +288,6 @@ export default function data() {
           </MDTypography>
         ),
       },
-
       {
         name: "קורן בר יוסף",
         clearance: "שמור",
@@ -292,8 +299,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "20/11/2022",
         project: "רפט",
+        projectFor: "רפט",
         NameRequester: "3333333",
         fileID: "ccccccccc",
         additionalInfo: (
@@ -337,8 +346,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "10/11/2022",
         project: "רפט",
+        projectFor: "רפט",
         NameRequester: "4444444",
         fileID: "dddddddddd",
         additionalInfo: (
@@ -382,8 +393,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
           </>
         ),
+        startDate: "27/10/2022",
         endDate: "14/11/2022",
         project: "מקטנאר",
+        projectFor: "מקטנאר",
         NameRequester: "55555555",
         fileID: "eeeeeeeee",
         additionalInfo: (
@@ -427,8 +440,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(75)[1]} value={75} />
           </>
         ),
+        startDate: "31/10/2022",
         endDate: "10/11/2022",
         project: "רפט",
+        projectFor: "מקטנאר",
         NameRequester: "66666666",
         fileID: "ffffffffff",
         additionalInfo: (
@@ -472,8 +487,10 @@ export default function data() {
             <Progress variant="gradient" color={getWorkStuts(25)[1]} value={25} />
           </>
         ),
+        startDate: "30/10/2022",
         endDate: "1/12/2022",
         project: "מקטנאר",
+        projectFor: "מקטנאר",
         NameRequester: "7777777",
         fileID: "gggggggg",
         additionalInfo: (

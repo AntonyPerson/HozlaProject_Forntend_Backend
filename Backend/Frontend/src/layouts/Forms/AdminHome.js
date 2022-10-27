@@ -34,7 +34,7 @@ import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
 import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
-import MoreInfoAdmin from "layouts/dashboard/components/MoreInfoAdmin";
+import AnnualInfoAdmin from "layouts/dashboard/components/AnnualInfoAdmin";
 
 // Data
 import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
@@ -140,7 +140,7 @@ function Dashboard() {
             <Grid item xs={12} md={6} lg={8}>
               <DefaultDoughnutChart
                 icon={{ color: "mekatnar", component: "leaderboard" }}
-                title="ניהול הוצל''א"
+                title="ניהול הוצל''א יומי"
                 description="מעקב בקשות להדפסה"
                 chart={{
                   labels: ["ממתין", "בטיפול", "בהדפסה", "הודפס"],
@@ -158,7 +158,7 @@ function Dashboard() {
               />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <MoreInfoAdmin />
+              <AnnualInfoAdmin />
               {/* <MDBox mb={6} md={8} lg={4}>
                 <ComplexStatisticsCard
                   icon="weekend"
@@ -193,24 +193,22 @@ function Dashboard() {
                 dir="ltr"
                 icon={{ color: "mekatnar", component: "leaderboard" }}
                 title="דוח מנהלים"
-                description="כמות הדפסת דפים"
+                description="כמות הדפסת דפים לפי ענף"
                 chart={
                   // {dataDB}
                   // ! replace with dataDB
                   {
                     labels: [
-                      "Jan.",
-                      "Feb.",
-                      "Mar.",
-                      "Apr.",
-                      "May.",
-                      "Jun.",
-                      "Jul.",
-                      "Aug.",
-                      "Sep.",
-                      "Oct.",
-                      "Nov.",
-                      "Dec.",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
+                      "ענף תו``ן",
                     ],
                     datasets: [
                       {
@@ -225,7 +223,7 @@ function Dashboard() {
                       },
                       {
                         label: "דפים שחור לבן",
-                        color: "dark",
+                        color: "secondary",
                         data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
                       },
                     ],

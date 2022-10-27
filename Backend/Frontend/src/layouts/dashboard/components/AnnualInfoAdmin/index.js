@@ -25,7 +25,7 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 
-function MoreInfoAdmin() {
+function AnnualInfoAdmin() {
   // * data from database
   const dataFromDB = {
     printed: 40,
@@ -34,17 +34,17 @@ function MoreInfoAdmin() {
     waiting: 20,
 
     countPrintInDay: 10,
-    countPrintInWeek: 30,
+    countPrintInYear: 3000,
     requests: 20,
     numBeatsPerDay: 100,
-    numBeatsPerWeek: 350,
+    numBeatsPerYear: 350000,
   };
 
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox pt={3} px={3}>
         <MDTypography variant="h6" fontWeight="medium">
-          מידע נוסף
+          מידע שנתי
         </MDTypography>
         <MDBox mt={0} mb={2}>
           <MDTypography variant="button" color="text" fontWeight="regular">
@@ -70,8 +70,8 @@ function MoreInfoAdmin() {
           color="mekatnar"
           // icon="inventory_2"
           icon={<Icon>print</Icon>}
-          title="כמות הדפים שהודפסו השבוע"
-          dateTime={dataFromDB.countPrintInWeek}
+          title="כמות הדפים שהודפסו השנה"
+          dateTime={dataFromDB.countPrintInYear}
         />
         <TimelineItem
           color="info"
@@ -84,8 +84,8 @@ function MoreInfoAdmin() {
           color="warning"
           // icon="payment"
           icon={<Icon>opacity_sharp</Icon>}
-          title="מספר פעימות בשבוע"
-          dateTime={dataFromDB.numBeatsPerWeek}
+          title="מספר פעימות השנה"
+          dateTime={dataFromDB.numBeatsPerYear}
         />
         {/* <TimelineItem
           color="primary"
@@ -99,4 +99,4 @@ function MoreInfoAdmin() {
   );
 }
 
-export default MoreInfoAdmin;
+export default AnnualInfoAdmin;
