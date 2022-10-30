@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 /* eslint-disable no-empty */
 /* eslint-disable react/no-unstable-nested-components */
@@ -31,6 +32,7 @@ import Footer from "examples/Footer";
 import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
 import Error404 from "views/Error404";
+import MDButton from "components/MDButton";
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
@@ -345,6 +347,20 @@ const FieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
+                </FormGroup>
+                <FormGroup>
+                  {formData.files &&
+                    formData.files.map((file, index) => (
+                      <MDButton
+                        color="mekatnar"
+                        size="large"
+                        // onClick={clickSubmit}
+                        className="btn-new-blue"
+                        key={index}
+                      >
+                        {file}
+                      </MDButton>
+                    ))}
                 </FormGroup>
               </Form>
             </CardBody>
