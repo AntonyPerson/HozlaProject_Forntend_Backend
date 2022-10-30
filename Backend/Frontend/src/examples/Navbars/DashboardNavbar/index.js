@@ -55,6 +55,7 @@ import {
 } from "context";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
+import axios from "axios";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -62,7 +63,20 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-  const [loggedInUser, setLoggedInUser] = useState("אנטוני פרסון");
+  const [loggedInUser, setLoggedInUser] = useState("אורח");
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/users/1234567`)
+      .then((response) => {
+        console.log(response.data);
+        setLoggedInUser(`${response.data.firstName} ${response.data.lastLame}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+      });
+  }, []);
+
   const loggedInUserString = `ברוך הבא ${loggedInUser}`;
 
   useEffect(() => {

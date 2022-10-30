@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 /* eslint-disable no-empty */
 /* eslint-disable react/no-unstable-nested-components */
@@ -31,8 +30,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
-import Error404 from "views/Error404";
 import MDButton from "components/MDButton";
+import Error404 from "views/Error404";
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
@@ -60,7 +59,7 @@ const textPlaceHolderInputs = [
   "סוג דף",
   "תאריך קבלת העבודה",
 ];
-const FieldReuestFormDB = () => {
+const adminFieldReuestFormDB = () => {
   const params = useParams();
   const [formData, setFormData] = useState({});
   const [errorDB, setErrorDB] = useState(false);
@@ -347,20 +346,17 @@ const FieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
-                </FormGroup>
-                <FormGroup>
-                  {formData.files &&
-                    formData.files.map((file, index) => (
-                      <MDButton
-                        color="mekatnar"
-                        size="large"
-                        // onClick={clickSubmit}
-                        className="btn-new-blue"
-                        key={index}
-                      >
-                        {file}
-                      </MDButton>
-                    ))}
+                  <div className="text-center">
+                    <MDButton
+                      color="mekatnar"
+                      size="large"
+                      // onClick={clickSubmit}
+                      className="btn-new-blue"
+                      type="submit"
+                    >
+                      {formData.files} פתח קובץ
+                    </MDButton>
+                  </div>
                 </FormGroup>
               </Form>
             </CardBody>
@@ -381,4 +377,4 @@ const FieldReuestFormDB = () => {
   );
 };
 
-export default FieldReuestFormDB;
+export default adminFieldReuestFormDB;
