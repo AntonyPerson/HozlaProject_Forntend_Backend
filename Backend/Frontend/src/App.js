@@ -201,10 +201,13 @@ export default function App() {
                 {getRoutes(AdminRoutes)}
                 <Route path="/" element={<Navigate to="/AdminHome" />} />
                 <Route path="/Error404" element={<Error404 />} />
-                <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} />
-                <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} />
+                {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
+                {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />
+                </Route>
+                <Route path="/adminForm">
+                  <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
                 </Route>
                 <Route path="*" element={<Error404 />} />
               </Routes>
