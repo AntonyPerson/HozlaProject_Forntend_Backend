@@ -73,7 +73,7 @@ import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
