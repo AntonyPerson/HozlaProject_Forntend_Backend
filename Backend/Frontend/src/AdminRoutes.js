@@ -47,11 +47,15 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import ManagementHoztla from "layouts/tables/adminManagementTable";
+import AdminArchiveTable from "layouts/tables/adminArchiveTable";
+// import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
+// import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 //my components
-import HozlaPrintRequestForm from "layouts/Forms/HozlaPrintRequestForm";
+import AdminHome from "layouts/Forms/AdminHome";
 import AboutPage from "views/aboutpage/AboutPage";
 // import Error404 from "views/Error404";
 
@@ -67,10 +71,10 @@ const AdminRoutes = [
   {
     type: "collapse",
     name: "דף הבית",
-    key: "dashboard",
+    key: "AdminHome",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
-    component: <Dashboard />,
+    route: "/AdminHome",
+    component: <AdminHome />,
   },
   {
     type: "collapse",
@@ -78,24 +82,48 @@ const AdminRoutes = [
     key: "managementHoztla",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/managementHoztla",
-    component: <Dashboard />,
+    component: <ManagementHoztla />,
+  },
+  // {
+  //   type: "collapse",
+  //   name: "טופס הוצל''א",
+  //   key: "adminForm",
+  //   icon: <Icon fontSize="small">assignment</Icon>,
+  //   route: "/adminForm",
+  //   component: <HozlaAdminPrintInfoForm />,
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "פרטים נוספים",
+  //   key: "adminFieldReuestFormDB",
+  //   icon: <Icon fontSize="small">assignment</Icon>,
+  //   route: "/adminFieldReuestFormDB",
+  //   component: <AdminFieldReuestFormDB />,
+  // },
+  {
+    type: "collapse",
+    name: "ארכיון",
+    key: "adminArchiveTable",
+    icon: <Icon fontSize="small">archive</Icon>,
+    route: "/adminArchiveTable",
+    component: <AdminArchiveTable />,
   },
   {
     type: "collapse",
-    name: "טופס הוצל''א",
-    key: "adminForm",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/adminForm",
-    component: <Dashboard />,
+    name: "אודות",
+    key: "about-us",
+    icon: <Icon fontSize="small">info</Icon>,
+    route: "/about-us",
+    component: <AboutPage />,
   },
-  {
-    type: "collapse",
-    name: "RequestForm",
-    key: "requestForm",
-    icon: <Icon fontSize="small">form</Icon>,
-    route: "/requestForm",
-    component: <Dashboard />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "RequestForm",
+  //   key: "requestForm",
+  //   icon: <Icon fontSize="small">form</Icon>,
+  //   route: "/requestForm",
+  //   component: <Dashboard />,
+  // },
   // {
   //   type: "collapse",
   //   name: "Billing",
