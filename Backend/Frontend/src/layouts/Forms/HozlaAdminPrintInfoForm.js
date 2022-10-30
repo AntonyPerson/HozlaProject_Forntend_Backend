@@ -114,7 +114,10 @@ export default function HozlaPrintRequestForm() {
   function handleChange(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
-  }
+  };
+  function handleChangeCheckbox(evt) {
+    setData({ ...data, [evt.target.name]: evt.target.twoSides });
+  };
 
   function handleChangeColourfulBeat(evt) {
     const { value } = evt.target;
@@ -425,7 +428,7 @@ export default function HozlaPrintRequestForm() {
                   פתח קובץ
                 </MDButton>
               </div> */}
-              <FormGroup>
+              {/* <FormGroup>
 
                 <FormControlLabel
                   // name="twoSides"
@@ -437,7 +440,21 @@ export default function HozlaPrintRequestForm() {
                   />}
                   labelPlacement="start"
                 />
+              </FormGroup> */}
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={data.twoSides}
+                      onChange={handleChangeCheckbox}
+                      name="twoSides"
+                    />
+                  }
+                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                  labelPlacement="start"
+                />
               </FormGroup>
+
               <FormGroup>
                 <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
                 <Input
