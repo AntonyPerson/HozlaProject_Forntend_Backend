@@ -58,6 +58,7 @@ const textPlaceHolderInputs = [
   "קובץ להדפסה",
   "סוג דף",
   "תאריך קבלת העבודה",
+  "שם אוסף העבודה",
 ];
 const adminFieldReuestFormDB = () => {
   const params = useParams();
@@ -130,16 +131,16 @@ const adminFieldReuestFormDB = () => {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "נשלח להוצלא";
+      stutus = "התקבלה";
       color = "error";
     } else if (value === 50) {
-      stutus = "התקבל במערכת";
-      color = "mekatnar";
-    } else if (value === 75) {
       stutus = "בהדפסה";
       color = "mekatnar";
+    } else if (value === 75) {
+      stutus = "הסתיימה";
+      color = "mekatnar";
     } else if (value === 100) {
-      stutus = "מוכן לאיסוף";
+      stutus = "נאסף";
       color = "success";
     }
     return [stutus, color];
@@ -332,6 +333,16 @@ const adminFieldReuestFormDB = () => {
                       name="fullNameReciver"
                       type="text"
                       value={formData.fullNameReciver}
+                      disabled
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="fullNameTakein">{textPlaceHolderInputs[15]}</Label>
+                    <Input
+                      // placeholder={textPlaceHolderInputs[9]}
+                      name="fullNameTakein"
+                      type="text"
+                      value={formData.fullNameTakein}
                       disabled
                     />
                   </FormGroup>

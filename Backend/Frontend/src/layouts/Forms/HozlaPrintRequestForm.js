@@ -29,6 +29,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Upload } from "antd-upload";
 
 import {
   Button,
@@ -60,23 +61,19 @@ export default function HozlaPrintRequestForm() {
   let dateString = "";
   if (currentDate.getMonth() + 1 >= 10) {
     if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+        }-${currentDate.getDate()}`;
     } else {
-      dateString = `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-0${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+        }-0${currentDate.getDate()}`;
     }
   } else {
     if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-0${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+        }-${currentDate.getDate()}`;
     } else {
-      dateString = `${currentDate.getFullYear()}-0${
-        currentDate.getMonth() + 1
-      }-0${currentDate.getDate()}`;
+      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+        }-0${currentDate.getDate()}`;
     }
   }
   const [data, setData] = useState({
@@ -94,6 +91,7 @@ export default function HozlaPrintRequestForm() {
     numOfCopyies: 1,
 
     fullNameAsker: "",
+    fullNameTakein: "",
     workGivenDate: dateString,
 
     fullNameReciver: "",
@@ -102,7 +100,33 @@ export default function HozlaPrintRequestForm() {
     personalnumber: "",
     // role: "",
 
-    files: [],
+    files: [
+      {
+        id: 'gary',
+        name: 'Gary Goodspeed',
+        thumb: '/images/gary.png'
+      },
+      {
+        id: 'cato',
+        name: 'Little Cato',
+        thumb: '/images/cato.png'
+      },
+      {
+        id: 'kvn',
+        name: 'KVN',
+        thumb: '/images/kvn.png'
+      },
+      {
+        id: 'mooncake',
+        name: 'Mooncake',
+        thumb: '/images/mooncake.png'
+      },
+      {
+        id: 'quinn',
+        name: 'Quinn Ergon',
+        thumb: '/images/quinn.png'
+      }
+    ],
 
     pageType: "A4",
 
@@ -131,6 +155,7 @@ export default function HozlaPrintRequestForm() {
     "קובץ להדפסה",
     "סוג דף",
     "תאריך קבלת העבודה",
+    "שם אוסף העבודה",
   ];
 
   function handleChange(evt) {
@@ -254,6 +279,7 @@ export default function HozlaPrintRequestForm() {
       fullNameAsker: data.fullNameAsker,
       workGivenDate: data.workGivenDate,
       fullNameReciver: data.fullNameReciver,
+      fullNameTakein: data.fullNameTakein,
       workRecivedDate: data.workRecivedDate,
       personalnumber: data.personalnumber,
       // role: data.role,
@@ -393,9 +419,9 @@ export default function HozlaPrintRequestForm() {
         // mb={2}
         textAlign="center"
       >
-          <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
-            בטעינה
-          </MDTypography>
+        <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
+          בטעינה
+        </MDTypography>
 
         <DialogContent>
           <MDTypography variant="h5" fontWeight="medium" color="white" mt={1}>
@@ -405,6 +431,20 @@ export default function HozlaPrintRequestForm() {
       </MDBox>
     </Dialog>
   );
+
+  // ! try DND
+  const [characters, updateCharacters] = useState(data.files);
+
+  function handleOnDragEnd(result) {
+    if (!result.destination) return;
+
+    const items = Array.from(characters);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    updateCharacters(items);
+  }
+  // ! try DND
 
   const hozlaPrintRequestForm = () => (
     <Container className="" dir="rtl">
@@ -556,7 +596,10 @@ export default function HozlaPrintRequestForm() {
                       <option defult value="A4">
                         A4
                       </option>
+                      <option value="A0">A0</option>
                       <option value="A3">A3</option>
+                      <option value="A5">A5</option>
+                      <option value="A6">A6</option>
                       <option value="A4b">A4 בריסטול</option>
                       <option value="A3b">A3 בריסטול</option>
                     </Input>
@@ -582,6 +625,16 @@ export default function HozlaPrintRequestForm() {
                       name="fullNameAsker"
                       type="text"
                       value={data.fullNameAsker}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="fullNameTakein">{textPlaceHolderInputs[15]}</Label>
+                    <Input
+                      // placeholder={textPlaceHolderInputs[9]}
+                      name="fullNameTakein"
+                      type="text"
+                      value={data.fullNameTakein}
                       onChange={handleChange}
                     />
                   </FormGroup>
@@ -623,6 +676,10 @@ export default function HozlaPrintRequestForm() {
                 </FormGroup>
 
                 <FormGroup row>
+                  {/* <Upload.Dragger multiple action='http://localhost:3000/requestForm'>
+                    <Button>upload</Button>
+                  </Upload.Dragger> */}
+
                   {/* <Label for="files">
                     <Button className="btn-new-blue">העלאה קובץ</Button>
                   </Label> */}
@@ -637,9 +694,34 @@ export default function HozlaPrintRequestForm() {
                   {data.files.length === 0 ? (
                     <FormText color="muted">ניתן להעלאות רק קבצי PDF</FormText>
                   ) : (
-                    <FormText hidden dir="ltr" color="muted">
-                      {data.files}
-                    </FormText>
+                    // <FormText hidden dir="ltr" color="muted">
+                    //   {data.files}
+                    // </FormText>
+                    <DragDropContext onDragEnd={handleOnDragEnd}>
+                      <Droppable droppableId="characters">
+                        {(provided) => (
+                          <ul className="characters" {...provided.droppableProps} ref={provided.innerRef}>
+                            {characters.map(({ id, name, thumb }, index) => {
+                              return (
+                                <Draggable key={id} draggableId={id} index={index}>
+                                  {(provided) => (
+                                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                      <div className="characters-thumb">
+                                        <img src={thumb} alt={`${name} Thumb`} />
+                                      </div>
+                                      <p>
+                                        {name}
+                                      </p>
+                                    </li>
+                                  )}
+                                </Draggable>
+                              );
+                            })}
+                            {provided.placeholder}
+                          </ul>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                   )}
                 </FormGroup>
 

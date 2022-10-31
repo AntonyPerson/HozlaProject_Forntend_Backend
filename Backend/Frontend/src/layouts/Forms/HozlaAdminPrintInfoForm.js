@@ -58,6 +58,7 @@ import "react-toastify/dist/ReactToastify.css";
 // Material Dashboard 2 React Components
 import MDAlert from "components/MDAlert";
 import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal } from "@mui/material";
+import { CompressOutlined } from "@mui/icons-material";
 
 export default function HozlaPrintRequestForm() {
   const currentDate = new Date();
@@ -116,7 +117,9 @@ export default function HozlaPrintRequestForm() {
     setData({ ...data, [evt.target.name]: value });
   };
   function handleChangeCheckbox(evt) {
-    setData({ ...data, [evt.target.name]: evt.target.twoSides });
+    // setData({ ...data, [evt.target.name]: evt.target.twoSides });
+    setData({ twoSides: !data.twoSides });
+    console.log(data.twoSides);
   };
 
   function handleChangeColourfulBeat(evt) {
@@ -441,13 +444,27 @@ export default function HozlaPrintRequestForm() {
                   labelPlacement="start"
                 />
               </FormGroup> */}
-              <FormGroup>
+              {/* <FormGroup>
                 <FormControlLabel
                   control={
                     <Checkbox
                       checked={data.twoSides}
                       onChange={handleChangeCheckbox}
                       name="twoSides"
+                    />
+                  }
+                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                  labelPlacement="start"
+                />
+              </FormGroup> */}
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      defaultChecked
+                      checked={data.checked}
+                      onChange={handleChangeCheckbox}
+                      inputProps={{ 'aria-label': 'controlled' }}
                     />
                   }
                   label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
@@ -464,6 +481,7 @@ export default function HozlaPrintRequestForm() {
                   value={data.numColourfulBeats}
                   onChange={handleChangeColourfulBeat}
                 />
+                <MDTypography variant="body2" color="mekatnar">{data.numColourfulBeats} פעימות צבעוני</MDTypography>
               </FormGroup>
               <FormGroup>
                 <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
@@ -474,6 +492,7 @@ export default function HozlaPrintRequestForm() {
                   value={data.numNoColourfulBeats}
                   onChange={handleNoChangeColourfulBeat}
                 />
+                <MDTypography variant="body2" color="mekatnar">{data.numNoColourfulBeats} פעימות שחור לבן</MDTypography>
               </FormGroup>
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">
@@ -486,6 +505,7 @@ export default function HozlaPrintRequestForm() {
                       value={data.sumColourfulPages}
                       onChange={handleChangeColourfulPage}
                     />
+                    <MDTypography variant="body2" color="mekatnar">{data.sumColourfulPages} דפים צבעוניים</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="sumNoColourfulPages">{textPlaceHolderInputs[1]}</Label>
@@ -496,6 +516,7 @@ export default function HozlaPrintRequestForm() {
                       value={data.sumNoColourfulPages}
                       onChange={handleNoChangeColourfulPage}
                     />
+                    <MDTypography variant="body2" color="mekatnar">{data.sumNoColourfulPages} דפים שחור לבן</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="numPages">{textPlaceHolderInputs[2]}</Label>

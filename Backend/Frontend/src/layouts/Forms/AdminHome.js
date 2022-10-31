@@ -33,6 +33,7 @@ import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
+import VerticalBarChart from "examples/Charts/BarCharts/VerticalBarChart";
 import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import AnnualInfoAdmin from "layouts/dashboard/components/AnnualInfoAdmin";
 
@@ -143,7 +144,7 @@ function Dashboard() {
                 title="ניהול הוצל''א יומי"
                 description="מעקב בקשות להדפסה"
                 chart={{
-                  labels: ["ממתין", "בטיפול", "בהדפסה", "הודפס"],
+                  labels: ["התקבלה", "בהדפסה", "הסתיימה", "מוכן לאיסוף"],
                   datasets: {
                     label: "Projects",
                     backgroundColors: ["dark", "info", "mekatnar", "success"],
@@ -189,7 +190,34 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>
-              <DefaultLineChart
+              <VerticalBarChart
+                icon={{ color: "mekatnar", component: "leaderboard" }}
+                title="דוח מנהלים"
+                description="כמות הדפסת דפים לפי ענף"
+                chart={{
+                  labels: [
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                    "ענף תו``ן",
+                  ],
+                  datasets: [
+                    {
+                      label: "כמות דפים",
+                      color: "mekatnar",
+                      data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
+                    },
+                  ],
+                }}
+              />
+            </Grid>
+            {/* <DefaultLineChart
                 dir="ltr"
                 icon={{ color: "mekatnar", component: "leaderboard" }}
                 title="דוח מנהלים"
@@ -230,8 +258,7 @@ function Dashboard() {
                   }
                   // !
                 }
-              />
-            </Grid>
+              /> */}
 
             {/* 
                             

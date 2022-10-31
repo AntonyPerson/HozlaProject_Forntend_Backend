@@ -154,6 +154,11 @@ export default function data() {
       stutus = "הסתיימה";
       color = "mekatnar";
     } else if (value === 100) {
+      stutus = "מוכן לאיסוף";
+      color = "success";
+    }
+    // לארכיון
+    else if (value === 125) {
       stutus = "נאסף";
       color = "success";
     }
@@ -165,11 +170,13 @@ export default function data() {
     name: hozla.name,
     fileID: hozla._id,
     project: hozla.workName,
+    projectFor: hozla.projectFor,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
     // </MDTypography>
-    endDate: hozla.endDate,
+    startDate: hozla.workGivenDate.split("T")[0],
+    endDate: hozla.workRecivedDate.split("T")[0],
     status: (
       <>
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
@@ -181,7 +188,7 @@ export default function data() {
     NameRequester: hozla.fullNameAsker,
     // diliveryDate: hozla.workRecivedDate.split("T")[0],
     additionalInfo: (
-      <Link to={`/adminFieldReuestFormDB/${hozla._id}`} key={hozla._id}>
+      <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
           color="mekatnar"
@@ -197,20 +204,6 @@ export default function data() {
         </MDButton>
       </Link>
     ),
-    update: (
-      <Link to={`/adminForm/${hozla._id}`} key={hozla._id}>
-        <MDTypography
-          component="a"
-          // href={`/RequestForm/${hozla._id}`}
-          // href="/adminForm"
-          variant="inherit"
-          color="mekatnar"
-          fontWeight="medium"
-        >
-          עדכן
-        </MDTypography>
-      </Link>
-    ),
   }));
 
   console.log(`isError ${isError}`);
@@ -219,16 +212,16 @@ export default function data() {
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
       // { Header: "שם העבודה", accessor: "project", align: "center" },
       { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
-      // { Header: "סטטוס", accessor: "status", align: "center" },
+      { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
-      // { Header: "מחק", accessor: "delete", align: "center" },
-      // { Header: "ערוך", accessor: "edit", align: "center" },
+      { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
+      // { Header: "עדכן", accessor: "update", align: "center" },
     ],
     rows: [
       {
@@ -249,19 +242,21 @@ export default function data() {
         projectFor: "הוצלא",
         numberID: "0000000",
         NameRequester: "0000000",
-        delete: (
-          // <Link to="/adminFieldReuestFormDB">
+        additionalInfo: (
+          // <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
           <MDButton
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminForm"
-            variant="inherit"
-            color="error"
-            fontWeight="medium"
+            variant="gradient"
+            color="mekatnar"
+            // onClick={() => {
+            //   // setIsInfoPressed(true);
+            //   // setpressedID(hozla._id);
+            // }}
+            circular="true"
+            iconOnly="true"
+            size="medium"
           >
-            <Icon>close</Icon>
+            <Icon>info</Icon>
           </MDButton>
-          // </Link>
         ),
         edit: (
           <MDTypography
@@ -283,9 +278,9 @@ export default function data() {
         status: (
           <>
             <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
-              {getWorkStuts(50)[0]}
+              {getWorkStuts(100)[0]}
             </MDTypography>
-            <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
+            <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
           </>
         ),
         startDate: "27/10/2022",
@@ -294,17 +289,20 @@ export default function data() {
         project: "הוצלא",
         projectFor: "הוצלא",
         NameRequester: "1111111",
-        delete: (
-          // <Link to="/adminFieldReuestFormDB">
+        additionalInfo: (
+          // <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
           <MDButton
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminForm"
-            variant="inherit"
-            color="error"
-            fontWeight="medium"
+            variant="gradient"
+            color="mekatnar"
+            // onClick={() => {
+            //   // setIsInfoPressed(true);
+            //   // setpressedID(hozla._id);
+            // }}
+            circular="true"
+            iconOnly="true"
+            size="medium"
           >
-            <Icon>close</Icon>
+            <Icon>info</Icon>
           </MDButton>
           // </Link>
         ),

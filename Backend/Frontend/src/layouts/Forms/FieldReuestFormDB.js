@@ -59,6 +59,7 @@ const textPlaceHolderInputs = [
   "קובץ להדפסה",
   "סוג דף",
   "תאריך קבלת העבודה",
+  "שם אוסף העבודה",
 ];
 const FieldReuestFormDB = () => {
   const params = useParams();
@@ -333,6 +334,16 @@ const FieldReuestFormDB = () => {
                       name="fullNameReciver"
                       type="text"
                       value={formData.fullNameReciver}
+                      disabled
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="fullNameTakein">{textPlaceHolderInputs[15]}</Label>
+                    <Input
+                      // placeholder={textPlaceHolderInputs[9]}
+                      name="fullNameTakein"
+                      type="text"
+                      value={formData.fullNameTakein}
                       disabled
                     />
                   </FormGroup>
