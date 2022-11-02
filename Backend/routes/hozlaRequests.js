@@ -68,9 +68,9 @@ router.route("/:id").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-//GET ALL HOZLA REQUESTS FOR THE A SPECIFICK USER 
+//GET ALL HOZLA REQUESTS FOR THE A SPECIFICK USER
 router.route("/:personalnumber").get((req, res) => {
-  HozlaRequest.findById({ personalnumber: req.params.personalnumber })
+  HozlaRequest.find({ personalnumber: req.params.personalnumber })
     .exec()
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
