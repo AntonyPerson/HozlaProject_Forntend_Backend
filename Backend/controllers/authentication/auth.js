@@ -24,9 +24,14 @@ exports.signin = (req, res) => {
   //find based on personalnumber
   const { personalnumber, password } = req.body;
   User.findOne(req.body.personalnumber, (err, user) => {
-    if (err || !user) {
+    if (!user) {
+      return res.json({
+        user: "DoNotExist", //"משתמש עם מספר אישי זה אינו קיים",
+      });
+    }
+    if (err) {
       return res.status(400).json({
-        error: "משתמש עם מספר אישי זה אינו קיים",
+        error: err, //"משתמש עם מספר אישי זה אינו קיים",
       });
     }
     //if user found make sure the personalnumber and password match

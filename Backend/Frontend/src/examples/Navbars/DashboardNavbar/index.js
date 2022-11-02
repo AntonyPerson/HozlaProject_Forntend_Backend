@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react/function-component-definition */
+/* eslint-disable import/newline-after-import */
 /* eslint-disable no-unused-vars */
 /**
 =========================================================
@@ -17,7 +20,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, Navigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -56,6 +59,8 @@ import {
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import axios from "axios";
+import { authenticate, isAuthenticated, signout } from "auth/index";
+const { user } = isAuthenticated();
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -63,18 +68,23 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-  const [loggedInUser, setLoggedInUser] = useState("gsdfsdfsdfsd");
+  const [loggedInUser, setLoggedInUser] = useState("אורח");
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/users/1234567`)
-      .then((response) => {
-        console.log(response.data);
-        setLoggedInUser(`${response.data.firstName} ${response.data.lastLame}`);
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.code);
-      });
+    // axios
+    //   .get(`http://localhost:5000/users/1234567`)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     setLoggedInUser(`${response.data.firstName} ${response.data.lastLame}`);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     console.log(error.code);
+    //   });
+    if (user) {
+      setLoggedInUser(`${user.firstName} ${user.lastLame}`);
+    } else {
+      setLoggedInUser("אורח");
+    }
   }, []);
 
   const loggedInUserString = `ברוך הבא ${loggedInUser}`;
@@ -141,7 +151,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-
+  const Signout = () => {
+    signout();
+    window.location.reload(true);
+    // return <Navigate to="/authentication/sign-in" />;
+  };
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -191,7 +205,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              {/* <Link to="/userRequestsTable">
+              {/* {/* <Link to="/userRequestsTable"> */}
+              {user ? (
                 <IconButton
                   size="small"
                   // disableRipple
@@ -200,11 +215,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   aria-controls="notification-menu"
                   aria-haspopup="true"
                   variant="contained"
-                  // onClick={handleOpenMenu}
+                  onClick={Signout}
                 >
-                  <Icon sx={iconsStyle}>notifications</Icon>
+                  <Icon sx={iconsStyle}>logout</Icon>
                 </IconButton>
-              </Link> */}
+              ) : null}
+              {/* </Link> */}
               {/* {renderMenu()} */}
             </MDBox>
           </MDBox>

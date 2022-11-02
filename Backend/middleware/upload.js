@@ -15,14 +15,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype == "application/pdf") {
-      cb(null, true);
-    } else {
-      console.log("Only PDF file can be uploaded");
-      cb(null, false);
-    }
-  },
+  // fileFilter: (req, file, cb) => {
+  //   if (file.mimetype == "application/pdf") {
+  //     cb(null, true);
+  //   } else {
+  //     console.log("Only PDF file can be uploaded");
+  //     cb(null, false);
+  //   }
+  // },
   //   limits: {
   //     fileSize: 1024 * 1024 * 1024  * 5,
   //   },

@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable consistent-return */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable no-undef */
@@ -55,10 +56,13 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 import bgImage from "assets/images/book-bg-image.jpg";
 
 import { signin, authenticate, isAuthenticated } from "auth/index";
+import { CompressOutlined } from "@mui/icons-material";
 
 function signIn() {
   // const [rememberMe, setRememberMe] = useState(false);
   // const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  // const { user } = isAuthenticated();
+
   const [values, setValues] = useState({
     personalnumber: "",
     password: "",
@@ -67,10 +71,22 @@ function signIn() {
     successmsg: false,
     loading: false,
     NavigateToReferrer: false,
-    passportauth_worked: false,
   });
-
-  const { personalnumber, password, passportauth_worked } = values;
+  //for signing up a new client
+  const [signUpData, setSignUpData] = useState({
+    firstName: "",
+    lastLame: "",
+    personalnumber: "",
+    admin: "",
+    unit: "",
+    anaf: "",
+    mador: "",
+    phoneNumber: "",
+    email: "",
+    holzlaRequest: [],
+  });
+  const [Demo, setDemo] = useState(true);
+  // const { personalnumber, password } = values;
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
@@ -98,8 +114,18 @@ function signIn() {
     });
   };
   const NavigateUser = () => {
-    if (values.NavigateToReferrer) {
-      // return <Navigate to="/userRequestsTable" />;
+    const { user } = isAuthenticated();
+    // console.log(user);
+    if (values.NavigateToReferrer && user) {
+      // console.log(user);
+      if (user.admin === "0") {
+        //regular user
+        return <Navigate to="/userRequestsTable" />;
+      }
+      if (user.admin === "1" || user.admin === "2") {
+        //mangment
+        return <Navigate to="/AdminHome" />;
+      }
     }
   };
   const showSuccess = () => (
@@ -187,40 +213,120 @@ function signIn() {
       </MDBox>
     </Dialog>
   );
+  useEffect(() => {
+    setDemo(true);
+    // passport();
+  }, []);
 
+  const SignUp = () => {
+    console.log("In sign up");
+    setValues({ ...values, loading: true, successmsg: false, error: false });
+    const newUser = {
+      firstName: signUpData.firstName,
+      lastLame: signUpData.lastLame,
+      personalnumber: signUpData.personalnumber,
+      admin: signUpData.admin,
+      unit: signUpData.unit,
+      anaf: signUpData.anaf,
+      mador: signUpData.mador,
+      phoneNumber: signUpData.phoneNumber,
+      email: signUpData.email,
+      holzlaRequest: signUpData.holzlaRequest,
+    };
+    axios
+      .post(`http://localhost:5000/api/signup`, newUser)
+      .then((res) => {
+        console.log(`gotten new user from sign up ${res.data}`);
+        authenticate(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // window.location.reload();
+  };
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, loading: true, successmsg: false, error: false });
+    const personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
+    console.log(personalnumber);
+    console.log(event.target.id);
+
     axios
-      .post(`http://localhost:5000/api/signin`, { personalnumber, password })
+      .post(`http://localhost:5000/api/signin`, personalnumber)
       .then((res) => {
+        console.log("in the onSubmit");
+        console.log(res.data);
+        console.log(res.data.user);
+        if (res.data.user === "DoNotExist") {
+          if (Demo) {
+            if (personalnumber === "1234567") {
+              setSignUpData({
+                ...signUpData,
+                firstName: "אנטוני",
+                lastLame: "פרסון",
+                personalnumber: "1234567",
+                admin: "2",
+                unit: "מקטנאר",
+                anaf: "תון",
+                mador: "NG",
+                phoneNumber: "123456789",
+                email: "sS@gmail.com",
+              });
+            } else if (personalnumber === "7654321") {
+              setSignUpData({
+                ...signUpData,
+                firstName: "דביר",
+                lastLame: "וסקר",
+                personalnumber: "7654321",
+                admin: "0",
+                unit: "מקטנאר",
+                anaf: "תון",
+                mador: "NG",
+                phoneNumber: "987654321",
+                email: "qQ@gmail.com",
+              });
+            }
+          }
+          SignUp();
+        }
         authenticate(res.data);
         setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+        window.location.reload(false);
       })
       .catch((error) => {
-        setValues({ ...values, errortype: error.error, loading: false, error: true });
+        // setValues({ ...values, errortype: error.error, loading: false, error: true });
+        setValues({ ...values, errortype: error.error, loading: false });
+        console.log(error);
       });
   };
 
-  // const passport = (event) => {
-  //   axios
-  //     .get(`http://localhost:5000/auth/passportauth`)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setValues({
-  //         ...values,
-  //         personalnumber: response.data.stam._json.cn,
-  //         passportauth_worked: true,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       // <Navigate to="/authentication/sign-up" />;
-  //     });
-  // };
-  // useEffect(() => {
-  //   passport();
-  // }, []);
+  // hoger
+  const passport = (event) => {
+    axios
+      .get(`http://localhost:5000/auth/passportauth`)
+      .then((response) => {
+        console.log(response.data);
+        setValues({
+          ...values,
+          personalnumber: response.data.stam._json.cn,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.error === "NotInTheSystem") {
+          axios
+            .get(`http://localhost:5000/auth/passportauth`)
+            .then((response) => {
+              console.log(response.data);
+              setSignUpData({ ...signUpData, personalnumber: response.data.stam._json.cn });
+              SignUp();
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      });
+  };
 
   const signInForm = () => (
     <BasicLayout image={bgImage}>
@@ -238,7 +344,7 @@ function signIn() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            {'התחברות למערכת הוצל"א'}
+            {Demo ? 'התחברות למערכת הוצל"א דמו' : 'התחברות למערכת הוצל"א'}
           </MDTypography>
           {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={2}>
@@ -259,39 +365,38 @@ function signIn() {
           </Grid> */}
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form" onSubmit={onSubmit}>
-            {passportauth_worked ? (
-              <MDBox mb={2}>
-                <MDInput
-                  type="input"
-                  onChange={handleChange("personalnumber")}
-                  label="מספר אישי"
-                  value={personalnumber}
-                  fullWidth
-                  disabled
-                />
-              </MDBox>
-            ) : (
+          <MDBox>
+            {Demo ? (
               <>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="input"
-                    onChange={handleChange("personalnumber")}
-                    label="מספר אישי"
-                    value={personalnumber}
+                <MDBox pb={3}>
+                  <MDButton
+                    id="MangerDemo"
+                    type="submit"
+                    variant="gradient"
+                    color="mekatnar"
                     fullWidth
-                  />
+                    onClick={onSubmit}
+                  >
+                    התחברות כמנהל
+                  </MDButton>
                 </MDBox>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="password"
-                    onChange={handleChange("password")}
-                    label="סיסמא"
-                    value={password}
+                <MDBox>
+                  <MDButton
+                    id="ClientDemo"
+                    type="submit"
+                    variant="gradient"
+                    color="mekatnar"
+                    onClick={onSubmit}
                     fullWidth
-                  />
+                  >
+                    התחברות לקוח
+                  </MDButton>
                 </MDBox>
               </>
+            ) : (
+              <MDTypography variant="h3" color="mekatnar" textGradient>
+                {'על מנת להתחבר למערכת הוצל"א. אנא הכנס חוגר'}
+              </MDTypography>
             )}
 
             {/* <MDBox display="flex" alignItems="center" ml={-1}>
@@ -306,12 +411,12 @@ function signIn() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox> */}
-            <MDBox mt={4} mb={1}>
+            {/* <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="mekatnar" fullWidth>
                 התחברות
               </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
+            </MDBox> */}
+            {/* <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 עוד לא נרשמתה?{" "}
                 <MDTypography
@@ -325,7 +430,7 @@ function signIn() {
                   לחץ כאן
                 </MDTypography>
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
           </MDBox>
         </MDBox>
       </Card>

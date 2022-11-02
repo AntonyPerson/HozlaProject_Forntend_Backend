@@ -39,23 +39,26 @@ import projectsTableData from "layouts/tables/data/projectsTableData";
 import regulsrUserRequestsTableData from "layouts/tables/data/regulsrUserRequestsTableData";
 import adminTableData from "layouts/tables/data/adminTableData";
 import { Dialog, DialogContent } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CardBody, Col, Container, Form, FormGroup, FormText, Input, Label, Row } from "reactstrap";
 import axios from "axios";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { signin, authenticate, isAuthenticated } from "auth/index";
 
 const adminManagementTable = () => {
   const tableTittle = 'ניהול הוצל"א';
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();
-  const {
-    columns: pColumns,
-    rows: pRows,
-    dbError: dbe,
-    setDBerror: setDbe,
-  } = adminTableData();
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      return <Navigate to="/AdminHome" />;
+    }
+  }, []);
+
+  const { columns: pColumns, rows: pRows, dbError: dbe, setDBerror: setDbe } = adminTableData();
   const handleErrorClose = () => {
     setDbError(true);
     setDbe(false);
@@ -120,7 +123,6 @@ const adminManagementTable = () => {
                   showTotalEntries={true}
                   noEndBorder={false}
                 />
-
               ) : dbError || dbe ? (
                 <MDTypography mx={30} variant="h3" color="error" textGradient={true}>
                   תקלת שרת{" "}

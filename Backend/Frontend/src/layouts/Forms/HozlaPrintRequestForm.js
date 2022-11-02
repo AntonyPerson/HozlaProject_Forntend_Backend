@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-lonely-if */
 /* eslint-disable camelcase */
 /* eslint-disable prettier/prettier */
@@ -13,7 +14,7 @@
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-vars */
-
+// TODO check mult-files
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -53,6 +54,9 @@ import "react-toastify/dist/ReactToastify.css";
 // Material Dashboard 2 React Components
 import MDAlert from "components/MDAlert";
 import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal } from "@mui/material";
+
+// for file upload from Data
+import { singleFileUpload } from "Data/api";
 
 export default function HozlaPrintRequestForm() {
   const currentDate = new Date();
@@ -393,9 +397,9 @@ export default function HozlaPrintRequestForm() {
         // mb={2}
         textAlign="center"
       >
-          <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
-            בטעינה
-          </MDTypography>
+        <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
+          בטעינה
+        </MDTypography>
 
         <DialogContent>
           <MDTypography variant="h5" fontWeight="medium" color="white" mt={1}>
@@ -642,79 +646,6 @@ export default function HozlaPrintRequestForm() {
                     </FormText>
                   )}
                 </FormGroup>
-
-                {/* {data.files.length !== 0 && (
-                  <FormGroup row>
-                    {data.files.map((file, index) => (
-                      <ul>
-                        <li key={`fille ${index}`}>{file}</li>
-                      </ul>
-                    ))}
-                  </FormGroup>
-                )} */}
-
-                {/* <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                    הרשאה
-                  </div>
-                  <FormGroup dir="rtl">
-                    <  Input
-
-                      type="select"
-                      name="role"
-                      value={data.role}
-                      onChange={handleChange}
-                    >
-                      <option value="">הרשאה</option>
-                      <option value="0">מנהל מערכת</option>
-                      <option value="1">הרשאת גדוד</option>
-                      <option value="2">הרשאת חטיבה</option>
-                      <option value="3">הרשאת אוגדה</option>
-                      <option value="4">הרשאת פיקוד</option> 
-                    </  Input
->
-                  </FormGroup> */}
-
-                {/* {data.role === "0" ? (
-                    <div>מנהל מערכת</div>
-                  ) : data.role === "1" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        גדוד
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={gdods} handleChange2={handleChange2} name={'gdodid'} val={data.gdodid ? data.gdodid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "2" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        חטיבה
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={hativas} handleChange2={handleChange2} name={'hativaid'} val={data.hativaid ? data.hativaid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "3" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        אוגדה
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={ogdas} handleChange2={handleChange2} name={'ogdaid'} val={data.ogdaid ? data.ogdaid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "4" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        פיקוד
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={pikods} handleChange2={handleChange2} name={'pikodid'} val={data.pikodid ? data.pikodid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "" ? (
-                    <div>נא להכניס הרשאה</div>
-                  ) : null} */}
 
                 <div className="text-center">
                   <MDButton

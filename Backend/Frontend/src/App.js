@@ -68,12 +68,18 @@ import brandDark from "assets/images/hozlaLogo.png";
 import WebsiteLoader from "components/WebsiteLoader/WebsiteLoader";
 import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
+import SignIn from "layouts/authentication/sign-in";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
+import { signin, authenticate, isAuthenticated } from "auth/index";
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState(isAuthenticated());
+  const [isAdmin, setIsAdmin] = useState(!(user.admin === "0"));
+  console.log("User in App");
+  console.log(user);
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -167,6 +173,25 @@ export default function App() {
       </Icon>
     </MDBox>
   );
+  // for the user
+  useEffect(() => {
+    // setIsAdmin(() => {
+    //   if (user) {
+    //     if (user.admin !== "0") {
+    //       return true;
+    //     }
+    //   }
+    //   return false;
+    // });
+    setUser(isAuthenticated());
+    console.log("User in App useEffect function");
+    console.log(user.user);
+    if (user.user === "DoNotExist" || user.user === "undefined") {
+      return <Navigate to="/authentication/sign-in" />;
+    }
+    return <Navigate to="/" />;
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -187,7 +212,7 @@ export default function App() {
                   color={sidenavColor}
                   brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
                   brandName='הוצל"א'
-                  routes={isAdmin ? AdminRoutes : routes}
+                  routes={user.admin !== "0" ? AdminRoutes : routes}
                   onMouseEnter={handleOnMouseEnter}
                   onMouseLeave={handleOnMouseLeave}
                 />
@@ -196,10 +221,12 @@ export default function App() {
               </>
             )}
             {/* {layout === "vr" && <Configurator />} */}
-            {isAdmin ? (
+            {user.admin === "0" ? (
               <Routes>
                 {getRoutes(AdminRoutes)}
+                <Route path="/authentication/sign-in" element={<SignIn />} />
                 <Route path="/" element={<Navigate to="/AdminHome" />} />
+                {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
                 <Route path="/Error404" element={<Error404 />} />
                 {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
                 {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
@@ -214,7 +241,9 @@ export default function App() {
             ) : (
               <Routes>
                 {getRoutes(routes)}
+                <Route path="/authentication/sign-in" element={<SignIn />} />
                 <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
                 <Route path="/Error404" element={<Error404 />} />
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />

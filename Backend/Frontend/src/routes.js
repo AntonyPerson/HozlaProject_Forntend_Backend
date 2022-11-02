@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable spaced-comment */
 /* eslint-disable no-unused-vars */
 /**
@@ -113,14 +114,14 @@ const routes = [
   //   route: "/profile",
   //   component: <Profile />,
   // },
-  // {
-  //   type: "collapse",
-  //   name: "Sign In",
-  //   key: "sign-in",
-  //   icon: <Icon fontSize="small">login</Icon>,
-  //   route: "/authentication/sign-in",
-  //   component: <SignIn />,
-  // },
+  {
+    type: "collapse",
+    name: "Sign In",
+    key: "sign-in",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/sign-in",
+    component: <SignIn />,
+  },
   // {
   //   type: "collapse",
   //   name: "Sign Up",
@@ -138,22 +139,22 @@ const routes = [
     component: <AboutPage />,
   },
 
-  {
-    type: "collapse",
-    name: "SignIn",
-    key: "SignIn",
-    icon: <Icon fontSize="small">user</Icon>,
-    route: "/SignIn",
-    component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "SignUp",
-    key: "SignUp",
-    icon: <Icon fontSize="small">user</Icon>,
-    route: "/SignUp",
-    component: <SignUp />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "SignIn",
+  //   key: "SignIn",
+  //   icon: <Icon fontSize="small">user</Icon>,
+  //   route: "/SignIn",
+  //   component: <SignIn />,
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "SignUp",
+  //   key: "SignUp",
+  //   icon: <Icon fontSize="small">user</Icon>,
+  //   route: "/SignUp",
+  //   component: <SignUp />,
+  // },
   // {
   //   // type: "collapse",
   //   // name: "Error404",
