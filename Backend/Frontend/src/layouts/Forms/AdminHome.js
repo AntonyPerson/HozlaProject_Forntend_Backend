@@ -24,6 +24,7 @@ import {
   Col,
   Label,
 } from "reactstrap";
+import { Navigate, useParams } from "react-router-dom";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -56,6 +57,36 @@ function Dashboard() {
 
   const openInfoSB = () => setInfoSB(true);
   const closeInfoSB = () => setInfoSB(false);
+  const params = useParams();
+  const [formData, setFormData] = useState({});
+  const [errorDB, setErrorDB] = useState(false);
+  const [error404, setError404] = useState(false);
+
+  const [dates, setdates] = useState({});
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/AdminHome`)
+  //     .then((response) => {
+  //       // console.log(`the object data`);
+  //       console.log(response.data);
+  //       console.log(params.formID);
+
+  //       setFormData(response.data);
+  //       setdates({
+  //         workGivenDate: response.data.workGivenDate.split("T")[0],
+  //         workRecivedDate: response.data.workRecivedDate.split("T")[0],
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       console.log(error.code);
+  //       if (error.code === "ERR_BAD_REQUEST") {
+  //         setError404(true);
+  //       } else {
+  //         setErrorDB(true);
+  //       }
+  //     });
+  // }, []);
 
   // * data from database
   const dataFromDB = {

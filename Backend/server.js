@@ -37,6 +37,10 @@ mongoose
 const hozlaRequestsRouter = require("./routes/hozlaRequests");
 app.use("/hozlaRequests", hozlaRequestsRouter);
 
+// Hozla Requests routes for admin
+const hozlaAdminRequestsRouter = require("./routes/hozlaAdminRequests");
+app.use("/hozlaAdminRequests", hozlaAdminRequestsRouter);
+
 //user routes
 const authRoutes = require("./routes/authentication/auth");
 const userRoutes = require("./routes/authentication/users");

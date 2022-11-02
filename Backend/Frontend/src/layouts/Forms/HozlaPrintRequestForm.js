@@ -32,7 +32,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Upload } from "antd-upload";
 
 import {
-  Button,
+  // Button,
   Card,
   CardHeader,
   Container,
@@ -76,6 +76,7 @@ export default function HozlaPrintRequestForm() {
         }-0${currentDate.getDate()}`;
     }
   }
+  const [file, setFile] = useState(null);
   const [data, setData] = useState({
     work_id: "",
     unit: "",
@@ -101,31 +102,32 @@ export default function HozlaPrintRequestForm() {
     // role: "",
 
     files: [
-      {
-        id: 'gary',
-        name: 'Gary Goodspeed',
-        thumb: '/images/gary.png'
-      },
-      {
-        id: 'cato',
-        name: 'Little Cato',
-        thumb: '/images/cato.png'
-      },
-      {
-        id: 'kvn',
-        name: 'KVN',
-        thumb: '/images/kvn.png'
-      },
-      {
-        id: 'mooncake',
-        name: 'Mooncake',
-        thumb: '/images/mooncake.png'
-      },
-      {
-        id: 'quinn',
-        name: 'Quinn Ergon',
-        thumb: '/images/quinn.png'
-      }
+
+      // {
+      //   id: 'gary',
+      //   name: 'Gary Goodspeed',
+      //   thumb: '/images/gary.png'
+      // },
+      // {
+      //   id: 'cato',
+      //   name: 'Little Cato',
+      //   thumb: '/images/cato.png'
+      // },
+      // {
+      //   id: 'kvn',
+      //   name: 'KVN',
+      //   thumb: '/images/kvn.png'
+      // },
+      // {
+      //   id: 'mooncake',
+      //   name: 'Mooncake',
+      //   thumb: '/images/mooncake.png'
+      // },
+      // {
+      //   id: 'quinn',
+      //   name: 'Quinn Ergon',
+      //   thumb: '/images/quinn.png'
+      // }
     ],
 
     pageType: "A4",
@@ -161,6 +163,15 @@ export default function HozlaPrintRequestForm() {
   function handleChange(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
+  }
+  const onFilesChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setData({ ...data, [data.files]: e.target.result });
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
   const onSubmit = (event) => {
@@ -244,11 +255,11 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("לא צויין תאריך קבלת העבודה ");
       // toast.error(ErrorReason);
     }
-    if (data.files.length === 0) {
-      flag = false;
-      ErrorReason.push("קובץ לא הועלה");
-      // toast.error(ErrorReason);
-    }
+    // if (data.files.length === 0) {
+    //   flag = false;
+    //   ErrorReason.push("קובץ לא הועלה");
+    //   // toast.error(ErrorReason);
+    // }
 
     if (flag !== true) {
       ErrorReason.forEach((reason) => {
@@ -287,6 +298,7 @@ export default function HozlaPrintRequestForm() {
       pageType: data.pageType,
       ordernum: data.ordernum,
     };
+    console.log(requestData);
 
     axios
       .post(`http://localhost:5000/hozlaRequests/add`, requestData)
@@ -433,7 +445,9 @@ export default function HozlaPrintRequestForm() {
   );
 
   // ! try DND
-  const [characters, updateCharacters] = useState(data.files);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [characters, updateCharacters] = useState(selectedFile);
 
   function handleOnDragEnd(result) {
     if (!result.destination) return;
@@ -444,6 +458,13 @@ export default function HozlaPrintRequestForm() {
 
     updateCharacters(items);
   }
+
+
+  useEffect(() => {
+    if (selectedFile) {
+      setImageUrl(URL.createObjectURL(selectedFile));
+    }
+  }, [selectedFile]);
   // ! try DND
 
   const hozlaPrintRequestForm = () => (
@@ -676,52 +697,90 @@ export default function HozlaPrintRequestForm() {
                 </FormGroup>
 
                 <FormGroup row>
-                  {/* <Upload.Dragger multiple action='http://localhost:3000/requestForm'>
-                    <Button>upload</Button>
-                  </Upload.Dragger> */}
-
                   {/* <Label for="files">
                     <Button className="btn-new-blue">העלאה קובץ</Button>
                   </Label> */}
+
+                  {/* 
+                  // ! -input
+                  <input
+                    accept=".pdf"
+                    type="file"
+                    id="select-files"
+                    style={{ display: 'none' }}
+                    onChange={e => setSelectedFile(e.target.files[0])}
+                    multiple
+                  />
+                  <label htmlFor="select-files">
+                    <MDButton variant="contained" color="mekatnar" component="span">
+                      העלאת קובץ
+                    </MDButton>
+                  </label> 
+                  // ! -input
+                  */}
+
+
                   <Input
-                    onChange={handleChange}
+                    onChange={onFilesChange}
                     type="file"
                     accept=".pdf"
                     name="files"
-                    id="Files"
+                    id="group_image"
                     multiple
                   />
+
                   {data.files.length === 0 ? (
-                    <FormText color="muted">ניתן להעלאות רק קבצי PDF</FormText>
+                    <>
+                      <FormText color="muted">ניתן להעלאות רק קבצי PDF</FormText>
+
+                      {/*
+                      // ! Show img and file
+                       {imageUrl && selectedFile && (
+                        <MDBox mt={2} textAlign="center">
+                          <div>קבצים:</div>
+                          <img src={imageUrl} alt={selectedFile.name} height="100px" />
+                          <p>
+                            {selectedFile.name}
+                          </p>
+                        </MDBox>
+                      )} 
+                      // ! Show img and file
+                      */}
+
+                    </>
                   ) : (
-                    // <FormText hidden dir="ltr" color="muted">
-                    //   {data.files}
-                    // </FormText>
-                    <DragDropContext onDragEnd={handleOnDragEnd}>
-                      <Droppable droppableId="characters">
-                        {(provided) => (
-                          <ul className="characters" {...provided.droppableProps} ref={provided.innerRef}>
-                            {characters.map(({ id, name, thumb }, index) => {
-                              return (
-                                <Draggable key={id} draggableId={id} index={index}>
-                                  {(provided) => (
-                                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                      <div className="characters-thumb">
-                                        <img src={thumb} alt={`${name} Thumb`} />
-                                      </div>
-                                      <p>
-                                        {name}
-                                      </p>
-                                    </li>
-                                  )}
-                                </Draggable>
-                              );
-                            })}
-                            {provided.placeholder}
-                          </ul>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
+                    // <img src={data.files} alt="preview file" />
+                    <FormText hidden dir="ltr" color="muted">
+                      {data.files}
+                    </FormText>
+                    // ! DragANDDrop
+                    // <DragDropContext onDragEnd={handleOnDragEnd}>
+                    //   <Droppable droppableId="characters">
+                    //     {(provided) => (
+                    //       <ul {...provided.droppableProps} ref={provided.innerRef}>
+                    //         {characters.map(({ id, name, thumb }, index) => {
+                    //           return (
+                    //             <Draggable key={id} draggableId={id} index={index}>
+                    //               {(provided) => (
+                    //                 <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                    //                   <div>
+                    //                     <img src={thumb} alt={`${name} Thumb`} />
+                    //                   </div>
+                    //                   <p>
+                    //                     {name}
+                    //                   </p>
+                    //                 </li>
+                    //               )}
+                    //             </Draggable>
+                    //           );
+                    //         })}
+                    //         {provided.placeholder}
+                    //       </ul>
+                    //     )}
+                    //   </Droppable>
+                    // </DragDropContext>
+                    // <Label>eroor</Label>
+                    // ! DragANDDrop
                   )}
                 </FormGroup>
 

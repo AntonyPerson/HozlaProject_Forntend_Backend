@@ -188,7 +188,7 @@ export default function data() {
       { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
-      // { Header: "שם העבודה", accessor: "project", align: "center" },
+      { Header: "שם העבודה", accessor: "project", align: "center" },
       { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },

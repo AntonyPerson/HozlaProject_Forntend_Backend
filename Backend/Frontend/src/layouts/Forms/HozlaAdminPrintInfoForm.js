@@ -57,7 +57,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Material Dashboard 2 React Components
 import MDAlert from "components/MDAlert";
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal } from "@mui/material";
+import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal, TextField } from "@mui/material";
 import { CompressOutlined } from "@mui/icons-material";
 
 export default function HozlaPrintRequestForm() {
@@ -86,7 +86,7 @@ export default function HozlaPrintRequestForm() {
     numNoColourfulBeats: 0,
     sumColourfulPages: 0,
     sumNoColourfulPages: 0,
-    numPages: 0,
+    numPages: 1,
     twoSides: true,
 
     printColor: "color",
@@ -99,6 +99,7 @@ export default function HozlaPrintRequestForm() {
     loading: false,
     redirectToReferrer: false,
   });
+  // const [value, setValue] = React.useState('');
 
   const textPlaceHolderInputs = [
     "סה''כ דפים צבעוני:",
@@ -119,6 +120,14 @@ export default function HozlaPrintRequestForm() {
   function handleChangeCheckbox(evt) {
     // setData({ ...data, [evt.target.name]: evt.target.twoSides });
     setData({ twoSides: !data.twoSides });
+    if (data.twoSides === true) {
+      setData({ sumColourfulPages: Math.round(data.sumColourfulPages * 2) });
+      console.log(data.sumColourfulPages);
+    }
+    if (data.twoSides === false) {
+      setData({ sumColourfulPages: Math.round(data.sumColourfulPages / 2) });
+      console.log(data.sumColourfulPages);
+    }
     console.log(data.twoSides);
   };
 
@@ -179,7 +188,7 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("כמות הדפים לא צויינה ");
       //toast.error(ErrorReason);
     }
-    if (data.numColourfulBeats === 0 && data.numNoColourfulBeats === 0) {
+    if ((data.numColourfulBeats === 0 && data.numNoColourfulBeats === 0) === undefined) {
       if (data.numColourfulBeats === 0) {
         flag = false;
         ErrorReason.push("כמות הפעימות צבעוני לא צויינה ");
@@ -190,6 +199,7 @@ export default function HozlaPrintRequestForm() {
         ErrorReason.push("כמות הפעימות שחור לבן לא צויינה ");
         //toast.error(ErrorReason);
       }
+      console.log("undefined");
     }
 
     if (data.selected === "none" && data.selectedBW === "none") {
@@ -232,11 +242,12 @@ export default function HozlaPrintRequestForm() {
       successmsg: data.successmsg,
       loading: data.loading,
       redirectToReferrer: data.redirectToReferrer,
+      // value: value,
     };
     console.log(requestData);
 
     axios
-      .post(`http://localhost:5000/adminForm/:id`, requestData)
+      .post(`http://localhost:5000/hozlaAdminRequests/add`, requestData)
       .then((res) => {
         setData({
           ...data,
@@ -523,7 +534,7 @@ export default function HozlaPrintRequestForm() {
                     <Input
                       name="numPages"
                       type="number"
-                      min="0"
+                      min="1"
                       value={data.numPages}
                       onChange={handleChange}
                       required
@@ -572,7 +583,7 @@ export default function HozlaPrintRequestForm() {
                       >
                         <option value="A0">A0</option>
                         <option value="A3">A3</option>
-                        <option value="A4">A4</option>
+                        <option defaultChecked value="A4">A4</option>
                         <option value="A5">A5</option>
                         <option value="A6">A6</option>
                         <option value="A4b">A4 בריסטול</option>
@@ -581,6 +592,10 @@ export default function HozlaPrintRequestForm() {
                     </FormGroup>
                   )}
                 </FormGroup>
+                {/* <FormGroup>
+                  <Label for="הערות">הערות</Label>
+                  <Input multiline rows={5} onChange={v => setValue(v)} />
+                </FormGroup> */}
                 <div className="text-center">
                   <MDButton
                     color="mekatnar"
