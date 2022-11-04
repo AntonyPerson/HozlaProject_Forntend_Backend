@@ -4,36 +4,20 @@ const mongoose = require("mongoose");
 //user_cars is the cadr id that was used to conect to the computer when the order was made
 const HozlaAdminRequestSchema = new mongoose.Schema(
     {
-        user_card_number: String,
-        // unit: String,
-        // anaf: String,
-        // mador: String,
-        // phoneNumber: String,
-        // workName: String,
-        // workClearance: String,
-        // bindingType: String,
-        // bindingTypeOther: { type: String, default: "" },
-        // copyType: String,
-        // pageType: String,
-        // numOfCopyies: Number,
-        // fullNameAsker: String,
-        // workGivenDate: { type: Date, default: () => Date.now() },
-        // fullNameReciver: String,
-        // workRecivedDate: Date,
-        // files: [String],
-        status: { type: Number, default: 50 },
+        // user_card_number: String,
+        // status: { type: Number, default: 50 },
 
 
-        order_maker_card_number: String,
-
-        sumColourfulPages: Number,
-        sumNoColourfulPages: Number,
-        numPages: Number,
-        numColourfulBeats: Number,
-        numNoColourfulBeats: Number,
-        selected: String,
-        selectedBW: String,
-        twoSides: String,
+        // order_maker_card_number: String,
+        hozlaRequestID: String,
+        sumColourfulPages: { type: Number, default: 0 },
+        sumNoColourfulPages: { type: Number, default: 0 },
+        numPages: { type: Number, default: 1 },
+        numColourfulBeats: { type: Number, default: 0 },
+        numNoColourfulBeats: { type: Number, default: 0 },
+        selected: { type: String, default: 0 },
+        selectedBW: { type: String, default: 0 },
+        twoSides: { type: String, default: 0 },
     },
     { timestamps: true }
 );

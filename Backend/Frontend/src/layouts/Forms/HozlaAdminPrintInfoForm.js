@@ -29,9 +29,10 @@ import MDButton from "components/MDButton";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import ManagementHoztla from "layouts/tables/adminManagementTable";
 
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -61,33 +62,40 @@ import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal, TextField
 import { CompressOutlined } from "@mui/icons-material";
 
 export default function HozlaPrintRequestForm() {
-  const currentDate = new Date();
-  console.log(currentDate);
-  let dateString = "";
-  if (currentDate.getMonth() + 1 >= 10) {
-    if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
-        }-${currentDate.getDate()}`;
-    } else {
-      dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
-        }-0${currentDate.getDate()}`;
-    }
-  } else {
-    if (currentDate.getDate() >= 10) {
-      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
-        }-${currentDate.getDate()}`;
-    } else {
-      dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
-        }-0${currentDate.getDate()}`;
-    }
-  }
+
+  // const currentDate = new Date();
+  // console.log(currentDate);
+  // let dateString = "";
+  // if (currentDate.getMonth() + 1 >= 10) {
+  //   if (currentDate.getDate() >= 10) {
+  //     dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+  //       }-${currentDate.getDate()}`;
+  //   } else {
+  //     dateString = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+  //       }-0${currentDate.getDate()}`;
+  //   }
+  // } else {
+  //   if (currentDate.getDate() >= 10) {
+  //     dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+  //       }-${currentDate.getDate()}`;
+  //   } else {
+  //     dateString = `${currentDate.getFullYear()}-0${currentDate.getMonth() + 1
+  //       }-0${currentDate.getDate()}`;
+  //   }
+  // }
+
+  const params = useParams();
+
   const [data, setData] = useState({
+
+    hozlaRequestID: params.formID,
+
     numColourfulBeats: 0,
     numNoColourfulBeats: 0,
     sumColourfulPages: 0,
     sumNoColourfulPages: 0,
     numPages: 1,
-    twoSides: true,
+    twoSides: "true",
 
     printColor: "color",
     selected: "A4",
@@ -113,6 +121,41 @@ export default function HozlaPrintRequestForm() {
     "דו צדדי"
   ];
 
+  //takes the data drom the DB and gives inital values to the useState data, each time the page gets rendred/refreshed
+  useEffect(() => {
+    axios
+      // ! .get(`http://localhost:5000/hozlaAdminRequests/${params.formID}`)
+      .get(`http://localhost:5000/hozlaRequests/${params.formID}`)
+      .then((response) => {
+        // console.log(`the object data`);
+        console.log(response.data);
+        console.log(params.formID);
+        // console.log(params.workName);
+
+        setData(response.data);
+        setData({
+          ...data, errortype: "",
+          error: false,
+          successmsg: false,
+          loading: false,
+          redirectToReferrer: false,
+        });
+        // setdates({
+        //   workGivenDate: response.data.workGivenDate.split("T")[0],
+        //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
+        // });
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+        // if (error.code === "ERR_BAD_REQUEST") {
+        //   setError404(true);
+        // } else {
+        //   setErrorDB(true);
+        // }
+      });
+  }, []);
+
   function handleChange(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
@@ -121,11 +164,11 @@ export default function HozlaPrintRequestForm() {
     // setData({ ...data, [evt.target.name]: evt.target.twoSides });
     setData({ twoSides: !data.twoSides });
     if (data.twoSides === true) {
-      setData({ sumColourfulPages: Math.round(data.sumColourfulPages * 2) });
+      setData({ ...data, sumColourfulPages: Math.round(data.sumColourfulPages * 2) });
       console.log(data.sumColourfulPages);
     }
     if (data.twoSides === false) {
-      setData({ sumColourfulPages: Math.round(data.sumColourfulPages / 2) });
+      setData({ ...data, sumColourfulPages: Math.round(data.sumColourfulPages / 2) });
       console.log(data.sumColourfulPages);
     }
     console.log(data.twoSides);
@@ -133,25 +176,21 @@ export default function HozlaPrintRequestForm() {
 
   function handleChangeColourfulBeat(evt) {
     const { value } = evt.target;
-    setData({ ...data, [evt.target.name]: value });
-    setData({ sumColourfulPages: Math.round(value / 2) });
+    setData({ ...data, [evt.target.name]: value, sumColourfulPages: Math.round(value / 2) });
     // setData({ numPages: data.sumColourfulPages + data.sumNoColourfulPages });
   };
   function handleNoChangeColourfulBeat(evt) {
     const { value } = evt.target;
-    setData({ ...data, [evt.target.name]: value });
-    setData({ sumNoColourfulPages: Math.round(value / 2) });
+    setData({ ...data, [evt.target.name]: value, sumNoColourfulPages: Math.round(value / 2) });
   };
 
   function handleChangeColourfulPage(evt) {
     const { value } = evt.target;
-    setData({ ...data, [evt.target.name]: value });
-    setData({ numColourfulBeats: Math.round(value * 2) });
+    setData({ ...data, numColourfulBeats: Math.round(value * 2), [evt.target.name]: value });
   };
   function handleNoChangeColourfulPage(evt) {
     const { value } = evt.target;
-    setData({ ...data, [evt.target.name]: value });
-    setData({ numNoColourfulBeats: Math.round(value * 2) });
+    setData({ ...data, numNoColourfulBeats: Math.round(value * 2), [evt.target.name]: value });
   };
 
   const onSubmit = (event) => {
@@ -237,11 +276,11 @@ export default function HozlaPrintRequestForm() {
       selectedBW: data.selectedBW,
       twoSides: data.twoSides,
 
-      errortype: data.errortype,
-      error: data.error,
-      successmsg: data.successmsg,
-      loading: data.loading,
-      redirectToReferrer: data.redirectToReferrer,
+      // errortype: data.errortype,
+      // error: data.error,
+      // successmsg: data.successmsg,
+      // loading: data.loading,
+      // redirectToReferrer: data.redirectToReferrer,
       // value: value,
     };
     console.log(requestData);
@@ -317,7 +356,7 @@ export default function HozlaPrintRequestForm() {
 
         <DialogContent>
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            מספר אסמכתא: {data.work_id}
+            מספר אסמכתא:{/*  {data.work_id}*/} {params.formID}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
             <Link style={{ color: "white" }} to="/managementHoztla">
@@ -408,105 +447,57 @@ export default function HozlaPrintRequestForm() {
                 textAlign="center"
               >
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  טופס הוצל"א{" "}
+                  טופס הוצל"א
+                </MDTypography>
+                <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                  {params.formID}
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
                 שם העבודה{" "}
               </MDTypography>
               <Label>פרטים נוספים על ההדפסה</Label>
-              {/* <Link to={`/adminForm/${}`} key={hozla._id}>
-                                <MDButton
-                                    variant="gradient"
-                                    color="mekatnar"
-                                    // onClick={() => {
-                                    //   // setIsInfoPressed(true);
-                                    //   // setpressedID(hozla._id);
 
-                                    // }}
-                                    circular="true"
-                                    iconOnly="true"
-                                    size="medium"
-                                >
-                                    <Icon>info</Icon>
-                                </MDButton>
-                            </Link> */}
-              {/* <div className="text-center">
-                <MDButton
-                  color="mekatnar"
-                  size="large"
-                  // onClick={clickSubmit}
-                  className="btn-new-blue"
-                  type="submit"
-                >
-                  פתח קובץ
-                </MDButton>
-              </div> */}
-              {/* <FormGroup>
 
-                <FormControlLabel
-                  // name="twoSides"
-                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                  value={data.twoSides}
-                  control={<Checkbox
-                    defaultChecked
-                    sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                  />}
-                  labelPlacement="start"
-                />
-              </FormGroup> */}
-              {/* <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={data.twoSides}
-                      onChange={handleChangeCheckbox}
-                      name="twoSides"
-                    />
-                  }
-                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                  labelPlacement="start"
-                />
-              </FormGroup> */}
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      defaultChecked
-                      checked={data.checked}
-                      onChange={handleChangeCheckbox}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                  }
-                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                  labelPlacement="start"
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
-                <Input
-                  name="numColourfulBeats"
-                  type="number"
-                  min="0"
-                  value={data.numColourfulBeats}
-                  onChange={handleChangeColourfulBeat}
-                />
-                <MDTypography variant="body2" color="mekatnar">{data.numColourfulBeats} פעימות צבעוני</MDTypography>
-              </FormGroup>
-              <FormGroup>
-                <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
-                <Input
-                  name="numNoColourfulBeats"
-                  type="number"
-                  min="0"
-                  value={data.numNoColourfulBeats}
-                  onChange={handleNoChangeColourfulBeat}
-                />
-                <MDTypography variant="body2" color="mekatnar">{data.numNoColourfulBeats} פעימות שחור לבן</MDTypography>
-              </FormGroup>
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          defaultChecked
+                          // checked={data.twoSides}
+                          value={data.twoSides}
+                          onChange={handleChangeCheckbox}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      }
+                      label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                      labelPlacement="start"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
+                    <Input
+                      name="numColourfulBeats"
+                      type="number"
+                      min="0"
+                      value={data.numColourfulBeats}
+                      onChange={handleChangeColourfulBeat}
+                    />
+                    <MDTypography variant="body2" color="mekatnar">{data.numColourfulBeats} פעימות צבעוני</MDTypography>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
+                    <Input
+                      name="numNoColourfulBeats"
+                      type="number"
+                      min="0"
+                      value={data.numNoColourfulBeats}
+                      onChange={handleNoChangeColourfulBeat}
+                    />
+                    <MDTypography variant="body2" color="mekatnar">{data.numNoColourfulBeats} פעימות שחור לבן</MDTypography>
+                  </FormGroup>
                   <FormGroup>
                     <Label for="sumColourfulPages">{textPlaceHolderInputs[0]}</Label>
                     <Input
@@ -635,7 +626,7 @@ export default function HozlaPrintRequestForm() {
         {showError()}
         {showSuccess()}
         {showLoading()}
-        {NavigateUser()}
+        {/* {NavigateUser()} */}
 
         {hozlaAdminPrintInfoForm()}
       </MDBox>

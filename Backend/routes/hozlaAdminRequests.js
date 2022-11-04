@@ -3,6 +3,7 @@
 /* eslint-disable camelcase */
 
 const router = require("express").Router();
+const { request } = require("express");
 const HozlaAdminRequest = require("../models/hozlaAdminRequest.model");
 
 router.route("/").get((req, res) => {
@@ -30,10 +31,11 @@ router.route("/add").post((req, res) => {
     // const fullNameReciver = req.body.fullNameReciver;
     // const workRecivedDate = Date.parse(req.body.workRecivedDate);
     // const files = req.body.files;
-    const status = req.body.status;
-    const order_maker_card_number = req.body.order_maker_card_number;
+    // const status = req.body.status;
+    // const order_maker_card_number = req.body.order_maker_card_number;
 
     // admin
+    const hozlaRequestID = req.body.hozlaRequestID;
     const sumColourfulPages = req.body.sumColourfulPages;
     const sumNoColourfulPages = req.body.sumNoColourfulPages;
     const numPages = req.body.numPages;
@@ -63,10 +65,11 @@ router.route("/add").post((req, res) => {
         //   fullNameReciver,
         //   workRecivedDate,
         //   files,
-        status,
-        order_maker_card_number,
+        // status,
+        // order_maker_card_number,
 
         // admin
+        hozlaRequestID,
         sumColourfulPages,
         sumNoColourfulPages,
         numPages,
@@ -94,6 +97,13 @@ router.route("/:id").get((req, res) => {
 router.route("/:id").delete((req, res) => {
     HozlaAdminRequest.findByIdAndDelete(req.params.id)
         .then(() => res.json("HozlaRequest deleted."))
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/:hozlaRequestID").get((req, res) => {
+    HozlaAdminRequest.find({ hozlaRequestID: req.params.hozlaRequestID })
+        .exec()
+        .then((request) => res.json(request))
         .catch((err) => res.status(400).json("Error: " + err));
 });
 

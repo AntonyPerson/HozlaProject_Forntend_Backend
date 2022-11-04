@@ -63,30 +63,40 @@ function Dashboard() {
   const [error404, setError404] = useState(false);
 
   const [dates, setdates] = useState({});
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5000/AdminHome`)
-  //     .then((response) => {
-  //       // console.log(`the object data`);
-  //       console.log(response.data);
-  //       console.log(params.formID);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/AdminHome`)
+      .then((response) => {
+        // console.log(`the object data`);
+        console.log(response.data);
+        console.log(params.formID);
+        // console.log(params.numAccepted);
+        // console.log(params.numInPrint);
+        // console.log(params.numEnded);
+        // console.log(params.numReadyForTakeIn);
+        // console.log(params.sumBeatsToday);
+        // console.log(params.sumBeatsYear);
+        // console.log(params.sumPagesToday);
+        // console.log(params.sumPagesYear);
+        // console.log(params.anaf);
+        // console.log(params.sumPages);
 
-  //       setFormData(response.data);
-  //       setdates({
-  //         workGivenDate: response.data.workGivenDate.split("T")[0],
-  //         workRecivedDate: response.data.workRecivedDate.split("T")[0],
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       console.log(error.code);
-  //       if (error.code === "ERR_BAD_REQUEST") {
-  //         setError404(true);
-  //       } else {
-  //         setErrorDB(true);
-  //       }
-  //     });
-  // }, []);
+        setFormData(response.data);
+        // setdates({
+        //   workGivenDate: response.data.workGivenDate.split("T")[0],
+        //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
+        // });
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
+      });
+  }, []);
 
   // * data from database
   const dataFromDB = {

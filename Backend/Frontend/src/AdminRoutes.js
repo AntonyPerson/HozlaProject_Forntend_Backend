@@ -50,7 +50,7 @@ import SignUp from "layouts/authentication/sign-up";
 import ManagementHoztla from "layouts/tables/adminManagementTable";
 import AdminArchiveTable from "layouts/tables/adminArchiveTable";
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
-import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
+import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -94,11 +94,11 @@ const AdminRoutes = [
   },
   {
     type: "collapse",
-    name: "פרטים נוספים",
-    key: "adminFieldReuestFormDB",
+    name: "טופס מ db",
+    key: "adminFeild",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/adminFieldReuestFormDB",
-    component: <AdminFieldReuestFormDB />,
+    route: "/adminFeild",
+    component: <AdminFeildPrintInfoFormDB />,
   },
   {
     type: "collapse",
