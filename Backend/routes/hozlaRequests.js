@@ -30,7 +30,7 @@ router.route("/add").post((req, res) => {
   const workRecivedDate = Date.parse(req.body.workRecivedDate);
   const files = req.body.files;
   const status = req.body.status;
-  const order_maker_card_number = req.body.order_maker_card_number;
+  const personalnumber = req.body.personalnumber;
 
   const newHozlaRequest = new HozlaRequest({
     user_card_number,
@@ -51,7 +51,7 @@ router.route("/add").post((req, res) => {
     workRecivedDate,
     files,
     status,
-    order_maker_card_number,
+    personalnumber,
   });
   const formId = newHozlaRequest.save((err, form) => {
     if (err) {
@@ -68,10 +68,13 @@ router.route("/:id").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-//GET ALL HOZLA REQUESTS FOR THE A SPECIFICK USER
-router.route("/:personalnumber").get((req, res) => {
-  HozlaRequest.find({ personalnumber: req.params.personalnumber })
-    .exec()
+//! un clear error with the route of the request the request it self do work
+//TODO fix it
+router.route("/personalnumber/:personalnumber").get((req, res) => {
+  console.log(req.params.personalnumber);
+  // const personalnumber = req.params.personalnumber;
+  const personalnumber = "7654321";
+  HozlaRequest.find({ personalnumber: personalnumber })
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -103,7 +106,7 @@ router.route("/update/:id").post((req, res) => {
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       request.files = req.body.files;
       request.status = req.body.status;
-      request.order_maker_card_number = req.body.order_maker_card_number;
+      request.personalnumber = req.body.personalnumber;
 
       request
         .save()
@@ -111,6 +114,30 @@ router.route("/update/:id").post((req, res) => {
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/statusUpdate/:id").post((req, res) => {
+  // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+  // console.log(req.params.id);
+
+  HozlaRequest.findById(req.params.id)
+    .then((request) => {
+      // console.log(request.status);
+      request.status = Number(req.body.status);
+      // console.log(request.status);
+      // console.log(req.body.status);
+
+      request
+        .save()
+        .then(() => res.json("HozlaRequest status updated!"))
+        .catch((err) => {
+          // console.log(err);
+
+          res.status(400).json("Error: " + err);
+        });
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+  console.groupEnd();
 });
 
 module.exports = router;

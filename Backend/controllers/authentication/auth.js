@@ -24,7 +24,12 @@ exports.signin = (req, res) => {
   //find based on personalnumber
   const { personalnumber, password } = req.body;
   User.findOne(req.body.personalnumber, (err, user) => {
-    if (!user) {
+    console.log(
+      `The SignIn server function - personalnumber: ${personalnumber}`
+    );
+    console.log(`The SignIn server function - user:`);
+    // console.log(user);
+    if (!user || user === undefined) {
       return res.json({
         user: "DoNotExist", //"משתמש עם מספר אישי זה אינו קיים",
       });

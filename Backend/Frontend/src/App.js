@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable react/jsx-no-useless-fragment */
@@ -73,6 +74,7 @@ import SignIn from "layouts/authentication/sign-in";
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 import { signin, authenticate, isAuthenticated } from "auth/index";
+import sidenav from "assets/theme/components/sidenav";
 
 export default function App() {
   const [user, setUser] = useState(isAuthenticated());
@@ -184,8 +186,9 @@ export default function App() {
     //   return false;
     // });
     setUser(isAuthenticated());
-    console.log("User in App useEffect function");
+    console.groupCollapsed("User in App useEffect function");
     console.log(user.user);
+    console.groupEnd();
     if (user.user === "DoNotExist" || user.user === "undefined") {
       return <Navigate to="/authentication/sign-in" />;
     }
@@ -206,49 +209,76 @@ export default function App() {
         <CacheProvider value={rtlCache}>
           <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
             <CssBaseline />
-            {layout === "dashboard" && (
+            {layout === "dashboard" && user.user !== undefined ? (
               <>
+                {console.groupCollapsed("Before the sidenav routing init - function")}
+                {console.log(user.user)}
+                {console.log(user.user.admin)}
+                {console.log(user.user.admin !== "0")}
+                {console.log(user.user.admin !== "0" ? AdminRoutes : routes)}
+                {console.groupEnd()}
+                {console.log("inside the sidenav")}
                 <Sidenav
                   color={sidenavColor}
                   brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
                   brandName='הוצל"א'
-                  routes={user.admin !== "0" ? AdminRoutes : routes}
+                  routes={user.user.admin !== "0" ? AdminRoutes : routes}
                   onMouseEnter={handleOnMouseEnter}
                   onMouseLeave={handleOnMouseLeave}
                 />
                 <Configurator />
                 {configsButton}
               </>
+            ) : (
+              console.log("NOT - inside the sidenav becouse user is not undefined")
             )}
             {/* {layout === "vr" && <Configurator />} */}
-            {user.admin === "0" ? (
-              <Routes>
-                {getRoutes(AdminRoutes)}
-                <Route path="/authentication/sign-in" element={<SignIn />} />
-                <Route path="/" element={<Navigate to="/AdminHome" />} />
-                {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
-                <Route path="/Error404" element={<Error404 />} />
-                {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
-                {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
-                <Route path="/RequestForm">
-                  <Route path=":formID" element={<FieldReuestFormDB />} />
-                </Route>
-                <Route path="/adminForm">
-                  <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
-                </Route>
-                <Route path="*" element={<Error404 />} />
-              </Routes>
+            {user.user !== undefined ? (
+              user.user.admin === "1" || user.user.admin === "2" ? (
+                <Routes>
+                  {getRoutes(AdminRoutes)}
+                  <Route
+                    path="/authentication/sign-in"
+                    render={() => getRoutes(AdminRoutes)}
+                    element={<SignIn />}
+                  />
+                  <Route path="/" element={<Navigate to="/AdminHome" />} />
+                  {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+                  <Route path="/Error404" element={<Error404 />} />
+                  {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
+                  {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
+                  <Route path="/RequestForm">
+                    <Route path=":formID" element={<FieldReuestFormDB />} />
+                  </Route>
+                  <Route path="/adminForm">
+                    <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
+                  </Route>
+                  <Route path="*" element={<Error404 />} />
+                </Routes>
+              ) : (
+                <Routes>
+                  {getRoutes(routes)}
+                  <Route
+                    path="/authentication/sign-in"
+                    render={() => getRoutes(AdminRoutes)}
+                    element={<SignIn />}
+                  />
+                  <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                  {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+                  <Route path="/Error404" element={<Error404 />} />
+                  <Route path="/RequestForm">
+                    <Route path=":formID" element={<FieldReuestFormDB />} />
+                  </Route>
+                  <Route path="*" element={<Error404 />} />
+                </Routes>
+              )
             ) : (
               <Routes>
-                {getRoutes(routes)}
                 <Route path="/authentication/sign-in" element={<SignIn />} />
-                <Route path="/" element={<Navigate to="/userRequestsTable" />} />
-                {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
-                <Route path="/Error404" element={<Error404 />} />
-                <Route path="/RequestForm">
-                  <Route path=":formID" element={<FieldReuestFormDB />} />
-                </Route>
-                <Route path="*" element={<Error404 />} />
+                {/* <Route path="/Error404" element={<Error404 />} /> */}
+                <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+                <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
+                {/* <Route path="*" element={<Navigate to="/Error404" />} /> */}
               </Routes>
             )}
           </ThemeProvider>

@@ -9,7 +9,7 @@ const {
   getallMultipleFiles,
   downloadFile,
 //   downloadFilePikod,
-} = require("../../controllers/fileuploader/fileuploader");
+} = require("../../controllers/fileuploader100/fileuploader");
 
 router.post("/singleFile", upload.single("file"), singleFileUpload);
 router.post("/multipleFiles", upload.array("files"), multipleFileUpload);

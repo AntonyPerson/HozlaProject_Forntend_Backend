@@ -39,8 +39,8 @@ mongoose
   app.use("/api", userRoutes);
 
 //* file uploader Routes
-const fileuploaderRoutes = require("./routes/fileuploader/fileuploader");
-app.use('/api',fileuploaderRoutes)
+// const fileuploaderRoutes = require("./routes/fileuploader100/fileuploader");
+// app.use('/api',fileuploaderRoutes)
 
 //Hozla Requests routes for Client
 const hozlaRequestsRouter = require("./routes/hozlaRequests");

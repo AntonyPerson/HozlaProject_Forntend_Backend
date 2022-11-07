@@ -58,6 +58,12 @@ import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal } from "@m
 // for file upload from Data
 import { singleFileUpload } from "Data/api";
 
+// user and auth import
+import { signin, authenticate, isAuthenticated } from "auth/index";
+const { user } = isAuthenticated();
+console.log("Hozla Print Request Form");
+console.log(user);
+
 export default function HozlaPrintRequestForm() {
   const currentDate = new Date();
   console.log(currentDate);
@@ -103,7 +109,7 @@ export default function HozlaPrintRequestForm() {
     fullNameReciver: "",
     workRecivedDate: "",
 
-    personalnumber: "",
+    personalnumber: user.personalnumber,
     // role: "",
 
     files: [],
@@ -213,7 +219,7 @@ export default function HozlaPrintRequestForm() {
     //   // toast.error(ErrorReason);
     // }
 
-    if (Date.parse(data.workRecivedDate) < currentDate) {
+    if (Date.parse(data.workRecivedDate) <= currentDate) {
       flag = false;
       ErrorReason.push("תאריך קבלת העבודה לא תיקני");
       // toast.error(ErrorReason);
@@ -248,19 +254,24 @@ export default function HozlaPrintRequestForm() {
       unit: data.unit,
       anaf: data.anaf,
       mador: data.mador,
-      phoneNumber: data.phoneNumber,
+
       workName: data.workName,
       workClearance: data.workClearance,
       bindingType: data.bindingType,
       bindingTypeOther: data.bindingTypeOther,
       copyType: data.copyType,
       numOfCopyies: data.numOfCopyies,
+
+      phoneNumber: data.phoneNumber,
       fullNameAsker: data.fullNameAsker,
       workGivenDate: data.workGivenDate,
+
       fullNameReciver: data.fullNameReciver,
       workRecivedDate: data.workRecivedDate,
+
       personalnumber: data.personalnumber,
       // role: data.role,
+
       files: data.files,
       pageType: data.pageType,
       ordernum: data.ordernum,

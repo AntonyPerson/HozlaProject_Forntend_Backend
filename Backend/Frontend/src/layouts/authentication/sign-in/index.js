@@ -55,7 +55,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/book-bg-image.jpg";
 
-import { signin, authenticate, isAuthenticated } from "auth/index";
+import { signin, signout, authenticate, isAuthenticated } from "auth/index";
 import { CompressOutlined } from "@mui/icons-material";
 
 function signIn() {
@@ -236,8 +236,20 @@ function signIn() {
     axios
       .post(`http://localhost:5000/api/signup`, newUser)
       .then((res) => {
-        console.log(`gotten new user from sign up ${res.data}`);
-        authenticate(res.data);
+        console.log(`gotten new user from sign up`);
+        console.log(`${res.data}`);
+        axios
+          .post(`http://localhost:5000/api/signin`, res.data.personalnumber)
+          .then((r) => {
+            authenticate(r.data);
+            setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // authenticate(res.data);
+        // setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
       })
       .catch((error) => {
         console.log(error);
@@ -247,19 +259,38 @@ function signIn() {
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, loading: true, successmsg: false, error: false });
-    const personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
-    console.log(personalnumber);
+    console.groupCollapsed("in the onSubmit function");
     console.log(event.target.id);
+    console.log(event.target.id === "MangerDemo");
+    console.log(event.target.id === "MangerDemo" ? "1234567" : "7654321");
+    // eslint-disable-next-line prefer-const
+    let personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
+    // setValues({
+    //   ...values,
+    //   personalnumber: t,
+    // });
+    // console.log(values);
+
+    // console.log(values.personalnumber);
+    console.log(personalnumber);
 
     axios
       .post(`http://localhost:5000/api/signin`, personalnumber)
       .then((res) => {
-        console.log("in the onSubmit");
+        console.groupCollapsed("in the axios of the onSubmit");
+        console.log("http://localhost:5000/api/signin");
+        console.group();
         console.log(res.data);
         console.log(res.data.user);
-        if (res.data.user === "DoNotExist") {
+        console.groupEnd();
+
+        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
+          console.groupCollapsed("inside the user creation if");
           if (Demo) {
+            // signout();
+            console.log(`personalnumber === "1234567" ${personalnumber === "1234567"}`);
             if (personalnumber === "1234567") {
+              console.log(`${personalnumber} in the MangerDemo`);
               setSignUpData({
                 ...signUpData,
                 firstName: "אנטוני",
@@ -273,6 +304,7 @@ function signIn() {
                 email: "sS@gmail.com",
               });
             } else if (personalnumber === "7654321") {
+              console.log(`${personalnumber} in the ClientDemo`);
               setSignUpData({
                 ...signUpData,
                 firstName: "דביר",
@@ -286,11 +318,16 @@ function signIn() {
                 email: "qQ@gmail.com",
               });
             }
+            console.groupEnd();
+            console.log(signUpData);
+            SignUp();
+            console.groupEnd();
           }
-          SignUp();
+        } else {
+          authenticate(res.data);
+          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
         }
-        authenticate(res.data);
-        setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+        //! the realod
         window.location.reload(false);
       })
       .catch((error) => {
@@ -298,6 +335,7 @@ function signIn() {
         setValues({ ...values, errortype: error.error, loading: false });
         console.log(error);
       });
+    console.groupEnd();
   };
 
   // hoger

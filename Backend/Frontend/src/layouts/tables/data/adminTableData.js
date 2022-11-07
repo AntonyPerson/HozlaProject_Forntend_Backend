@@ -105,15 +105,18 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "התקבלה";
+      stutus = "נשלח להוצלא";
       color = "error";
     } else if (value === 50) {
-      stutus = "בהדפסה";
+      stutus = "התקבל במערכת";
       color = "mekatnar";
     } else if (value === 75) {
-      stutus = "הסתיימה";
+      stutus = "בהדפסה";
       color = "mekatnar";
     } else if (value === 100) {
+      stutus = "מוכן לאיסוף";
+      color = "success";
+    } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
     }
@@ -137,7 +140,11 @@ export default function data() {
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
           {getWorkStuts(hozla.status)[0]}
         </MDTypography>
-        <Progress variant="gradient" color={getWorkStuts(hozla.status)[1]} value={hozla.status} />
+        <Progress
+          variant="gradient"
+          color={getWorkStuts(hozla.status)[1]}
+          value={hozla.status === 125 ? 100 : hozla.status}
+        />
       </>
     ),
     NameRequester: hozla.fullNameAsker,
