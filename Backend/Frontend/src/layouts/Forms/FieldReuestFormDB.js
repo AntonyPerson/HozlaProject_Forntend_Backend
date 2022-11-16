@@ -64,6 +64,7 @@ const textPlaceHolderInputs = [
   "קובץ להדפסה",
   "סוג דף",
   "תאריך קבלת העבודה",
+  "עדכון סטטוס",
 ];
 const FieldReuestFormDB = () => {
   const params = useParams();
@@ -150,6 +151,9 @@ const FieldReuestFormDB = () => {
     } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
 
     return [stutus, color];
@@ -190,6 +194,7 @@ const FieldReuestFormDB = () => {
       <MDTypography variant="caption" color={color} fontWeight="medium">
         {value}%
       </MDTypography>
+
       <MDBox ml={0.5} width="60rem">
         <MDProgress variant="gradient" color={color} value={value} />
       </MDBox>
@@ -229,12 +234,12 @@ const FieldReuestFormDB = () => {
                   <Progress
                     variant="gradient"
                     color={getWorkStuts(formData.status)[1]}
-                    value={formData.status}
+                    value={formData.status >= 125 ? 100 : formData.formData}
                   />
                 </>
               ) : (
                 <FormGroup>
-                  <Label for="workClearance">{textPlaceHolderInputs[5]}</Label>
+                  <Label for="workClearance">{textPlaceHolderInputs[15]}</Label>
                   <Input
                     // placeholder={textPlaceHolderInputs[5]}
                     name="workClearance"
@@ -250,6 +255,7 @@ const FieldReuestFormDB = () => {
                     <option value="75">בהדפסה</option>
                     <option value="100">מוכן לאיסוף</option>
                     <option value="125">נאסף</option>
+                    <option value="150">העבודה נדחתה</option>
                   </Input>
                 </FormGroup>
               )}

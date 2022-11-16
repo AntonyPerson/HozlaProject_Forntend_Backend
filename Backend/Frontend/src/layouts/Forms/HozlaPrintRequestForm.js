@@ -511,7 +511,7 @@ export default function HozlaPrintRequestForm() {
                       </option>
                       <option value="0">בלמ"ס</option>
                       <option value="2">סודי</option>
-                      <option value="3">סודי ביותר</option>
+                      {/* <option value="3">סודי ביותר</option> */}
                     </Input>
                   </FormGroup>
                 </FormGroup>

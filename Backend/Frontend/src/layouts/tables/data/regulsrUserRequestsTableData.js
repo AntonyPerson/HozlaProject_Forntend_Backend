@@ -97,8 +97,11 @@ export default function data() {
   //     });
   // }, []);
   useEffect(() => {
+    console.log(user.personalnumber);
     axios
-      .get(`http://localhost:5000/hozlaRequests/`)
+      .get(`http://localhost:5000/hozlaRequests/requestByPersonalnumber`, {
+        params: { personalnumber: user.personalnumber },
+      })
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
@@ -121,7 +124,7 @@ export default function data() {
 
   // const projectOptions = ["א", "ב", "ג", "ד", "ה", "ו"];
   const getWorkStuts = (value) => {
-    let stutus = "נשלח";
+    let stutus = "נשלח להוצלא";
     let color = "error";
     if (value === 25) {
       stutus = "נשלח להוצלא";
@@ -138,6 +141,9 @@ export default function data() {
     } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
     return [stutus, color];
   };
@@ -157,7 +163,7 @@ export default function data() {
         <Progress
           variant="gradient"
           color={getWorkStuts(hozla.status)[1]}
-          value={hozla.status === 125 ? 100 : hozla.status}
+          value={hozla.status >= 125 ? 100 : hozla.status}
         />
       </>
     ),

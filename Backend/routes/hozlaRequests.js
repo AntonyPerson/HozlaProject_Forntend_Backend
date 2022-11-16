@@ -11,6 +11,22 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/activeRequests").get((req, res) => {
+  HozlaRequest.find({ status: { $lte: 100 } })
+    .sort({ status: 1, createdAt: -1 })
+    .exec()
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/archivedRequests").get((req, res) => {
+  HozlaRequest.find({ status: { $gte: 125 } })
+    .sort({ status: 1, createdAt: -1 })
+    .exec()
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/add").post((req, res) => {
   const user_card_number = req.body.user_card_number;
   const unit = req.body.unit;
@@ -61,20 +77,20 @@ router.route("/add").post((req, res) => {
     }
   });
 });
-
-router.route("/:id").get((req, res) => {
-  HozlaRequest.findById(req.params.id)
+//! un clear error with the route of the request the request it self do work and parham and body empty
+//TODO fix it
+router.route("/requestByPersonalnumber").get((req, res) => {
+  console.log(req.body);
+  console.log(req.params);
+  // const personalnumber = req.params.personalnumber;
+  const personalnumber = "7654321";
+  HozlaRequest.find({ personalnumber: personalnumber })
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-//! un clear error with the route of the request the request it self do work
-//TODO fix it
-router.route("/personalnumber/:personalnumber").get((req, res) => {
-  console.log(req.params.personalnumber);
-  // const personalnumber = req.params.personalnumber;
-  const personalnumber = "7654321";
-  HozlaRequest.find({ personalnumber: personalnumber })
+router.route("/:id").get((req, res) => {
+  HozlaRequest.findById(req.params.id)
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -126,7 +142,9 @@ router.route("/statusUpdate/:id").post((req, res) => {
       request.status = Number(req.body.status);
       // console.log(request.status);
       // console.log(req.body.status);
-
+      if (req.body.status >= 125) {
+        request.files = [];
+      }
       request
         .save()
         .then(() => res.json("HozlaRequest status updated!"))
