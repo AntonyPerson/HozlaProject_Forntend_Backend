@@ -77,13 +77,12 @@ router.route("/add").post((req, res) => {
     }
   });
 });
-//! un clear error with the route of the request the request it self do work and parham and body empty
-//TODO fix it
-router.route("/requestByPersonalnumber").get((req, res) => {
-  console.log(req.body);
-  console.log(req.params);
-  // const personalnumber = req.params.personalnumber;
-  const personalnumber = "7654321";
+
+router.route("/requestByPersonalnumber/:personalnumber").get((req, res) => {
+  // console.log(req.body);
+  // console.log(req.params);
+  const personalnumber = req.params.personalnumber;
+  // const personalnumber = "7654321";
   HozlaRequest.find({ personalnumber: personalnumber })
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));

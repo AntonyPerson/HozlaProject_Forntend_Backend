@@ -99,9 +99,7 @@ export default function data() {
   useEffect(() => {
     console.log(user.personalnumber);
     axios
-      .get(`http://localhost:5000/hozlaRequests/requestByPersonalnumber`, {
-        params: { personalnumber: user.personalnumber },
-      })
+      .get(`http://localhost:5000/hozlaRequests/requestByPersonalnumber/${user.personalnumber}`)
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
