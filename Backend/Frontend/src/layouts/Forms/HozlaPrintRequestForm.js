@@ -61,8 +61,8 @@ import { singleFileUpload } from "Data/api";
 // user and auth import
 import { signin, authenticate, isAuthenticated } from "auth/index";
 const { user } = isAuthenticated();
-console.log("Hozla Print Request Form");
-console.log(user);
+// console.log("Hozla Print Request Form");
+// console.log(user);
 
 export default function HozlaPrintRequestForm() {
   const currentDate = new Date();

@@ -51,8 +51,9 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
-import routes from "routes";
-import AdminRoutes from "AdminRoutes";
+import routes from "routes/userRoutes";
+import AdminRoutes from "routes/AdminRoutes";
+import ToraHailitAdminRoutes from "routes/ToraHailitAdminRoutes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -79,8 +80,8 @@ import sidenav from "assets/theme/components/sidenav";
 export default function App() {
   const [user, setUser] = useState(isAuthenticated());
   const [isAdmin, setIsAdmin] = useState(!(user.admin === "0"));
-  console.log("User in App");
-  console.log(user);
+  // console.log("User in App");
+  // console.log(user);
 
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -186,9 +187,9 @@ export default function App() {
     //   return false;
     // });
     setUser(isAuthenticated());
-    console.groupCollapsed("User in App useEffect function");
-    console.log(user.user);
-    console.groupEnd();
+    // console.groupCollapsed("User in App useEffect function");
+    // console.log(user.user);
+    // console.groupEnd();
     if (user.user === "DoNotExist" || user.user === "undefined") {
       return <Navigate to="/authentication/sign-in" />;
     }
@@ -211,13 +212,13 @@ export default function App() {
             <CssBaseline />
             {layout === "dashboard" && user.user !== undefined ? (
               <>
-                {console.groupCollapsed("Before the sidenav routing init - function")}
-                {console.log(user.user)}
-                {console.log(user.user.admin)}
-                {console.log(user.user.admin !== "0")}
-                {console.log(user.user.admin !== "0" ? AdminRoutes : routes)}
-                {console.groupEnd()}
-                {console.log("inside the sidenav")}
+                {/* {console.groupCollapsed("Before the sidenav routing init - function")} */}
+                {/* {console.log(user.user)} */}
+                {/* {console.log(user.user.admin)} */}
+                {/* {console.log(user.user.admin !== "0")} */}
+                {/* {console.log(user.user.admin !== "0" ? AdminRoutes : routes)} */}
+                {/* {console.groupEnd()} */}
+                {/* {console.log("inside the sidenav")} */}
                 <Sidenav
                   color={sidenavColor}
                   brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
@@ -229,9 +230,7 @@ export default function App() {
                 <Configurator />
                 {configsButton}
               </>
-            ) : (
-              console.log("NOT - inside the sidenav becouse user is not undefined")
-            )}
+            ) : null}
             {/* {layout === "vr" && <Configurator />} */}
             {user.user !== undefined ? (
               user.user.admin === "1" || user.user.admin === "2" ? (

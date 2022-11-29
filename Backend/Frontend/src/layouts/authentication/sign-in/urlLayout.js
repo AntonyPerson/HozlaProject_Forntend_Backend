@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable spaced-comment */
 /* eslint-disable consistent-return */
 /* eslint-disable react/function-component-definition */
@@ -6,7 +7,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 /* eslint-disable react/jsx-curly-brace-presence */
-/* eslint-disable no-unused-vars */
 /**
 =========================================================
 * Material Dashboard 2 React - v2.1.0
@@ -21,10 +21,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-//! In the demo mode there is a problem with the buttons, you need to prees twice. once for a user creaton and then to login.
-//! i bellive the window.location.reload(false) has some thing to do with that or somthing is not being updated when it should.
-//! mayb with the card login that bug will not excict, can be only check when the server code will be given.
-
+//! The url Style that benny has request for the loggin.
 import React, { useState, useEffect } from "react";
 
 // react-router-dom components
@@ -88,7 +85,7 @@ function signIn() {
     email: "",
     holzlaRequest: [],
   });
-  const [Demo, setDemo] = useState(true);
+  //   const [Demo, setDemo] = useState(true);
   // const { personalnumber, password } = values;
 
   const handleChange = (name) => (event) => {
@@ -394,115 +391,6 @@ function signIn() {
         }
       });
   };
-
-  const signInForm = () => (
-    <BasicLayout image={bgImage}>
-      <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="mekatnar"
-          borderRadius="lg"
-          coloredShadow="mekatnar"
-          mx={2}
-          mt={-3}
-          p={2}
-          pb={5}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            {Demo ? 'התחברות למערכת הוצל"א דמו' : 'התחברות למערכת הוצל"א'}
-          </MDTypography>
-          {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid> */}
-        </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox>
-            {Demo ? (
-              <>
-                <MDBox pb={3}>
-                  <MDButton
-                    id="MangerDemo"
-                    type="submit"
-                    variant="gradient"
-                    color="mekatnar"
-                    fullWidth
-                    onClick={onSubmit}
-                  >
-                    התחברות כמנהל
-                  </MDButton>
-                </MDBox>
-                <MDBox>
-                  <MDButton
-                    id="ClientDemo"
-                    type="submit"
-                    variant="gradient"
-                    color="mekatnar"
-                    onClick={onSubmit}
-                    fullWidth
-                  >
-                    התחברות לקוח
-                  </MDButton>
-                </MDBox>
-              </>
-            ) : (
-              <MDTypography variant="h3" color="mekatnar" textGradient>
-                {'על מנת להתחבר למערכת הוצל"א. אנא הכנס חוגר'}
-              </MDTypography>
-            )}
-
-            {/* <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox> */}
-            {/* <MDBox mt={4} mb={1}>
-              <MDButton type="submit" variant="gradient" color="mekatnar" fullWidth>
-                התחברות
-              </MDButton>
-            </MDBox> */}
-            {/* <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                עוד לא נרשמתה?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-up"
-                  variant="button"
-                  color="mekatnar"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  לחץ כאן
-                </MDTypography>
-              </MDTypography>
-            </MDBox> */}
-          </MDBox>
-        </MDBox>
-      </Card>
-    </BasicLayout>
-  );
 
   return (
     <>
