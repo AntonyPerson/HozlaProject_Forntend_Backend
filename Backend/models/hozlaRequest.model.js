@@ -20,7 +20,7 @@ const HozlaRequestSchema = new mongoose.Schema(
     workGivenDate: { type: Date, default: () => Date.now() },
     fullNameReciver: String,
     workRecivedDate: Date,
-    files: [String],
+    files_id: { type: String, default: "" },
     status: { type: Number, default: 25 },
     order_maker_card_number: String,
   },

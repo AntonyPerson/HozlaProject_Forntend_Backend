@@ -18,6 +18,7 @@
 import Icon from "@mui/material/Icon";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Popup from "reactjs-popup";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -89,13 +90,14 @@ export default function HozlaPrintRequestForm() {
   const [data, setData] = useState({
 
     hozlaRequestID: params.formID,
+    workName: params.workName,
 
     numColourfulBeats: 0,
     numNoColourfulBeats: 0,
     sumColourfulPages: 0,
     sumNoColourfulPages: 0,
     numPages: 1,
-    twoSides: "true",
+    twoSides: false,
 
     printColor: "color",
     selected: "A4",
@@ -162,16 +164,25 @@ export default function HozlaPrintRequestForm() {
   };
   function handleChangeCheckbox(evt) {
     // setData({ ...data, [evt.target.name]: evt.target.twoSides });
-    setData({ twoSides: !data.twoSides });
+    // setData({ ...data, twoSides: !data.twoSides });
     if (data.twoSides === true) {
-      setData({ ...data, sumColourfulPages: Math.round(data.sumColourfulPages * 2) });
-      console.log(data.sumColourfulPages);
+      setData({
+        ...data, twoSides: false,
+        sumColourfulPages: Math.round(data.sumColourfulPages * 2),
+        numColourfulBeats: Math.round(data.numColourfulBeats * 2),
+        sumNoColourfulPages: Math.round(data.sumNoColourfulPages * 2),
+        numNoColourfulBeats: Math.round(data.numNoColourfulBeats * 2)
+      });
     }
-    if (data.twoSides === false) {
-      setData({ ...data, sumColourfulPages: Math.round(data.sumColourfulPages / 2) });
-      console.log(data.sumColourfulPages);
+    else {
+      setData({
+        ...data, twoSides: true,
+        sumColourfulPages: Math.round(data.sumColourfulPages / 2),
+        numColourfulBeats: Math.round(data.numColourfulBeats / 2),
+        sumNoColourfulPages: Math.round(data.sumNoColourfulPages / 2),
+        numNoColourfulBeats: Math.round(data.numNoColourfulBeats / 2)
+      });
     }
-    console.log(data.twoSides);
   };
 
   function handleChangeColourfulBeat(evt) {
@@ -275,6 +286,8 @@ export default function HozlaPrintRequestForm() {
       selected: data.selected,
       selectedBW: data.selectedBW,
       twoSides: data.twoSides,
+      hozlaRequestID: params.formID,
+      workName: params.workName,
 
       // errortype: data.errortype,
       // error: data.error,
@@ -465,7 +478,7 @@ export default function HozlaPrintRequestForm() {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          defaultChecked
+                          // defaultChecked
                           // checked={data.twoSides}
                           value={data.twoSides}
                           onChange={handleChangeCheckbox}
@@ -485,7 +498,6 @@ export default function HozlaPrintRequestForm() {
                       value={data.numColourfulBeats}
                       onChange={handleChangeColourfulBeat}
                     />
-                    <MDTypography variant="body2" color="mekatnar">{data.numColourfulBeats} פעימות צבעוני</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="numNoColourfulBeats">{textPlaceHolderInputs[4]}</Label>
@@ -496,7 +508,6 @@ export default function HozlaPrintRequestForm() {
                       value={data.numNoColourfulBeats}
                       onChange={handleNoChangeColourfulBeat}
                     />
-                    <MDTypography variant="body2" color="mekatnar">{data.numNoColourfulBeats} פעימות שחור לבן</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="sumColourfulPages">{textPlaceHolderInputs[0]}</Label>
@@ -507,7 +518,6 @@ export default function HozlaPrintRequestForm() {
                       value={data.sumColourfulPages}
                       onChange={handleChangeColourfulPage}
                     />
-                    <MDTypography variant="body2" color="mekatnar">{data.sumColourfulPages} דפים צבעוניים</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="sumNoColourfulPages">{textPlaceHolderInputs[1]}</Label>
@@ -518,7 +528,6 @@ export default function HozlaPrintRequestForm() {
                       value={data.sumNoColourfulPages}
                       onChange={handleNoChangeColourfulPage}
                     />
-                    <MDTypography variant="body2" color="mekatnar">{data.sumNoColourfulPages} דפים שחור לבן</MDTypography>
                   </FormGroup>
                   <FormGroup>
                     <Label for="numPages">{textPlaceHolderInputs[2]}</Label>
@@ -531,7 +540,6 @@ export default function HozlaPrintRequestForm() {
                       required
                     />
                   </FormGroup>
-
                   <FormGroup>
                     <Label for="printColor">{textPlaceHolderInputs[7]}</Label>
                     <Input
@@ -544,7 +552,6 @@ export default function HozlaPrintRequestForm() {
                       <option value="color">צבע</option>
                     </Input>
                   </FormGroup>
-
                   {data.printColor === "bw" ? (
                     <FormGroup>
                       <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
@@ -554,14 +561,22 @@ export default function HozlaPrintRequestForm() {
                         value={data.selectedBW}
                         onChange={handleChange}
                       >
+                        {/* <option value="A0BW">(84.1 x 118.9 cm) A0</option>
+                        <option value="A3BW">(29.7 x 42 cm) A3</option>
+                        <option value="A4BW">(21 x 29.7 cm) A4</option>
+                        <option value="A5BW">(14.85 x 21cm) A5</option>
+                        <option value="A6BW">(10.5 x 14.85 cm) A6</option>
+                        <option value="BWA4">(21 x 29.7 cm) A4 בריסטול</option>
+                        <option value="BWA3">(29.7 x 42 cm) A3 בריסטול</option> */}
                         <option value="A0BW">A0</option>
                         <option value="A3BW">A3</option>
-                        <option value="A4BW">A4</option>
+                        <option defult value="A4BW">A4</option>
                         <option value="A5BW">A5</option>
                         <option value="A6BW">A6</option>
                         <option value="BWA4">A4 בריסטול</option>
                         <option value="BWA3">A3 בריסטול</option>
                       </Input>
+
                     </FormGroup>
                   ) : (
                     <FormGroup>
@@ -574,7 +589,7 @@ export default function HozlaPrintRequestForm() {
                       >
                         <option value="A0">A0</option>
                         <option value="A3">A3</option>
-                        <option defaultChecked value="A4">A4</option>
+                        <option defult value="A4">A4</option>
                         <option value="A5">A5</option>
                         <option value="A6">A6</option>
                         <option value="A4b">A4 בריסטול</option>
@@ -582,6 +597,31 @@ export default function HozlaPrintRequestForm() {
                       </Input>
                     </FormGroup>
                   )}
+                  <Popup
+                    trigger={
+                      <MDButton
+                        variant="gradient"
+                        color="mekatnar"
+                        circular="true"
+                        iconOnly="true"
+                        size="small"
+                      >
+                        <Icon>help_outline</Icon>
+                      </MDButton>
+                    }
+                  >
+                    <MDAlert color="mekatnar">
+                      <MDBox>
+                        <MDTypography variant="h6" color="light">A0 (84.1 * 118.9 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A3 (29.7 * 42 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A4 (21 * 29.7 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A5 (14.85 * 21 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A6 (10.5 * 14.85 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A4 בריסטול (21 * 29.7 ס"מ)</MDTypography>
+                        <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography>
+                      </MDBox>
+                    </MDAlert>
+                  </Popup>
                 </FormGroup>
                 {/* <FormGroup>
                   <Label for="הערות">הערות</Label>

@@ -9,6 +9,8 @@
 /* eslint-disable import/no-duplicates */
 /* eslint-disable no-unused-vars */
 import react, { useEffect } from "react";
+import Popup from "reactjs-popup";
+import Icon from "@mui/material/Icon";
 import { Dialog, DialogContent } from "@mui/material";
 import { useState } from "react";
 import MDBox from "components/MDBox";
@@ -33,6 +35,8 @@ import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
 import Error404 from "views/Error404";
 import MDButton from "components/MDButton";
+import MDAlert from "components/MDAlert";
+import FileDownload from "js-file-download";
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
@@ -66,6 +70,9 @@ const FieldReuestFormDB = () => {
   const [formData, setFormData] = useState({});
   const [errorDB, setErrorDB] = useState(false);
   const [error404, setError404] = useState(false);
+  const [showFile, setShowFile] = useState(false);
+  const [downloadFile, setDownloadFile] = useState(false);
+  const [filesFromDB, setFilesFromDB] = useState([]);
 
   const [dates, setdates] = useState({});
   useEffect(() => {
@@ -92,6 +99,53 @@ const FieldReuestFormDB = () => {
         }
       });
   }, []);
+
+  const getFiles = () => {
+    axios
+      .get(`http://localhost:5000/api/getMultipleFiles/${formData.files_id}`)
+      .then((response) => {
+        setFilesFromDB(response.data.files);
+        console.log(`files: ${response.data}`);
+        setShowFile(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/api/getMultipleFiles/`, formData.files_id)
+  //     .then((response) => {
+  //       setFilesFromDB(response.data.files);
+  //       console.log("files: " + response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [])
+  function openFileANewWindows(filePath, fileName) {
+    // const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+    // const fileLink = document.createElement('a');
+    // fileLink.href = fileURL;
+    // const fileName = response.headers['content-disposition'].substring(22, 52);
+    // fileLink.setAttribute('download', fileName);
+    // fileLink.setAttribute('target', '_blank');
+    // document.body.appendChild(fileLink);
+    // fileLink.click();
+    // fileLink.remove();
+
+    // * no id
+    // e.preventDefault();
+    const urlPath = filePath;
+    const newUrlPath = urlPath.slice(8);
+    console.log(`Frontend ${newUrlPath}`);
+    axios
+      .get(`http://localhost:5000/api/downloadPDFFile/${newUrlPath}`, { responseType: "blob" })
+      .then((res) => {
+        FileDownload(res.data, fileName);
+      });
+  }
 
   const NavigateUser = () => {
     if (error404) {
@@ -295,6 +349,31 @@ const FieldReuestFormDB = () => {
                       value={pageTypes[formData.pageType]}
                       disabled
                     />
+                    {/* <Popup
+                      trigger={
+                        <MDButton
+                          variant="gradient"
+                          color="mekatnar"
+                          circular="true"
+                          iconOnly="true"
+                          size="small"
+                        >
+                          <Icon>help_outline</Icon>
+                        </MDButton>
+                      }
+                    >
+                      <MDAlert color="mekatnar">
+                        <MDBox>
+                          <MDTypography variant="h6" color="light">A0 (84.1 * 118.9 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A3 (29.7 * 42 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A4 (21 * 29.7 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A5 (14.85 * 21 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A6 (10.5 * 14.85 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A4 בריסטול (21 * 29.7 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography>
+                        </MDBox>
+                      </MDAlert>
+                    </Popup> */}
                   </FormGroup>
                   <FormGroup>
                     <Label for="numOfCopyies">{textPlaceHolderInputs[8]}</Label>
@@ -360,17 +439,51 @@ const FieldReuestFormDB = () => {
                   </FormGroup>
                 </FormGroup>
                 <FormGroup>
-                  {formData.files &&
-                    formData.files.map((file, index) => (
-                      <MDButton
-                        color="mekatnar"
-                        size="large"
-                        // onClick={clickSubmit}
-                        className="btn-new-blue"
-                        key={index}
-                      >
-                        {file}
-                      </MDButton>
+                  {showFile === false ? (
+                    <MDButton color="mekatnar" onClick={getFiles}>
+                      פתח קבצים
+                    </MDButton>
+                  ) : (
+                    <FormText variant="body2" color="mekatnar">
+                      לחץ כדי להוריד
+                    </FormText>
+                  )}
+                  {filesFromDB &&
+                    filesFromDB.map((file, index) => (
+                      <FormGroup>
+                        <MDAlert color="mekatnar">
+                          <MDButton
+                            dir="ltr"
+                            iconOnly
+                            variant="text"
+                            onClick={() => openFileANewWindows(file.filePath, file.fileName)}
+                          >
+                            <Icon fontSize="small">download</Icon>&nbsp;
+                          </MDButton>
+                          <MDBox color="light">
+                            {/* <MDTypography variant="h6" color="light">{index}</MDTypography> */}
+                            <MDTypography variant="h6" color="light">
+                              {file.fileName}
+                            </MDTypography>
+                            <MDTypography variant="body2" color="light">
+                              {file.fileSize}
+                            </MDTypography>
+                          </MDBox>
+                        </MDAlert>
+                        {/* <MDButton
+                          color="mekatnar"
+                          size="large"
+                          // onClick={clickSubmit}
+                          className="btn-new-blue"
+                          key={index}
+                          onClick={openFileANewWindows}
+                        >
+                          <MDBox color="light">
+                            <MDTypography variant="h6" color="light">{file.fileName}</MDTypography>
+                            <MDTypography variant="body2" color="light">{file.fileSize}</MDTypography>
+                          </MDBox>
+                        </MDButton> */}
+                      </FormGroup>
                     ))}
                 </FormGroup>
               </Form>

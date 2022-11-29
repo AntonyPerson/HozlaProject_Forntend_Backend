@@ -21,7 +21,6 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Icon from "@mui/material/Icon";
-
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -31,7 +30,7 @@ import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Images
 // import LogoAsana from "assets/images/small-logos/logo-asana.svg";
@@ -50,6 +49,7 @@ export default function data() {
   //     </MDTypography>
   //   </MDBox>
   // );
+  const params = useParams();
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
   const [isInfoPressed, setIsInfoPressed] = useState(false);
@@ -89,6 +89,27 @@ export default function data() {
         setIsError(true);
       });
   }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //     .then((response) => {
+  //       // console.log(`the object data`);
+  //       console.log(response.data);
+  //       console.log(params.formID);
+
+  //       setFormData(response.data);
+
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       console.log(error.code);
+  //       if (error.code === "ERR_BAD_REQUEST") {
+  //         setError404(true);
+  //       } else {
+  //         setErrorDB(true);
+  //       }
+  //     });
+  // }, []);
 
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
@@ -114,6 +135,9 @@ export default function data() {
       stutus = "הסתיימה";
       color = "mekatnar";
     } else if (value === 100) {
+      stutus = "מוכן לאיסוף";
+      color = "success";
+    } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
     }
@@ -185,11 +209,11 @@ export default function data() {
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
+      // { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
       { Header: "שם העבודה", accessor: "project", align: "center" },
-      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },

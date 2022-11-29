@@ -3,6 +3,12 @@
 /* eslint-disable camelcase */
 const router = require("express").Router();
 const HozlaRequest = require("../models/hozlaRequest.model");
+const { upload } = require("../helpers/filehelper");
+const MultipleFile = require("../models/fileuploader/multipleFile");
+// const { singleFileUpload, multipleFileUpload,
+//   getallSingleFiles, getallMultipleFiles, downloadFile, downloadFilePikod }
+//   = require("../controllers/authentication/fileuploader/fileuploader");
+
 
 router.route("/").get((req, res) => {
   HozlaRequest.find()
@@ -12,6 +18,8 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/add").post((req, res) => {
+
+
   const user_card_number = req.body.user_card_number;
   const unit = req.body.unit;
   const anaf = req.body.anaf;
@@ -28,7 +36,7 @@ router.route("/add").post((req, res) => {
   const workGivenDate = Date.parse(req.body.workGivenDate);
   const fullNameReciver = req.body.fullNameReciver;
   const workRecivedDate = Date.parse(req.body.workRecivedDate);
-  const files = req.body.files;
+  const files_id = req.body.files_id;
   const status = req.body.status;
   const order_maker_card_number = req.body.order_maker_card_number;
 
@@ -49,10 +57,11 @@ router.route("/add").post((req, res) => {
     workGivenDate,
     fullNameReciver,
     workRecivedDate,
-    files,
+    files_id,
     status,
     order_maker_card_number,
   });
+
   const formId = newHozlaRequest.save((err, form) => {
     if (err) {
       return res.status(400).json("Error: " + err);
@@ -93,7 +102,7 @@ router.route("/update/:id").post((req, res) => {
       request.workGivenDate = Date.parse(req.body.workGivenDate);
       request.fullNameReciver = req.body.fullNameReciver;
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
-      request.files = req.body.files;
+      request.files_id = req.body.files_id;
       request.status = req.body.status;
       request.order_maker_card_number = req.body.order_maker_card_number;
 

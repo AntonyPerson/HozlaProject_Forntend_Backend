@@ -31,7 +31,7 @@ import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -57,8 +57,12 @@ export default function data() {
   //     </MDTypography>
   //   </MDBox>
   // );
+  const params = useParams();
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
+  const [errorDB, setErrorDB] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [error404, setError404] = useState(false);
   const [isInfoPressed, setIsInfoPressed] = useState(false);
   const [pressedID, setpressedID] = useState("");
   const textPlaceHolderInputs = [
@@ -116,19 +120,66 @@ export default function data() {
   //     </DialogActions>
   //   </Dialog>
   // };
+  const one = "http://localhost:5000/hozlaAdminRequests/";
+  const two = "http://localhost:5000/hozlaRequests/";
 
+  const requestOne = axios.get(one);
+  const requestTwo = axios.get(two);
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/managementHoztla/`)
-      .then((response) => {
-        console.log(response.data);
-        setRequestDB(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsError(true);
+      .all([requestOne, requestTwo])
+      .then(
+        axios.spread((...responses) => {
+          const responseOne = responses[0];
+          const responseTwo = responses[1];
+          // setFormData(responseOne.data);
+          // console.log(formData);
+          setRequestDB(responseTwo.data, responseOne.data);
+          console.log(requestDB);
+          // use/access the results
+          console.log(responseOne, responseTwo);
+        })
+      )
+      .catch((errors) => {
+        // react on errors.
+        console.error(errors);
       });
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //       .then((response) => {
+  //         // console.log(`the object data`);
+  //         console.log(response.data);
+  //         console.log(params.formID);
+  //         // console.log(params.hozlaRequestID);
+
+  //         setFormData(response.data);
+  //         console.log(formData);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //         console.log(error.code);
+  //         if (error.code === "ERR_BAD_REQUEST") {
+  //           setError404(true);
+  //         } else {
+  //           setErrorDB(true);
+  //         }
+  //       });
+  // }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaRequests/`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
 
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
@@ -204,6 +255,23 @@ export default function data() {
         </MDButton>
       </Link>
     ),
+    hozlaInfo: (
+      <Link to={`/adminFeild/${hozla.hozlaRequestID}`} key={hozla.hozlaRequestID}>
+        <MDButton
+          variant="gradient"
+          color="mekatnar"
+          // onClick={() => {
+          //   // setIsInfoPressed(true);
+          //   // setpressedID(hozla._id);
+          // }}
+          circular="true"
+          iconOnly="true"
+          size="medium"
+        >
+          <Icon>edit</Icon>
+        </MDButton>
+      </Link>
+    ),
   }));
 
   console.log(`isError ${isError}`);
@@ -213,15 +281,15 @@ export default function data() {
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
+      // { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
-      // { Header: "שם העבודה", accessor: "project", align: "center" },
-      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      { Header: "שם העבודה", accessor: "project", align: "center" },
+      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
-      // { Header: "עדכן", accessor: "update", align: "center" },
+      // { Header: "טופס הוצל``א", accessor: "hozlaInfo", align: "center" },
     ],
     rows: dbRows,
     dbError: isError,

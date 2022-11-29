@@ -63,85 +63,206 @@ function Dashboard() {
   const [error404, setError404] = useState(false);
 
   const [dates, setdates] = useState({});
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/AdminHome`)
-      .then((response) => {
-        // console.log(`the object data`);
-        console.log(response.data);
-        console.log(params.formID);
-        // console.log(params.numAccepted);
-        // console.log(params.numInPrint);
-        // console.log(params.numEnded);
-        // console.log(params.numReadyForTakeIn);
-        // console.log(params.sumBeatsToday);
-        // console.log(params.sumBeatsYear);
-        // console.log(params.sumPagesToday);
-        // console.log(params.sumPagesYear);
-        // console.log(params.anaf);
-        // console.log(params.sumPages);
-
-        setFormData(response.data);
-        // setdates({
-        //   workGivenDate: response.data.workGivenDate.split("T")[0],
-        //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
-        // });
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.code);
-        if (error.code === "ERR_BAD_REQUEST") {
-          setError404(true);
-        } else {
-          setErrorDB(true);
-        }
+  const [status, setStatus] = useState({
+    // hozlaRequestID: params.formID,
+    received: 0,
+    inprint: 0,
+    ended: 0,
+    readyForTakeIn: 0,
+  });
+  const getWorkStuts = (value) => {
+    // let stutus = "נשלח";
+    // let color = "error";
+    if (value === 25) {
+      setStatus({
+        ...status,
+        received: status.received + 1,
+        inprint: status.inprint,
+        ended: status.ended,
+        readyForTakeIn: status.readyForTakeIn,
       });
-  }, []);
+      // stutus = "התקבלה";
+      // color = "error";
+    } else if (value === 50) {
+      setStatus({
+        ...status,
+        received: status.received,
+        inprint: status.inprint + 1,
+        ended: status.ended,
+        readyForTakeIn: status.readyForTakeIn,
+      });
+    } else if (value === 75) {
+      setStatus({
+        ...status,
+        received: status.received,
+        inprint: status.inprint,
+        ended: status.ended + 1,
+        readyForTakeIn: status.readyForTakeIn,
+      });
+    } else if (value === 100) {
+      setStatus({
+        ...status,
+        received: status.received,
+        inprint: status.inprint,
+        ended: status.ended,
+        readyForTakeIn: status.readyForTakeIn + 1,
+      });
+    }
+    // return [stutus, color];
+  };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaRequests/`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //       requestDB.map((hozla, index) => ({
+  //         status: (
+  //           <>{getWorkStuts(hozla.status)[0]}</>
+  //         ),
+  //       }));
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //     .then((response) => {
+  //       // console.log(`the object data`);
+  //       console.log(response.data);
+  //       console.log(params.formID);
+  //       // console.log(params.numAccepted);
+  //       // console.log(params.numInPrint);
+  //       // console.log(params.numEnded);
+  //       // console.log(params.numReadyForTakeIn);
+  //       // console.log(params.sumBeatsToday);
+  //       // console.log(params.sumBeatsYear);
+  //       // console.log(params.sumPagesToday);
+  //       // console.log(params.sumPagesYear);
+  //       // console.log(params.anaf);
+  //       // console.log(params.sumPages);
+
+  //       setFormData(response.data);
+  //       // setdates({
+  //       //   workGivenDate: response.data.workGivenDate.split("T")[0],
+  //       //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
+  //       // });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       console.log(error.code);
+  //       if (error.code === "ERR_BAD_REQUEST") {
+  //         setError404(true);
+  //       } else {
+  //         setErrorDB(true);
+  //       }
+  //     });
+  // }, []);
 
   // * data from database
   const dataFromDB = {
-    printed: 40,
-    inprint: 10,
-    intreatment: 30,
-    waiting: 20,
+    received: 10,
+    inprint: 40,
+    ended: 20,
+    readyForTakeIn: 30,
 
     countPrintInDay: 10,
     countPrintInWeek: 30,
   };
+  // const [status, setStatus] = useState({
+  //   // hozlaRequestID: params.formID,
+  //   received: 0,
+  //   inprint: 0,
+  //   ended: 0,
+  //   readyForTakeIn: 0,
+  // });
+  // const getWorkStuts = (value) => {
+  //   // let stutus = "נשלח";
+  //   // let color = "error";
+  //   if (value === 25) {
+  //     setStatus({
+  //       ...status,
+  //       received: status.received + 1,
+  //       inprint: status.inprint,
+  //       ended: status.ended,
+  //       readyForTakeIn: status.readyForTakeIn,
+  //     });
+  //     // stutus = "התקבלה";
+  //     // color = "error";
+  //   } else if (value === 50) {
+  //     setStatus({
+  //       ...status,
+  //       received: status.received,
+  //       inprint: status.inprint + 1,
+  //       ended: status.ended,
+  //       readyForTakeIn: status.readyForTakeIn,
+  //     });
+  //   } else if (value === 75) {
+  //     setStatus({
+  //       ...status,
+  //       received: status.received,
+  //       inprint: status.inprint,
+  //       ended: status.ended + 1,
+  //       readyForTakeIn: status.readyForTakeIn,
+  //     });
+  //   } else if (value === 100) {
+  //     setStatus({
+  //       ...status,
+  //       received: status.received,
+  //       inprint: status.inprint,
+  //       ended: status.ended,
+  //       readyForTakeIn: status.readyForTakeIn + 1,
+  //     });
+  //   }
+  //   // return [stutus, color];
+  // };
+  // const dbStatus = requestDB.map((hozla, index) => ({
+  //   // project: <Project image={LogoAsana} name="Asana" />,
 
-  const dataDB = requestDB.map((hozla, index) => ({
-    labels: [
-      "Jan.",
-      "Feb.",
-      "Mar.",
-      "Apr.",
-      "May.",
-      "Jun.",
-      "Jul.",
-      "Aug.",
-      "Sep.",
-      "Oct.",
-      "Nov.",
-      "Dec.",
-    ],
-    datasets: [
-      {
-        label: "כמות דפים",
-        color: "info",
-        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
-      },
-      {
-        label: "דפים צבעוניים",
-        color: "mekatnar",
-        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
-      },
-      {
-        label: "דפים שחור לבן",
-        color: "dark",
-        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
-      },
-    ],
-  }));
+  //   status: (
+  //     <>
+  //       {getWorkStuts(hozla.status)[0]}
+  //     </>
+  //   ),
+  // }));
+
+  // const dataDB = requestDB.map((hozla, index) => ({
+  //   labels: [
+  //     "Jan.",
+  //     "Feb.",
+  //     "Mar.",
+  //     "Apr.",
+  //     "May.",
+  //     "Jun.",
+  //     "Jul.",
+  //     "Aug.",
+  //     "Sep.",
+  //     "Oct.",
+  //     "Nov.",
+  //     "Dec.",
+  //   ],
+  //   datasets: [
+  //     {
+  //       label: "כמות דפים",
+  //       color: "info",
+  //       data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
+  //     },
+  //     {
+  //       label: "דפים צבעוניים",
+  //       color: "mekatnar",
+  //       data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
+  //     },
+  //     {
+  //       label: "דפים שחור לבן",
+  //       color: "dark",
+  //       data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
+  //     },
+  //   ],
+  // }));
 
   // useEffect(() => {
   //   axios
@@ -190,10 +311,15 @@ function Dashboard() {
                     label: "Projects",
                     backgroundColors: ["dark", "info", "mekatnar", "success"],
                     data: [
-                      dataFromDB.waiting,
-                      dataFromDB.intreatment,
+                      // dbStatus
+                      // dataFromDB.waiting,
+                      // dataFromDB.intreatment,
+                      // dataFromDB.inprint,
+                      // dataFromDB.printed,
+                      dataFromDB.received,
                       dataFromDB.inprint,
-                      dataFromDB.printed,
+                      dataFromDB.ended,
+                      dataFromDB.readyForTakeIn,
                     ],
                   },
                 }}
@@ -238,15 +364,15 @@ function Dashboard() {
                 chart={{
                   labels: [
                     "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
-                    "ענף תו``ן",
+                    "ענף א",
+                    "ענף ב",
+                    "ענף ג",
+                    "ענף ד",
+                    "ענף ה",
+                    "ענף ו",
+                    "ענף ז",
+                    "ענף ח",
+                    "ענף ט",
                   ],
                   datasets: [
                     {
@@ -258,49 +384,6 @@ function Dashboard() {
                 }}
               />
             </Grid>
-            {/* <DefaultLineChart
-                dir="ltr"
-                icon={{ color: "mekatnar", component: "leaderboard" }}
-                title="דוח מנהלים"
-                description="כמות הדפסת דפים לפי ענף"
-                chart={
-                  // {dataDB}
-                  // ! replace with dataDB
-                  {
-                    labels: [
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                    ],
-                    datasets: [
-                      {
-                        label: "כמות דפים",
-                        color: "info",
-                        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
-                      },
-                      {
-                        label: "דפים צבעוניים",
-                        color: "mekatnar",
-                        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
-                      },
-                      {
-                        label: "דפים שחור לבן",
-                        color: "secondary",
-                        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
-                      },
-                    ],
-                  }
-                  // !
-                }
-              /> */}
-
             {/* 
                             
                                 <ReportsBarChart
