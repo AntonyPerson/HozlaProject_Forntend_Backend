@@ -58,6 +58,7 @@ import {
 } from "context";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
+import soldierAvatar from "assets/images/soldier.png";
 import axios from "axios";
 import { authenticate, isAuthenticated, signout } from "auth/index";
 const { user } = isAuthenticated();
@@ -164,7 +165,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <MDAvatar src="https://bit.ly/34BY10g" alt="Avatar" variant="circular" size="sm" />
+          <MDAvatar src={soldierAvatar} alt="Avatar" size="sm" />
 
           <MDTypography textGradient color="mekatnar" variant="h4" pl={0.5}>
             {loggedInUserString}

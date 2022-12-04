@@ -52,8 +52,8 @@ import {
 } from "context";
 
 import hozlaLogo from "assets/images/hozlaLogo.png";
-import mekatnarLogo from "assets/images/unitsimg/mekatnar58.png";
-import NGTeamLogo from "assets/images/NewNGlogoWhite.svg";
+import pikudtzafonLogo from "assets/images/unitsimg/pikudtzafon.png";
+import golanyLogo from "assets/images/unitsimg/pikudtzafon.png";
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
@@ -190,9 +190,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       <List>{renderRoutes}</List>
       <MDBox
         component="img"
-        src={mekatnarLogo}
+        src={golanyLogo}
         alt="mekatnarLogo"
-        width="5rem"
+        width="6rem"
         alignSelf="center"
         sx={{
           marginTop: "auto",
@@ -200,9 +200,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       />
       <MDBox
         component="img"
-        src={NGTeamLogo}
+        src={pikudtzafonLogo}
         alt="NGTeamLogo"
-        width="7rem"
+        width="6rem"
         alignSelf="center"
         sx={{
           marginTop: "2rem",

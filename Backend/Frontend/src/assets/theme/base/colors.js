@@ -61,8 +61,8 @@ const colors = {
     focus: "#1662C4",
   },
   mekatnar: {
-    main: "#FF1F01",
-    focus: "#FFC700",
+    main: "#7D8F69",
+    focus: "#A9AF7E",
   },
   success: {
     main: "#4CAF50",
@@ -117,8 +117,8 @@ const colors = {
       state: "#1A73E8",
     },
     mekatnar: {
-      main: "#FF1F01",
-      state: "#FFC700",
+      main: "#7D8F69",
+      state: "#A9AF7E",
     },
     success: {
       main: "#66BB6A",
@@ -224,8 +224,8 @@ const colors = {
       text: "#095bc6",
     },
     mekatnar: {
-      background: "#fcd3d0",
-      text: "#FF1F01",
+      background: "#E6E5A3",
+      text: "#7D8F69",
     },
     success: {
       background: "#bce2be",
@@ -257,7 +257,7 @@ const colors = {
     primary: "#e91e62",
     secondary: "#110e0e",
     info: "#00bbd4",
-    mekatnar: "#f44336",
+    mekatnar: "#7D8F69",
     success: "#4caf4f",
     warning: "#ff9900",
     error: "#f44336",

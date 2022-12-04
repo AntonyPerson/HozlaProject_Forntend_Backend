@@ -56,7 +56,7 @@ import Footer from "examples/Footer";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/book-bg-image.jpg";
+import bgImage from "assets/images/max-burger-DMRQmC8gRBs-unsplash.jpg";
 
 import { signin, signout, authenticate, isAuthenticated } from "auth/index";
 import { CompressOutlined } from "@mui/icons-material";
