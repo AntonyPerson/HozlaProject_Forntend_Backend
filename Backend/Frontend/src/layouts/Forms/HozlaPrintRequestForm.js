@@ -63,6 +63,7 @@ import {
   Col,
   Label,
 } from "reactstrap";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { ToastContainer, toast, Icons } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import "react-toastify/dist/ReactToastify.css";
@@ -139,6 +140,7 @@ export default function HozlaPrintRequestForm() {
     pageType: "A4",
 
     ordernum: "",
+    textArea: "",
 
     errortype: "",
     // propPrint: {
@@ -148,7 +150,6 @@ export default function HozlaPrintRequestForm() {
     //     propCopyType: "b&w2",
     //   },
     // },
-    textAreaValue: "",
     error: false,
     successmsg: false,
     loading: false,
@@ -161,6 +162,7 @@ export default function HozlaPrintRequestForm() {
       propCopyType: "b&w2",
     },
   });
+  // const [textArea, setTextArea] = useState("");
   const [files, setFiles] = useState([]);
   const [open, setOpen] = React.useState(false);
   const { getRootProps, getInputProps } = useDropzone({});
@@ -202,7 +204,8 @@ export default function HozlaPrintRequestForm() {
         //   [propPrint.props.propPageType]: "A4",
         // });
         // console.log("file name: " + data.propPrint.nameFile);
-        setPropPrint({ ...propPrint, nameFile: filePush.name });
+        // setPropPrint({ ...propPrint, nameFile: filePush.name });
+        // setTextArea({ ...textArea, nameFiletxt: filePush.name });
 
         // if (uploaded.length === MAX_COUNT) setFileLimit(true);
         if (uploaded.length < 0) {
@@ -221,6 +224,13 @@ export default function HozlaPrintRequestForm() {
     e.preventDefault();
     const chosenFiles = Array.prototype.slice.call(e.target.files);
     handleUploadFiles(chosenFiles);
+  };
+  const deleteFile1 = (i) => {
+    const index = files.indexOf(i);
+
+    const x = files.splice(index, 1);
+    setFiles(files);
+    console.log(x);
   };
   const handleRemove = (e) => {
     const array = [...files]; // make a separate copy of the array
@@ -242,7 +252,7 @@ export default function HozlaPrintRequestForm() {
     setData({ ...propPrint, [evt.target.name]: value });
   }
   function handleChangeTxtAera(evt) {
-    const { value } = evt.target.value;
+    const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
   }
   // const UploadFile = async (filenameindb) => {
@@ -416,8 +426,9 @@ export default function HozlaPrintRequestForm() {
         files_id: res.data,
         pageType: data.pageType,
         ordernum: data.ordernum,
+        textArea: data.textArea,
       };
-
+      console.log(requestData);
       axios
         .post(`http://localhost:5000/hozlaRequests/add`, requestData)
         .then((response) => {
@@ -456,34 +467,57 @@ export default function HozlaPrintRequestForm() {
             // {
             //   return
             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-              <MDAlert color="mekatnar">
-                <MDButton
-                  dir="ltr"
-                  iconOnly
-                  variant="text"
-                  onClick={(ifile) => {
-                    if (ifile > -1) {
-                      files.splice(ifile, 1);
-                    }
-                    setFiles(files);
-                  }}
-                  // onClick={handleDelete}
-                  // onClick={handleRemove}
+              <FormGroup>
+                <MDAlert color="mekatnar">
+                  <MDButton
+                    dir="ltr"
+                    iconOnly
+                    variant="text"
+                    // onClick={deleteFile1(el.id)}
+                    onClick={() => {
+                      if (i > -1) {
+                        setFiles((currentFile) =>
+                          files.filter((oneFile, oneIndex) => oneIndex !== i)
+                        );
+                      }
+                    }}
+                    // onClick={handleDelete}
+                    // onClick={handleRemove}
 
-                  // onClick={() => fileRemove(el)}
-                >
-                  <Icon fontSize="small">delete</Icon>&nbsp;
-                </MDButton>
-                <MDBox>
-                  <MDTypography variant="h6" color="light">
-                    {el.name}
-                  </MDTypography>
-                  <MDTypography variant="body2" color="light">
-                    {el.size} MB
-                  </MDTypography>
-                </MDBox>
-              </MDAlert>
-              {/* <textarea
+                    // onClick={() => fileRemove(el)}
+                  >
+                    <Icon fontSize="small">delete</Icon>&nbsp;
+                  </MDButton>
+                  <MDBox>
+                    <MDTypography variant="h6" color="light">
+                      {el.name}
+                    </MDTypography>
+                    <MDTypography variant="body2" color="light">
+                      {el.size} MB
+                    </MDTypography>
+                  </MDBox>
+                </MDAlert>
+                {/* <TextareaAutosize
+                  minLength={1}
+                  maxRows={2}
+                  aria-label="maximum height"
+                  placeholder="הערות נוספות..."
+                  style={{ minWidth: 380 }}
+                /> */}
+
+                {/* <MDInput
+                  label={el.name}
+                  onChange={handleChangeTxtAera}
+                  style={{ minWidth: 360 }}
+                  multiline
+                  rows={3}
+                  contrast
+                  // value={() => {
+                  //   setTextArea({ ...textArea, txt: filePush.name });
+                  // }}
+                /> */}
+
+                {/* <textarea
                 name="textAreaValue"
                 rows={3} cols={55}
                 value={data.textAreaValue}
@@ -491,7 +525,7 @@ export default function HozlaPrintRequestForm() {
                 placeholder="הערות הדפסה">
                 {data.textAreaValue}
               </textarea> */}
-              <MDButton onClick={handleClickOpen} color="mekatnar" variant="text" size="medium">
+                {/* <MDButton onClick={handleClickOpen} color="mekatnar" variant="text" size="medium">
                 בחר אפשרות הדפסה
               </MDButton>
               <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
@@ -550,7 +584,8 @@ export default function HozlaPrintRequestForm() {
                   <Button onClick={handleClose}>ביטול</Button>
                   <Button onClick={handleClose}>אישור</Button>
                 </DialogActions>
-              </Dialog>
+              </Dialog> */}
+              </FormGroup>
             </div>
           )
           // }
@@ -834,7 +869,6 @@ export default function HozlaPrintRequestForm() {
                       maxLength={10}
                     />
                   </FormGroup>
-
                   <FormGroup>
                     <Label for="workName">{textPlaceHolderInputs[4]}</Label>
                     <Input
@@ -889,7 +923,6 @@ export default function HozlaPrintRequestForm() {
                       />
                     )}
                   </FormGroup>
-
                   <FormGroup>
                     <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
                     <Input
@@ -907,7 +940,6 @@ export default function HozlaPrintRequestForm() {
                       <option value="b&w1">שחור לבן יחיד</option>
                     </Input>
                   </FormGroup>
-
                   <FormGroup>
                     <Label for="pageType">{textPlaceHolderInputs[13]}</Label>
                     <Input
@@ -1056,7 +1088,6 @@ export default function HozlaPrintRequestForm() {
                   <MDTypography variant="h6" color="mekatnar">
                     נבחרו {files.length} קבצים
                   </MDTypography>
-
                   {files.length === 0 ? (
                     <FormText color="muted">ניתן להעלאות רק קבצי PDF</FormText>
                   ) : (
@@ -1076,7 +1107,24 @@ export default function HozlaPrintRequestForm() {
                           }
                         </Droppable>
                       </DragDropContext>
-                      <FormText color="muted">ניתן לגרור את הקבצים לפי הסדר</FormText>
+                      <FormGroup>
+                        <FormText color="muted">ניתן לגרור את הקבצים לפי הסדר</FormText>
+                      </FormGroup>
+                      <FormGroup>
+                        <MDInput
+                          name="textArea"
+                          label="הערות נוספות..."
+                          onChange={handleChangeTxtAera}
+                          style={{ minWidth: 360 }}
+                          multiline
+                          rows={3}
+                          // contrast
+                          value={data.textArea}
+                          // value={() => {
+                          //   setTextArea({ ...textArea, txt: filePush.name });
+                          // }}
+                        />
+                      </FormGroup>
                       <FormGroup>
                         <MDButton
                           dir="ltr"

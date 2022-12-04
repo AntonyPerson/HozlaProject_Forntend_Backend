@@ -12,9 +12,9 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -34,54 +34,50 @@ function AnnualInfoAdmin() {
   // const [error404, setError404] = useState(false);
   // const [errorDB, setErrorDB] = useState(false);
   // // * data from database
-  // const [dataFromDB, setDataFromDB] = useState({
+  const [dataFromDB, setDataFromDB] = useState({
+    countPrintInDay: 0,
+    countPrintInYear: 0,
+    requests: 0,
+    numBeatsPerDay: 0,
+    numBeatsPerYear: 0,
+  });
+
+  const params = useParams();
+  const [formData, setFormData] = useState({});
+  useEffect(() => {
+    axios.get(`http://localhost:5000/hozlaAdminRequests/`).then((response) => {
+      // console.log(`the object data`);
+      // console.log(response.data);
+      setFormData(response.data);
+      formData.forEach((nbpy) => {
+        setDataFromDB({
+          ...dataFromDB,
+          numBeatsPerYear: nbpy.numPages,
+          countPrintInDay: nbpy.numColourfulBeats,
+          numBeatsPerDay: nbpy.sumNoColourfulPages,
+          countPrintInYear: nbpy.numNoColourfulBeats,
+        });
+      });
+    });
+    // .catch((error) => {
+    //   console.log(error);
+    //   console.log(error.code);
+    //   if (error.code === "ERR_BAD_REQUEST") {
+    //     setError404(true);
+    //   } else {
+    //     setErrorDB(true);
+    //   }
+    // });
+  }, []);
+  console.log(formData);
+  console.log(params);
+  // const dataFromDB = {
   //   countPrintInDay: 10,
   //   countPrintInYear: 3000,
   //   requests: 20,
   //   numBeatsPerDay: 100,
   //   numBeatsPerYear: 350000,
-  // });
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
-  //     .then((response) => {
-  //       // console.log(`the object data`);
-  //       console.log(response.data);
-  //       console.log(params.formID);
-  //       // console.log(params.numAccepted);
-  //       // console.log(params.numInPrint);
-  //       // console.log(params.numEnded);
-  //       // console.log(params.numReadyForTakeIn);
-  //       // console.log(params.sumBeatsToday);
-  //       // console.log(params.sumBeatsYear);
-  //       // console.log(params.sumPagesToday);
-  //       // console.log(params.sumPagesYear);
-  //       // console.log(params.anaf);
-  //       // console.log(params.sumPages);
-
-  //       setFormData(response.data);
-  //       // setdates({
-  //       //   workGivenDate: response.data.workGivenDate.split("T")[0],
-  //       //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
-  //       // });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       console.log(error.code);
-  //       if (error.code === "ERR_BAD_REQUEST") {
-  //         setError404(true);
-  //       } else {
-  //         setErrorDB(true);
-  //       }
-  //     });
-  // }, []);
-  const dataFromDB = {
-    countPrintInDay: 10,
-    countPrintInYear: 3000,
-    requests: 20,
-    numBeatsPerDay: 100,
-    numBeatsPerYear: 350000,
-  };
+  // };
 
   return (
     <Card sx={{ height: "100%" }}>
@@ -129,6 +125,7 @@ function AnnualInfoAdmin() {
           icon={<Icon>access_time</Icon>}
           title="מספר פעימות ביום"
           dateTime={dataFromDB.numBeatsPerDay}
+          lastItem
         />
 
         {/* <TimelineItem

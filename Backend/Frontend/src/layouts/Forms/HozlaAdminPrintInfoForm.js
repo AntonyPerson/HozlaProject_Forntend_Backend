@@ -59,11 +59,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Material Dashboard 2 React Components
 import MDAlert from "components/MDAlert";
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Modal, TextField } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Modal,
+  TextField,
+} from "@mui/material";
 import { CompressOutlined } from "@mui/icons-material";
 
 export default function HozlaPrintRequestForm() {
-
   // const currentDate = new Date();
   // console.log(currentDate);
   // let dateString = "";
@@ -88,7 +94,6 @@ export default function HozlaPrintRequestForm() {
   const params = useParams();
 
   const [data, setData] = useState({
-
     hozlaRequestID: params.formID,
     workName: params.workName,
 
@@ -120,7 +125,7 @@ export default function HozlaPrintRequestForm() {
     "צילום בצבע:",
     "צילום בשחור לבן:",
     "סוג הדפסה:",
-    "דו צדדי"
+    "דו צדדי",
   ];
 
   //takes the data drom the DB and gives inital values to the useState data, each time the page gets rendred/refreshed
@@ -136,7 +141,8 @@ export default function HozlaPrintRequestForm() {
 
         setData(response.data);
         setData({
-          ...data, errortype: "",
+          ...data,
+          errortype: "",
           error: false,
           successmsg: false,
           loading: false,
@@ -161,48 +167,49 @@ export default function HozlaPrintRequestForm() {
   function handleChange(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
-  };
+  }
   function handleChangeCheckbox(evt) {
     // setData({ ...data, [evt.target.name]: evt.target.twoSides });
     // setData({ ...data, twoSides: !data.twoSides });
     if (data.twoSides === true) {
       setData({
-        ...data, twoSides: false,
+        ...data,
+        twoSides: false,
         sumColourfulPages: Math.round(data.sumColourfulPages * 2),
         numColourfulBeats: Math.round(data.numColourfulBeats * 2),
         sumNoColourfulPages: Math.round(data.sumNoColourfulPages * 2),
-        numNoColourfulBeats: Math.round(data.numNoColourfulBeats * 2)
+        numNoColourfulBeats: Math.round(data.numNoColourfulBeats * 2),
       });
-    }
-    else {
+    } else {
       setData({
-        ...data, twoSides: true,
+        ...data,
+        twoSides: true,
         sumColourfulPages: Math.round(data.sumColourfulPages / 2),
         numColourfulBeats: Math.round(data.numColourfulBeats / 2),
         sumNoColourfulPages: Math.round(data.sumNoColourfulPages / 2),
-        numNoColourfulBeats: Math.round(data.numNoColourfulBeats / 2)
+        numNoColourfulBeats: Math.round(data.numNoColourfulBeats / 2),
       });
     }
-  };
+  }
 
   function handleChangeColourfulBeat(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value, sumColourfulPages: Math.round(value / 2) });
     // setData({ numPages: data.sumColourfulPages + data.sumNoColourfulPages });
-  };
+  }
   function handleNoChangeColourfulBeat(evt) {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value, sumNoColourfulPages: Math.round(value / 2) });
-  };
+  }
 
   function handleChangeColourfulPage(evt) {
     const { value } = evt.target;
     setData({ ...data, numColourfulBeats: Math.round(value * 2), [evt.target.name]: value });
-  };
+  }
   function handleNoChangeColourfulPage(evt) {
     const { value } = evt.target;
     setData({ ...data, numNoColourfulBeats: Math.round(value * 2), [evt.target.name]: value });
-  };
+  }
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -422,11 +429,8 @@ export default function HozlaPrintRequestForm() {
         bgColor="mekatnar"
         coloredShadow="mekatnar"
         borderRadius="l"
-        // mx={2}
-        // mt={2}
         p={3}
         px={5}
-        // mb={2}
         textAlign="center"
       >
         <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
@@ -471,7 +475,6 @@ export default function HozlaPrintRequestForm() {
               </MDTypography>
               <Label>פרטים נוספים על ההדפסה</Label>
 
-
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">
                   <FormGroup>
@@ -482,7 +485,7 @@ export default function HozlaPrintRequestForm() {
                           // checked={data.twoSides}
                           value={data.twoSides}
                           onChange={handleChangeCheckbox}
-                          inputProps={{ 'aria-label': 'controlled' }}
+                          inputProps={{ "aria-label": "controlled" }}
                         />
                       }
                       label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
@@ -570,13 +573,14 @@ export default function HozlaPrintRequestForm() {
                         <option value="BWA3">(29.7 x 42 cm) A3 בריסטול</option> */}
                         <option value="A0BW">A0</option>
                         <option value="A3BW">A3</option>
-                        <option defult value="A4BW">A4</option>
+                        <option defult value="A4BW">
+                          A4
+                        </option>
                         <option value="A5BW">A5</option>
                         <option value="A6BW">A6</option>
                         <option value="BWA4">A4 בריסטול</option>
                         <option value="BWA3">A3 בריסטול</option>
                       </Input>
-
                     </FormGroup>
                   ) : (
                     <FormGroup>
@@ -589,7 +593,9 @@ export default function HozlaPrintRequestForm() {
                       >
                         <option value="A0">A0</option>
                         <option value="A3">A3</option>
-                        <option defult value="A4">A4</option>
+                        <option defult value="A4">
+                          A4
+                        </option>
                         <option value="A5">A5</option>
                         <option value="A6">A6</option>
                         <option value="A4b">A4 בריסטול</option>
@@ -597,7 +603,7 @@ export default function HozlaPrintRequestForm() {
                       </Input>
                     </FormGroup>
                   )}
-                  <Popup
+                  {/* <Popup
                     trigger={
                       <MDButton
                         variant="gradient"
@@ -621,7 +627,7 @@ export default function HozlaPrintRequestForm() {
                         <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography>
                       </MDBox>
                     </MDAlert>
-                  </Popup>
+                  </Popup> */}
                 </FormGroup>
                 {/* <FormGroup>
                   <Label for="הערות">הערות</Label>

@@ -5,10 +5,6 @@ const router = require("express").Router();
 const HozlaRequest = require("../models/hozlaRequest.model");
 const { upload } = require("../helpers/filehelper");
 const MultipleFile = require("../models/fileuploader/multipleFile");
-// const { singleFileUpload, multipleFileUpload,
-//   getallSingleFiles, getallMultipleFiles, downloadFile, downloadFilePikod }
-//   = require("../controllers/authentication/fileuploader/fileuploader");
-
 
 router.route("/").get((req, res) => {
   HozlaRequest.find()
@@ -18,8 +14,6 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/add").post((req, res) => {
-
-
   const user_card_number = req.body.user_card_number;
   const unit = req.body.unit;
   const anaf = req.body.anaf;
@@ -39,6 +33,7 @@ router.route("/add").post((req, res) => {
   const files_id = req.body.files_id;
   const status = req.body.status;
   const order_maker_card_number = req.body.order_maker_card_number;
+  const textArea = String(req.body.textArea);
 
   const newHozlaRequest = new HozlaRequest({
     user_card_number,
@@ -60,6 +55,7 @@ router.route("/add").post((req, res) => {
     files_id,
     status,
     order_maker_card_number,
+    textArea,
   });
 
   const formId = newHozlaRequest.save((err, form) => {
@@ -103,6 +99,7 @@ router.route("/update/:id").post((req, res) => {
       request.fullNameReciver = req.body.fullNameReciver;
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       request.files_id = req.body.files_id;
+      request.textArea = String(req.body.textArea);
       request.status = req.body.status;
       request.order_maker_card_number = req.body.order_maker_card_number;
 

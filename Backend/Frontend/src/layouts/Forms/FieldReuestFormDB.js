@@ -75,6 +75,8 @@ const FieldReuestFormDB = () => {
   const [filesFromDB, setFilesFromDB] = useState([]);
 
   const [dates, setdates] = useState({});
+  const [textArea, setTextArea] = useState("");
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/hozlaRequests/${params.formID}`)
@@ -88,6 +90,7 @@ const FieldReuestFormDB = () => {
           workGivenDate: response.data.workGivenDate.split("T")[0],
           workRecivedDate: response.data.workRecivedDate.split("T")[0],
         });
+        setTextArea(response.data.textArea.split("\n"));
       })
       .catch((error) => {
         console.log(error);
@@ -112,6 +115,13 @@ const FieldReuestFormDB = () => {
         console.log(err);
       });
   };
+  // const splitTextArea = () => {
+  //   return textArea.map((text) => (
+  //     <MDTypography variant="subtitle1" color="mekatnar">
+  //       {text !== "" ? text : "אין הערות נוספות"}
+  //     </MDTypography>
+  //   ));
+  // };
 
   // useEffect(() => {
   //   axios
@@ -440,7 +450,7 @@ const FieldReuestFormDB = () => {
                 </FormGroup>
                 <FormGroup>
                   {showFile === false ? (
-                    <MDButton color="mekatnar" onClick={getFiles}>
+                    <MDButton color="mekatnar" variant="outlined" onClick={getFiles}>
                       פתח קבצים
                     </MDButton>
                   ) : (
@@ -483,6 +493,19 @@ const FieldReuestFormDB = () => {
                             <MDTypography variant="body2" color="light">{file.fileSize}</MDTypography>
                           </MDBox>
                         </MDButton> */}
+
+                        <FormGroup>
+                          <MDBox bgColor="light" borderRadius="lg" shadow="lg" opacity={3} p={2}>
+                            {textArea.map((text) => (
+                              <MDTypography variant="subtitle1" color="mekatnar">
+                                {text !== "" ? text : "אין הערות נוספות"}
+                              </MDTypography>
+                            ))}
+                            {/* <MDTypography variant="subtitle1" color="mekatnar">
+                              {formData.textArea !== "" ? formData.textArea : "אין הערות נוספות"}
+                            </MDTypography> */}
+                          </MDBox>
+                        </FormGroup>
                       </FormGroup>
                     ))}
                 </FormGroup>
