@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable import/newline-after-import */
@@ -56,6 +57,8 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+import soldierAvatar from "assets/images/soldier.png";
+
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import axios from "axios";
@@ -164,7 +167,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <MDAvatar src="https://bit.ly/34BY10g" alt="Avatar" variant="circular" size="sm" />
+          <MDAvatar src={soldierAvatar} alt="Avatar" size="sm" />
 
           <MDTypography textGradient color="mekatnar" variant="h4" pl={0.5}>
             {loggedInUserString}

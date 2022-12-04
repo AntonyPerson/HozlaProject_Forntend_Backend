@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable spaced-comment */
 /* eslint-disable consistent-return */
@@ -25,7 +26,7 @@ Coded by www.creative-tim.com
 import React, { useState, useEffect } from "react";
 
 // react-router-dom components
-import { Link, withRouter, Redirect, Navigate } from "react-router-dom";
+import { Link, withRouter, Redirect, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 // @mui material components
@@ -58,10 +59,11 @@ import bgImage from "assets/images/book-bg-image.jpg";
 import { signin, signout, authenticate, isAuthenticated } from "auth/index";
 import { CompressOutlined } from "@mui/icons-material";
 
-function signIn() {
+function signInURL() {
   // const [rememberMe, setRememberMe] = useState(false);
   // const handleSetRememberMe = () => setRememberMe(!rememberMe);
   // const { user } = isAuthenticated();
+  const params = useParams();
 
   const [values, setValues] = useState({
     personalnumber: "",
@@ -118,11 +120,11 @@ function signIn() {
     // console.log(user);
     if (values.NavigateToReferrer && user) {
       // console.log(user);
-      if (user.admin === "0") {
+      if (params.idUR === "69173dcb3ee95de869edfq10") {
         //regular user
         return <Navigate to="/userRequestsTable" />;
       }
-      if (user.admin === "1" || user.admin === "2") {
+      if (params.idUR === "6368f702a925c8f735fa6a59" || params.idUR === "17351e923ex28e869e06c83") {
         //mangment
         return <Navigate to="/AdminHome" />;
       }
@@ -213,12 +215,26 @@ function signIn() {
       </MDBox>
     </Dialog>
   );
-  useEffect(() => {
-    setDemo(true);
-    // passport();
-  }, []);
 
-  const SignUp = () => {
+  const signInAxios = (personalnumber) => {
+    axios
+      .post(`http://localhost:5000/api/signin`, {
+        personalnumber,
+      })
+      .then((res) => {
+        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
+          return "DoNotExist";
+        }
+        authenticate(res.data);
+        setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+        return "sucsses";
+      })
+      .catch((error) => {
+        console.log(error);
+        return "error";
+      });
+  };
+  const SignUpAxios = () => {
     console.log("In sign up");
     setValues({ ...values, loading: true, successmsg: false, error: false });
     const newUser = {
@@ -240,18 +256,7 @@ function signIn() {
         console.log(`${res.data}`);
         console.log({ personalnumber: res.data.user.personalnumber });
         console.log(res.data.user.personalnumber);
-        axios
-          .post(`http://localhost:5000/api/signin`, {
-            personalnumber: res.data.user.personalnumber,
-          })
-          .then((r) => {
-            authenticate(r.data);
-            setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
+        return res.data.user.personalnumber;
         // authenticate(res.data);
         // setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
       })
@@ -260,24 +265,6 @@ function signIn() {
       });
     // window.location.reload();
   };
-
-  useEffect(() => {
-    console.log("signUpData:");
-    console.log(signUpData);
-    if (
-      signUpData.firstName !== "" &&
-      signUpData.lastLame !== "" &&
-      signUpData.personalnumber !== "" &&
-      signUpData.admin !== "" &&
-      signUpData.unit !== "" &&
-      signUpData.anaf !== "" &&
-      signUpData.mador !== "" &&
-      signUpData.phoneNumber !== "" &&
-      signUpData.email !== ""
-    ) {
-      SignUp();
-    }
-  }, [signUpData]);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -345,8 +332,8 @@ function signIn() {
             console.log(signUpData);
             // SignUp();
             /* //? set of useStae do not return a promise so you cant use async/await & the error is that the function strats before the value is being updated.
-              ?There for we are going to use a useEffect for when the SignUpData is updated and not its init defualt value.
-             */
+            ?There for we are going to use a useEffect for when the SignUpData is updated and not its init defualt value.
+            */
             console.groupEnd();
           }
         } else {
@@ -365,45 +352,114 @@ function signIn() {
   };
 
   // hoger - need server code to make it work or fix bugs
-  const passport = (event) => {
-    axios
-      .get(`http://localhost:5000/auth/passportauth`)
-      .then((response) => {
-        console.log(response.data);
-        setValues({
-          ...values,
-          personalnumber: response.data.stam._json.cn,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.error === "NotInTheSystem") {
-          axios
-            .get(`http://localhost:5000/auth/passportauth`)
-            .then((response) => {
-              console.log(response.data);
-              setSignUpData({ ...signUpData, personalnumber: response.data.stam._json.cn });
-              // SignUp();
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        }
+  const passport = async (event) => {
+    // console.log(response.data);
+    // http://localhost:3000/authentication/sign-in/69173dcb3ee95de869edfq10
+    console.log(params.idUR);
+    let admin_value = "0";
+    let personalnumber_demo = "1234567";
+    if (params.idUR === "6368f702a925c8f735fa6a59") {
+      //? for the admin 2 - admin of admins
+      admin_value = "2";
+      personalnumber_demo = "1234567";
+    } else if (params.idUR === "17351e923ex28e869e06c83") {
+      //? for the admin 1 - regular admin
+      admin_value = "1";
+      personalnumber_demo = "1234567";
+    } else if (params.idUR === "69173dcb3ee95de869edfq10") {
+      //? for the admin 0 - regular user
+      admin_value = "0";
+      personalnumber_demo = "7654321";
+    }
+    const signInAxiosResult = await signInAxios(personalnumber_demo);
+    console.log(signInAxiosResult);
+    if (signInAxiosResult === "DoNotExist") {
+      // setSignUpData({
+      //   ...signUpData,
+      //   personalnumber: response.data.stam._json.cn,
+      //   admin: admin_value,
+      // });
+      setSignUpData({
+        ...signUpData,
+        personalnumber: personalnumber_demo,
+        admin: admin_value,
       });
-  };
+      if (signInAxios(SignUpAxios()) === "sucsses") {
+        // window.location.reload(false);
+      }
+    }
 
+    // axios
+    //   .get(`http://localhost:5000/auth/passportauth`)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     console.log(params.idUR);
+    //     let admin_value = "0";
+    //     if (params.idUR === "6368f702a925c8f735fa6a59") {
+    //       //? for the admin 2 - admin of admins
+    //       admin_value = "2";
+    //     } else if (params.idUR === "17351e923ex28e869e06c83") {
+    //       //? for the admin 1 - regular admin
+    //       admin_value = "1";
+    //     } else if (params.idUR === "69173dcb3ee95de869edfq10") {
+    //       //? for the admin 0 - regular user
+    //       admin_value = "0";
+    //     }
+    //     const signInAxiosResult = signInAxios("1234567");
+    //     if (signInAxiosResult === "DoNotExist") {
+    //       // setSignUpData({
+    //       //   ...signUpData,
+    //       //   personalnumber: response.data.stam._json.cn,
+    //       //   admin: admin_value,
+    //       // });
+    //       setSignUpData({
+    //         ...signUpData,
+    //         personalnumber: "1234567",
+    //         admin: admin_value,
+    //       });
+    //       signInAxios(SignUpAxios());
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
+  useEffect(() => {
+    // setDemo(true);
+
+    passport();
+    // console.log(params.idUR);
+  }, []);
+
+  useEffect(() => {
+    console.log("signUpData:");
+    console.log(signUpData);
+    if (
+      signUpData.firstName !== "" &&
+      signUpData.lastLame !== "" &&
+      signUpData.personalnumber !== "" &&
+      signUpData.admin !== "" &&
+      signUpData.unit !== "" &&
+      signUpData.anaf !== "" &&
+      signUpData.mador !== "" &&
+      signUpData.phoneNumber !== "" &&
+      signUpData.email !== ""
+    ) {
+      SignUp();
+    }
+  }, [signUpData]);
   return (
     <>
       {/* <DashboardLayout> */}
       {/* <DashboardNavbar /> */}
       {/* <MDBox pt={6} pb={3}> */}
       {/* //! fot the pop up warning windoes */}
-      {showError()}
-      {showSuccess()}
-      {showLoading()}
+      {/* {showError()} */}
+      {/* {showSuccess()} */}
+      {/* {showLoading()} */}
       {NavigateUser()}
 
-      {signInForm()}
+      {/* {signInForm()} */}
       {/* </MDBox> */}
       {/* <Footer /> */}
       {/* </DashboardLayout> */}
@@ -411,4 +467,4 @@ function signIn() {
   );
 }
 
-export default signIn;
+export default signInURL;
