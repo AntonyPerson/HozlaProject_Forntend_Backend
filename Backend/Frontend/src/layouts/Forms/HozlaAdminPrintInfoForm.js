@@ -95,7 +95,8 @@ export default function HozlaPrintRequestForm() {
 
   const [data, setData] = useState({
     hozlaRequestID: params.formID,
-    workName: params.workName,
+    workName: "",
+    anaf: "",
 
     numColourfulBeats: 0,
     numNoColourfulBeats: 0,
@@ -113,6 +114,12 @@ export default function HozlaPrintRequestForm() {
     successmsg: false,
     loading: false,
     redirectToReferrer: false,
+  });
+  const [adminData, setAdminData] = useState({
+    countPrintInYear: 0,
+    numBeatsColourful: 0,
+    sumBeatsBlackwhite: 0,
+    sumRequestInYear: 0,
   });
   // const [value, setValue] = React.useState('');
 
@@ -142,12 +149,67 @@ export default function HozlaPrintRequestForm() {
         setData(response.data);
         setData({
           ...data,
+          workName: response.data.workName,
+          anaf: response.data.anaf,
           errortype: "",
           error: false,
           successmsg: false,
           loading: false,
           redirectToReferrer: false,
         });
+        // setdates({
+        //   workGivenDate: response.data.workGivenDate.split("T")[0],
+        //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
+        // });
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+        // if (error.code === "ERR_BAD_REQUEST") {
+        //   setError404(true);
+        // } else {
+        //   setErrorDB(true);
+        // }
+      });
+    axios
+      .get(`http://localhost:5000/AnnualInfoAdmin/`)
+      .then((response) => {
+        if (response.data === null) {
+          axios.post(`http://localhost:5000/AnnualInfoAdmin/add`, adminData).then((res) => {
+            setAdminData({
+              ...adminData,
+              countPrintInYear: response.data.countPrintInYear,
+              numBeatsColourful: response.data.numBeatsColourful,
+              sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
+              sumRequestInYear: response.data.sumRequestInYear,
+            });
+            // toast.success(`הטופס נשלח בהצלחה`);
+            // history.push(`/signin`);
+            console.log(res.data);
+          });
+        } else {
+          console.log(response.data);
+
+          setAdminData(response.data);
+          setAdminData({
+            ...adminData,
+            countPrintInYear: response.data.countPrintInYear,
+            numBeatsColourful: response.data.numBeatsColourful,
+            sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
+            sumRequestInYear: response.data.sumRequestInYear,
+          });
+        }
+
+        // console.log(adminData);
+        // adminData.forEach((a) => {
+        //   setAdminData(a.response.data);
+        // });
+        // console.log(adminData);
+        // setAdminId(response.data._id);
+        // setAdminData({
+        //   ...adminData,
+        //   numPages: response.data.numPages,
+        // });
         // setdates({
         //   workGivenDate: response.data.workGivenDate.split("T")[0],
         //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
@@ -284,17 +346,19 @@ export default function HozlaPrintRequestForm() {
   const SendFormData = (event) => {
     event.preventDefault();
     setData({ ...data, loading: true, successmsg: false, error: false, NavigateToReferrer: false });
+    // setAdminData({ ...adminData, numPages: Math.floor(adminData.numPages) + data.numPages });
     const requestData = {
-      sumColourfulPages: data.sumColourfulPages,
-      sumNoColourfulPages: data.sumNoColourfulPages,
+      sumColourfulPages: Math.floor(data.sumColourfulPages),
+      sumNoColourfulPages: Math.floor(data.sumNoColourfulPages),
       numPages: data.numPages,
-      numColourfulBeats: data.numColourfulBeats,
-      numNoColourfulBeats: data.numNoColourfulBeats,
+      numColourfulBeats: Math.floor(data.numColourfulBeats),
+      numNoColourfulBeats: Math.floor(data.numNoColourfulBeats),
       selected: data.selected,
       selectedBW: data.selectedBW,
       twoSides: data.twoSides,
       hozlaRequestID: params.formID,
-      workName: params.workName,
+      workName: data.workName,
+      anaf: data.anaf,
 
       // errortype: data.errortype,
       // error: data.error,
@@ -305,8 +369,42 @@ export default function HozlaPrintRequestForm() {
     };
     console.log(requestData);
 
+    const adminRequestData = {
+      countPrintInYear: adminData.countPrintInYear + Math.floor(data.numPages),
+      numBeatsColourful: adminData.numBeatsColourful + Math.floor(data.numColourfulBeats),
+      sumBeatsBlackwhite: adminData.sumBeatsBlackwhite + Math.floor(data.numNoColourfulBeats),
+      sumRequestInYear: adminData.sumRequestInYear + 1,
+      // numPages: adminData.numPages + Math.floor(data.numPages),
+    };
+    console.log(adminRequestData);
+
     axios
       .post(`http://localhost:5000/hozlaAdminRequests/add`, requestData)
+      .then((res) => {
+        setData({
+          ...data,
+          work_id: res.data,
+          loading: false,
+          error: false,
+          successmsg: true,
+          NavigateToReferrer: false,
+        });
+        // toast.success(`הטופס נשלח בהצלחה`);
+        // history.push(`/signin`);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        // console.log(error);
+        setData({
+          ...data,
+          errortype: error.response,
+          loading: false,
+          error: true,
+          NavigateToReferrer: false,
+        });
+      });
+    axios
+      .post(`http://localhost:5000/AnnualInfoAdmin/update`, adminRequestData)
       .then((res) => {
         setData({
           ...data,
@@ -471,9 +569,9 @@ export default function HozlaPrintRequestForm() {
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
-                שם העבודה{" "}
+                שם העבודה: {data.anaf}
               </MDTypography>
-              <Label>פרטים נוספים על ההדפסה</Label>
+              <Label>{data.workName}</Label>
 
               <Form style={{ textAlign: "right" }} role="form" onSubmit={onSubmit}>
                 <FormGroup row className="">

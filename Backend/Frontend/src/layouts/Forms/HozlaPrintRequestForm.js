@@ -1079,7 +1079,7 @@ export default function HozlaPrintRequestForm() {
                     <Input
                       type="file"
                       multiple
-                      accept="application/pdf"
+                      accept="application/pdf, image/png, image/jpeg"
                       onChange={handleFileEvent}
                       // disabled={fileLimit}
                     />

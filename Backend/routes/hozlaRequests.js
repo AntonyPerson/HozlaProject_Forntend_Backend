@@ -13,6 +13,40 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/getCountStatus").get((req, res) => {
+  let received = 0;
+  let inprint = 0;
+  let ended = 0;
+  let readyForTakeIn = 0;
+  let archive = 0;
+  HozlaRequest.find()
+    .then((request) =>
+      //  res.json(request)
+      {
+        request.map((hozla) => {
+          if (hozla.status === 25) {
+            received += 1;
+          } else if (hozla.status === 50) {
+            inprint += 1;
+          } else if (hozla.status === 75) {
+            ended += 1;
+          } else if (hozla.status === 100) {
+            readyForTakeIn += 1;
+          } else if (hozla.status === 125) {
+            archive += 1;
+          }
+        });
+        console.log(`received: ${received}`);
+        console.log(`inprint: ${inprint}`);
+        console.log(`ended: ${ended}`);
+        console.log(`readyForTakeIn: ${readyForTakeIn}`);
+        console.log(`archive: ${archive}`);
+      }
+    )
+    .then(() => res.json({ received, archive, inprint, ended, readyForTakeIn }))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/add").post((req, res) => {
   const user_card_number = req.body.user_card_number;
   const unit = req.body.unit;

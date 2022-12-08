@@ -35,29 +35,28 @@ function AnnualInfoAdmin() {
   // const [errorDB, setErrorDB] = useState(false);
   // // * data from database
   const [dataFromDB, setDataFromDB] = useState({
-    countPrintInDay: 0,
     countPrintInYear: 0,
-    requests: 0,
-    numBeatsPerDay: 0,
-    numBeatsPerYear: 0,
+    numBeatsColourful: 0,
+    sumBeatsBlackwhite: 0,
+    sumRequestInYear: 0,
   });
 
   const params = useParams();
   const [formData, setFormData] = useState({});
   useEffect(() => {
-    axios.get(`http://localhost:5000/hozlaAdminRequests/`).then((response) => {
+    axios.get(`http://localhost:5000/AnnualInfoAdmin/`).then((response) => {
       // console.log(`the object data`);
       // console.log(response.data);
       setFormData(response.data);
-      formData.forEach((nbpy) => {
-        setDataFromDB({
-          ...dataFromDB,
-          numBeatsPerYear: nbpy.numPages,
-          countPrintInDay: nbpy.numColourfulBeats,
-          numBeatsPerDay: nbpy.sumNoColourfulPages,
-          countPrintInYear: nbpy.numNoColourfulBeats,
-        });
+      // formData.forEach((num) => {
+      setDataFromDB({
+        ...dataFromDB,
+        countPrintInYear: response.data.countPrintInYear,
+        numBeatsColourful: response.data.numBeatsColourful,
+        sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
+        sumRequestInYear: response.data.sumRequestInYear,
       });
+      // });
     });
     // .catch((error) => {
     //   console.log(error);
@@ -69,15 +68,33 @@ function AnnualInfoAdmin() {
     //   }
     // });
   }, []);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/hozlaAdminRequests/`).then((response) => {
+  //     // console.log(`the object data`);
+  //     // console.log(response.data);
+  //     setFormData(response.data);
+  //     formData.forEach((nbpy) => {
+  //       setDataFromDB({
+  //         ...dataFromDB,
+  //         numBeatsPerYear: nbpy.numBeatsPerYear,
+  //         countPrintInDay: nbpy.countPrintInDay,
+  //         numBeatsPerDay: nbpy.numBeatsPerDay,
+  //         countPrintInYear: nbpy.countPrintInYear,
+  //       });
+  //     });
+  //   });
+  //   // .catch((error) => {
+  //   //   console.log(error);
+  //   //   console.log(error.code);
+  //   //   if (error.code === "ERR_BAD_REQUEST") {
+  //   //     setError404(true);
+  //   //   } else {
+  //   //     setErrorDB(true);
+  //   //   }
+  //   // });
+  // }, []);
   console.log(formData);
   console.log(params);
-  // const dataFromDB = {
-  //   countPrintInDay: 10,
-  //   countPrintInYear: 3000,
-  //   requests: 20,
-  //   numBeatsPerDay: 100,
-  //   numBeatsPerYear: 350000,
-  // };
 
   return (
     <Card sx={{ height: "100%" }}>
@@ -103,28 +120,35 @@ function AnnualInfoAdmin() {
           color="mekatnar"
           // icon="inventory_2"
           icon={<Icon>print</Icon>}
-          title="כמות הדפים שהודפסו השנה"
+          title="כמות הדפים שהודפסו"
           dateTime={dataFromDB.countPrintInYear}
         />
-        <TimelineItem
+        {/* <TimelineItem
           color="success"
           icon={<Icon>access_time</Icon>}
           title="כמות הדפים שהודפסו היום"
           dateTime={dataFromDB.countPrintInDay}
-        />
+        /> */}
         <TimelineItem
           color="warning"
           // icon="payment"
           icon={<Icon>opacity_sharp</Icon>}
-          title="מספר פעימות השנה"
-          dateTime={dataFromDB.numBeatsPerYear}
+          title="מספר פעימות צבעוני"
+          dateTime={dataFromDB.numBeatsColourful}
         />
         <TimelineItem
           color="info"
           // icon="shopping_cart"
-          icon={<Icon>access_time</Icon>}
-          title="מספר פעימות ביום"
-          dateTime={dataFromDB.numBeatsPerDay}
+          icon={<Icon>opacity_sharp</Icon>}
+          title="מספר פעימות שחור לבן"
+          dateTime={dataFromDB.sumBeatsBlackwhite}
+        />
+        <TimelineItem
+          color="success"
+          // icon="shopping_cart"
+          icon={<Icon>request_quote</Icon>}
+          title="כמות בקשות"
+          dateTime={dataFromDB.sumRequestInYear}
           lastItem
         />
 

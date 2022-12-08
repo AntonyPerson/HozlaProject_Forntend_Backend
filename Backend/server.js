@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 // !
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(cookieParser());
 // !
 app.use("/uploads", express.static("uploads")); // to acsses the uploades folder in the server
@@ -58,12 +58,15 @@ app.use("/api", userRoutes);
 const fileuploaderRoutes = require("./routes/fileuploader/fileuploader");
 app.use("/api", fileuploaderRoutes);
 
+// Annual Info Admin
+const AnnualInfoAdmin = require("./routes/AnnualInfoAdmin");
+app.use("/AnnualInfoAdmin", AnnualInfoAdmin);
 
 if (process.env.NODE_ENV === "production") {
   //set static folder
   app.use(express.static("frontend/build"));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 }
 

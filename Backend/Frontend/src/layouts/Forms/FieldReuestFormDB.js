@@ -115,25 +115,7 @@ const FieldReuestFormDB = () => {
         console.log(err);
       });
   };
-  // const splitTextArea = () => {
-  //   return textArea.map((text) => (
-  //     <MDTypography variant="subtitle1" color="mekatnar">
-  //       {text !== "" ? text : "אין הערות נוספות"}
-  //     </MDTypography>
-  //   ));
-  // };
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5000/api/getMultipleFiles/`, formData.files_id)
-  //     .then((response) => {
-  //       setFilesFromDB(response.data.files);
-  //       console.log("files: " + response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [])
   function openFileANewWindows(filePath, fileName) {
     // const fileURL = window.URL.createObjectURL(new Blob([response.data]));
     // const fileLink = document.createElement('a');
@@ -493,21 +475,23 @@ const FieldReuestFormDB = () => {
                             <MDTypography variant="body2" color="light">{file.fileSize}</MDTypography>
                           </MDBox>
                         </MDButton> */}
-
-                        <FormGroup>
-                          <MDBox bgColor="light" borderRadius="lg" shadow="lg" opacity={3} p={2}>
-                            {textArea.map((text) => (
-                              <MDTypography variant="subtitle1" color="mekatnar">
-                                {text !== "" ? text : "אין הערות נוספות"}
-                              </MDTypography>
-                            ))}
-                            {/* <MDTypography variant="subtitle1" color="mekatnar">
-                              {formData.textArea !== "" ? formData.textArea : "אין הערות נוספות"}
-                            </MDTypography> */}
-                          </MDBox>
-                        </FormGroup>
                       </FormGroup>
                     ))}
+
+                  <FormGroup>
+                    {showFile && (
+                      <MDBox bgColor="light" borderRadius="lg" shadow="lg" opacity={3} p={2}>
+                        {textArea.map((text) => (
+                          <MDTypography variant="body1" color="mekatnar">
+                            {textArea !== "" ? text : "אין הערות נוספות"}
+                          </MDTypography>
+                        ))}
+                      </MDBox>
+                    )}
+                    {/* <MDTypography variant="subtitle1" color="mekatnar">
+                              {formData.textArea !== "" ? formData.textArea : "אין הערות נוספות"}
+                            </MDTypography> */}
+                  </FormGroup>
                 </FormGroup>
               </Form>
             </CardBody>
