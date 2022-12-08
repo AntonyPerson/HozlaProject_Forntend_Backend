@@ -75,7 +75,7 @@ const FieldReuestFormDB = () => {
   const [filesFromDB, setFilesFromDB] = useState([]);
 
   const [dates, setdates] = useState({});
-  const [textArea, setTextArea] = useState("");
+  const [clientNote, setClientNote] = useState("");
 
   useEffect(() => {
     axios
@@ -90,7 +90,7 @@ const FieldReuestFormDB = () => {
           workGivenDate: response.data.workGivenDate.split("T")[0],
           workRecivedDate: response.data.workRecivedDate.split("T")[0],
         });
-        setTextArea(response.data.textArea.split("\n"));
+        setClientNote(response.data.clientNote.split("\n"));
       })
       .catch((error) => {
         console.log(error);
@@ -481,9 +481,9 @@ const FieldReuestFormDB = () => {
                   <FormGroup>
                     {showFile && (
                       <MDBox bgColor="light" borderRadius="lg" shadow="lg" opacity={3} p={2}>
-                        {textArea.map((text) => (
+                        {clientNote.map((text) => (
                           <MDTypography variant="body1" color="mekatnar">
-                            {textArea !== "" ? text : "אין הערות נוספות"}
+                            {clientNote !== "" ? text : "אין הערות נוספות"}
                           </MDTypography>
                         ))}
                       </MDBox>

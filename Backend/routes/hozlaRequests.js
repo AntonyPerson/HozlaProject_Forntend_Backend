@@ -67,7 +67,7 @@ router.route("/add").post((req, res) => {
   const files_id = req.body.files_id;
   const status = req.body.status;
   const order_maker_card_number = req.body.order_maker_card_number;
-  const textArea = String(req.body.textArea);
+  const clientNote = String(req.body.clientNote);
 
   const newHozlaRequest = new HozlaRequest({
     user_card_number,
@@ -89,7 +89,7 @@ router.route("/add").post((req, res) => {
     files_id,
     status,
     order_maker_card_number,
-    textArea,
+    clientNote,
   });
 
   const formId = newHozlaRequest.save((err, form) => {
@@ -133,7 +133,7 @@ router.route("/update/:id").post((req, res) => {
       request.fullNameReciver = req.body.fullNameReciver;
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       request.files_id = req.body.files_id;
-      request.textArea = String(req.body.textArea);
+      request.clientNote = String(req.body.clientNote);
       request.status = req.body.status;
       request.order_maker_card_number = req.body.order_maker_card_number;
 

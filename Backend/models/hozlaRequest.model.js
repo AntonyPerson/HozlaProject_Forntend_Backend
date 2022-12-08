@@ -22,7 +22,7 @@ const HozlaRequestSchema = new mongoose.Schema(
     workRecivedDate: Date,
     files_id: { type: String, default: "" },
     status: { type: Number, default: 25 },
-    textArea: { type: String, default: "" },
+    clientNote: { type: String, default: "" },
     order_maker_card_number: String,
   },
   { timestamps: true }

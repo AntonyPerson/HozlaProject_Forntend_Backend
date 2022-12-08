@@ -140,7 +140,7 @@ export default function HozlaPrintRequestForm() {
     pageType: "A4",
 
     ordernum: "",
-    textArea: "",
+    clientNote: "",
 
     errortype: "",
     // propPrint: {
@@ -426,7 +426,7 @@ export default function HozlaPrintRequestForm() {
         files_id: res.data,
         pageType: data.pageType,
         ordernum: data.ordernum,
-        textArea: data.textArea,
+        clientNote: data.clientNote,
       };
       console.log(requestData);
       axios
@@ -1112,14 +1112,14 @@ export default function HozlaPrintRequestForm() {
                       </FormGroup>
                       <FormGroup>
                         <MDInput
-                          name="textArea"
+                          name="clientNote"
                           label="הערות נוספות..."
                           onChange={handleChangeTxtAera}
                           style={{ minWidth: 360 }}
                           multiline
                           rows={3}
                           // contrast
-                          value={data.textArea}
+                          value={data.clientNote}
                           // value={() => {
                           //   setTextArea({ ...textArea, txt: filePush.name });
                           // }}
