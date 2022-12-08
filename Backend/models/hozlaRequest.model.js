@@ -22,13 +22,14 @@ const HozlaRequestSchema = new mongoose.Schema(
     workGivenDate: { type: Date, default: () => Date.now() },
 
     fullNameReciver: String,
+    fullNameTakein: String,
     workRecivedDate: Date,
 
     files_id: { type: String, default: "" },
     status: { type: Number, default: 25 },
-    
+
     clientNote: { type: String, default: "" },
-    personalnumber:  { type: String, required: true },
+    personalnumber: { type: String, required: true },
   },
   { timestamps: true }
 );

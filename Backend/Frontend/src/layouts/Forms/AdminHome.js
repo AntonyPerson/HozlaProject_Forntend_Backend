@@ -65,9 +65,8 @@ function Dashboard() {
   const [dates, setdates] = useState({});
   const [status, setStatus] = useState({
     received: 0,
-    archive: 0,
+    inWorking: 0,
     inprint: 0,
-    ended: 0,
     readyForTakeIn: 0,
   });
 
@@ -93,9 +92,8 @@ function Dashboard() {
         setStatus({
           ...status,
           received: responseStatus.data.received,
-          archive: responseStatus.data.archive,
+          inWorking: responseStatus.data.inWorking,
           inprint: responseStatus.data.inprint,
-          ended: responseStatus.data.ended,
           readyForTakeIn: responseStatus.data.readyForTakeIn,
         });
       })
@@ -151,10 +149,10 @@ function Dashboard() {
                 title="ניהול הוצל''א יומי"
                 description="מעקב בקשות להדפסה"
                 chart={{
-                  labels: ["התקבלה", "בארכיון", "בהדפסה", "הסתיימה", "מוכן לאיסוף"],
+                  labels: ["התקבלה", "בעבודה", "בהדפסה", "מוכן לאיסוף"],
                   datasets: {
                     label: "Projects",
-                    backgroundColors: ["mekatnar", "warning", "info", "dark", "success"],
+                    backgroundColors: ["mekatnar", "info", "dark", "success"],
                     // data: ,
                     data: [
                       // dbStatus
@@ -163,9 +161,8 @@ function Dashboard() {
                       // dataFromDB.inprint,
                       // dataFromDB.printed,
                       `${status.received}`,
-                      `${status.archive}`,
+                      `${status.inWorking}`,
                       `${status.inprint}`,
-                      `${status.ended}`,
                       `${status.readyForTakeIn}`,
                     ],
                   },

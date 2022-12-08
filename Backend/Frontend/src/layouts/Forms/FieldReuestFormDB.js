@@ -134,11 +134,10 @@ const FieldReuestFormDB = () => {
     // fileLink.click();
     // fileLink.remove();
 
-    // * no id
     // e.preventDefault();
     const urlPath = filePath;
     const newUrlPath = urlPath.slice(8);
-    console.log(`Frontend ${newUrlPath}`);
+    // console.log(`Frontend ${newUrlPath}`);
     axios
       .get(`http://localhost:5000/api/downloadPDFFile/${newUrlPath}`, { responseType: "blob" })
       .then((res) => {
@@ -282,7 +281,7 @@ const FieldReuestFormDB = () => {
                   <Progress
                     variant="gradient"
                     color={getWorkStuts(formData.status)[1]}
-                    value={formData.status >= 125 ? 100 : formData.formData}
+                    value={formData.status >= 125 ? 100 : formData.status}
                   />
                 </>
               ) : (
@@ -462,6 +461,16 @@ const FieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
+                  <FormGroup>
+                    <Label for="fullNameTakein">{textPlaceHolderInputs[16]}</Label>
+                    <Input
+                      // placeholder={textPlaceHolderInputs[9]}
+                      name="fullNameTakein"
+                      type="text"
+                      value={formData.fullNameTakein}
+                      disabled
+                    />
+                  </FormGroup>
 
                   <FormGroup>
                     <Label for="workGivenDate">{textPlaceHolderInputs[10]}</Label>
@@ -479,17 +488,6 @@ const FieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
-                  <FormGroup>
-                    <Label for="fullNameTakein">{textPlaceHolderInputs[15]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[9]}
-                      name="fullNameTakein"
-                      type="text"
-                      value={formData.fullNameTakein}
-                      disabled
-                    />
-                  </FormGroup>
-
                   <FormGroup>
                     <Label for="workRecivedDate">{textPlaceHolderInputs[14]}</Label>
                     <Input

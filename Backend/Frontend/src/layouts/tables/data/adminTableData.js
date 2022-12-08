@@ -149,7 +149,7 @@ export default function data() {
 
   const dbRows = requestDB.map((hozla, index) => ({
     // project: <Project image={LogoAsana} name="Asana" />,
-    name: hozla.name,
+    fullNameTakein: hozla.fullNameTakein,
     fileID: hozla._id,
     project: hozla.workName,
     projectFor: hozla.projectFor,
@@ -216,11 +216,11 @@ export default function data() {
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
+      { Header: "שם האוסף", accessor: "fullNameTakein", align: "center" },
       { Header: "תאריך דרישת העבודה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום העבודה", accessor: "endDate", align: "center" },
-      // { Header: "שם העבודה", accessor: "project", align: "center" },
-      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      { Header: "שם העבודה", accessor: "project", align: "center" },
+      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },

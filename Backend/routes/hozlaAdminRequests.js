@@ -49,16 +49,16 @@ router.route("/getAnafPrintCount").get((req, res) => {
           other = hozla.numPages + other;
         }
       });
-      console.log(`tun: ${tun}`);
-      console.log(`takom: ${takom}`);
-      console.log(`tom: ${tom}`);
-      console.log(`sadot: ${sadot}`);
-      console.log(`aczaka: ${aczaka}`);
-      console.log(`segel: ${segel}`);
-      console.log(`peer: ${peer}`);
-      console.log(`ergon: ${ergon}`);
-      console.log(`shalishot: ${shalishot}`);
-      console.log(`other: ${other}`);
+      // console.log(`tun: ${tun}`);
+      // console.log(`takom: ${takom}`);
+      // console.log(`tom: ${tom}`);
+      // console.log(`sadot: ${sadot}`);
+      // console.log(`aczaka: ${aczaka}`);
+      // console.log(`segel: ${segel}`);
+      // console.log(`peer: ${peer}`);
+      // console.log(`ergon: ${ergon}`);
+      // console.log(`shalishot: ${shalishot}`);
+      // console.log(`other: ${other}`);
     })
     .then(() =>
       res.json({

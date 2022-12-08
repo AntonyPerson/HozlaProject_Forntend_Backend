@@ -31,10 +31,10 @@ router.route("/archivedRequests").get((req, res) => {
 
 router.route("/getCountStatus").get((req, res) => {
   let received = 0;
+  let inWorking = 0;
   let inprint = 0;
-  let ended = 0;
   let readyForTakeIn = 0;
-  let archive = 0;
+  // let archive = 0;
   HozlaRequest.find()
     .then((request) =>
       //  res.json(request)
@@ -43,23 +43,24 @@ router.route("/getCountStatus").get((req, res) => {
           if (hozla.status === 25) {
             received += 1;
           } else if (hozla.status === 50) {
-            inprint += 1;
+            inWorking += 1;
           } else if (hozla.status === 75) {
-            ended += 1;
+            inprint += 1;
           } else if (hozla.status === 100) {
             readyForTakeIn += 1;
-          } else if (hozla.status === 125) {
-            archive += 1;
           }
+          // else if (hozla.status === 125) {
+          //   archive += 1;
+          // }
         });
-        console.log(`received: ${received}`);
-        console.log(`inprint: ${inprint}`);
-        console.log(`ended: ${ended}`);
-        console.log(`readyForTakeIn: ${readyForTakeIn}`);
-        console.log(`archive: ${archive}`);
+        // console.log(`received: ${received}`);
+        // console.log(`inprint: ${inprint}`);
+        // console.log(`ended: ${ended}`);
+        // console.log(`readyForTakeIn: ${readyForTakeIn}`);
+        // console.log(`archive: ${archive}`);
       }
     )
-    .then(() => res.json({ received, archive, inprint, ended, readyForTakeIn }))
+    .then(() => res.json({ received, inWorking, inprint, readyForTakeIn }))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -79,6 +80,7 @@ router.route("/add").post((req, res) => {
   const fullNameAsker = req.body.fullNameAsker;
   const workGivenDate = Date.parse(req.body.workGivenDate);
   const fullNameReciver = req.body.fullNameReciver;
+  const fullNameTakein = req.body.fullNameTakein;
   const workRecivedDate = Date.parse(req.body.workRecivedDate);
   const files_id = req.body.files_id;
   const status = req.body.status;
@@ -101,6 +103,7 @@ router.route("/add").post((req, res) => {
     fullNameAsker,
     workGivenDate,
     fullNameReciver,
+    fullNameTakein,
     workRecivedDate,
     files_id,
     status,
@@ -157,6 +160,7 @@ router.route("/update/:id").post((req, res) => {
       request.fullNameAsker = req.body.fullNameAsker;
       request.workGivenDate = Date.parse(req.body.workGivenDate);
       request.fullNameReciver = req.body.fullNameReciver;
+      request.fullNameTakein = req.body.fullNameTakein;
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       request.files_id = req.body.files_id;
       request.clientNote = String(req.body.clientNote);
