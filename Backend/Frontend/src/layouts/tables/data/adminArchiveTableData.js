@@ -97,8 +97,6 @@ export default function data() {
     return diff;
   };
 
-  const requestOne = axios.get(one);
-  const requestTwo = axios.get(two);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/hozlaRequests/archivedRequests`)

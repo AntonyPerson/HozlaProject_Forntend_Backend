@@ -57,11 +57,11 @@ app.use("/hozlaRequests", hozlaRequestsRouter);
 const hozlaAdminRequestsRouter = require("./routes/hozlaAdminRequests");
 app.use("/hozlaAdminRequests", hozlaAdminRequestsRouter);
 
-//user routes
-const authRoutes = require("./routes/authentication/auth");
-const userRoutes = require("./routes/authentication/users");
-app.use("/api", authRoutes);
-app.use("/api", userRoutes);
+// //user routes
+// const authRoutes = require("./routes/authentication/auth");
+// const userRoutes = require("./routes/authentication/users");
+// app.use("/api", authRoutes);
+// app.use("/api", userRoutes);
 
 // upload files
 const fileuploaderRoutes = require("./routes/fileuploader/fileuploader");

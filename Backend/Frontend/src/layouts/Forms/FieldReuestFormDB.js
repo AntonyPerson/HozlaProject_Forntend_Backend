@@ -282,7 +282,7 @@ const FieldReuestFormDB = () => {
                   <Progress
                     variant="gradient"
                     color={getWorkStuts(formData.status)[1]}
-                    value={formData.status >= 125 ? 100 : formData.formData}
+                    value={formData.status >= 125 ? 100 : formData.status}
                   />
                 </>
               ) : (
