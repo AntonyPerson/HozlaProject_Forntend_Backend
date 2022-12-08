@@ -79,7 +79,7 @@ export default function data() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/hozlaRequests/`)
+      .get(`http://localhost:5000/hozlaRequests/activeRequests`)
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
@@ -126,13 +126,13 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "התקבלה";
+      stutus = "נשלח להוצלא";
       color = "error";
     } else if (value === 50) {
-      stutus = "בהדפסה";
+      stutus = "התקבל במערכת";
       color = "mekatnar";
     } else if (value === 75) {
-      stutus = "הסתיימה";
+      stutus = "בהדפסה";
       color = "mekatnar";
     } else if (value === 100) {
       stutus = "מוכן לאיסוף";
@@ -140,6 +140,9 @@ export default function data() {
     } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
     return [stutus, color];
   };
@@ -161,7 +164,11 @@ export default function data() {
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
           {getWorkStuts(hozla.status)[0]}
         </MDTypography>
-        <Progress variant="gradient" color={getWorkStuts(hozla.status)[1]} value={hozla.status} />
+        <Progress
+          variant="gradient"
+          color={getWorkStuts(hozla.status)[1]}
+          value={hozla.status >= 125 ? 100 : hozla.status}
+        />
       </>
     ),
     NameRequester: hozla.fullNameAsker,
@@ -209,11 +216,11 @@ export default function data() {
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
-      // { Header: "שם האוסף", accessor: "name", align: "center" },
-      { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
-      { Header: "תאריך סיום", accessor: "endDate", align: "center" },
-      { Header: "שם העבודה", accessor: "project", align: "center" },
-      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      { Header: "שם האוסף", accessor: "name", align: "center" },
+      { Header: "תאריך דרישת העבודה", accessor: "startDate", align: "center" },
+      { Header: "תאריך סיום העבודה", accessor: "endDate", align: "center" },
+      // { Header: "שם העבודה", accessor: "project", align: "center" },
+      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
@@ -225,133 +232,3 @@ export default function data() {
     setDBerror: setIsError,
   };
 }
-
-// rows: [
-//   {
-//     // project: <Project image={LogoAsana} name="Asana" />,
-//     project: projectOptions[0],
-//     clearance:
-//       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//       clearanceOptions[0],
-//     // </MDTypography>
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     completion: <Progress color="info" value={60} />,
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[1],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[2]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[2],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[3]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[3],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[1]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[4],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[0]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[5],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[2]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-// ],

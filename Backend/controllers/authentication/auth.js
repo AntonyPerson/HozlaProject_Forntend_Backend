@@ -4,6 +4,9 @@ const User = require("../../models/authentication/user.model");
 //const {errorHandler} = require('../helpers/dbErrorHandler');
 
 exports.signup = (req, res) => {
+  console.log(
+    `The SignUp server function`
+  );
   console.log("req.body", req.body);
   const user = new User(req.body);
   user.save((err, user) => {
@@ -23,10 +26,20 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
   //find based on personalnumber
   const { personalnumber, password } = req.body;
-  User.findOne(req.body.personalnumber, (err, user) => {
-    if (err || !user) {
+  User.findOne({ personalnumber: personalnumber }, (err, user) => {
+    console.log(
+      `The SignIn server function - personalnumber: ${req.body.personalnumber}`
+    );
+    console.log(`The SignIn server function - user:`);
+    console.log(user);
+    if (!user || user === undefined) {
+      return res.json({
+        user: "DoNotExist", //"משתמש עם מספר אישי זה אינו קיים",
+      });
+    }
+    if (err) {
       return res.status(400).json({
-        error: "משתמש עם מספר אישי זה אינו קיים",
+        error: err, //"משתמש עם מספר אישי זה אינו קיים",
       });
     }
     //if user found make sure the personalnumber and password match

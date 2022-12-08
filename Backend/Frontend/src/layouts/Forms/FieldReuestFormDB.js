@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 /* eslint-disable no-empty */
@@ -38,6 +39,10 @@ import MDButton from "components/MDButton";
 import MDAlert from "components/MDAlert";
 import FileDownload from "js-file-download";
 
+import { signin, authenticate, isAuthenticated } from "auth/index";
+
+const { user } = isAuthenticated();
+
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
 const copyTypes = {
@@ -63,10 +68,12 @@ const textPlaceHolderInputs = [
   "קובץ להדפסה",
   "סוג דף",
   "תאריך קבלת העבודה",
+  "עדכון סטטוס",
   "שם אוסף העבודה",
 ];
 const FieldReuestFormDB = () => {
   const params = useParams();
+
   const [formData, setFormData] = useState({});
   const [errorDB, setErrorDB] = useState(false);
   const [error404, setError404] = useState(false);
@@ -189,14 +196,53 @@ const FieldReuestFormDB = () => {
     } else if (value === 100) {
       stutus = "מוכן לאיסוף";
       color = "success";
+    } else if (value === 125) {
+      stutus = "נאסף";
+      color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
+
     return [stutus, color];
+  };
+  const handleStatusChange = (event) => {
+    console.groupCollapsed(` -------- handleStatusChange --------`);
+    const newStatus = Number(event.target.value);
+    console.log(newStatus);
+
+    axios
+      .post(`http://localhost:5000/hozlaRequests/statusUpdate/${params.formID}`, {
+        status: newStatus,
+      })
+      .then((response) => {
+        console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+        console.log(response.data);
+        console.log(params.formID);
+
+        setFormData({ ...formData, status: newStatus });
+        console.groupEnd();
+      })
+      .catch((error) => {
+        console.groupCollapsed(`handleStatusChange -------- Axios.error`);
+
+        console.error(error);
+        console.error(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
+        console.groupEnd();
+      });
+    console.groupEnd();
   };
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color={color} fontWeight="medium">
         {value}%
       </MDTypography>
+
       <MDBox ml={0.5} width="60rem">
         <MDProgress variant="gradient" color={color} value={value} />
       </MDBox>
@@ -223,19 +269,44 @@ const FieldReuestFormDB = () => {
                   טופס מספר {params.formID}{" "}
                 </MDTypography>
               </MDBox>
-              <MDTypography
-                alignItems="center"
-                component="h3"
-                color={getWorkStuts(formData.status)[1]}
-                fontWeight="medium"
-              >
-                {getWorkStuts(formData.status)[0]}
-              </MDTypography>
-              <Progress
-                variant="gradient"
-                color={getWorkStuts(formData.status)[1]}
-                value={formData.status}
-              />
+              {user.admin === "0" ? (
+                <>
+                  <MDTypography
+                    alignItems="center"
+                    component="h3"
+                    color={getWorkStuts(formData.status)[1]}
+                    fontWeight="medium"
+                  >
+                    {getWorkStuts(formData.status)[0]}
+                  </MDTypography>
+                  <Progress
+                    variant="gradient"
+                    color={getWorkStuts(formData.status)[1]}
+                    value={formData.status >= 125 ? 100 : formData.formData}
+                  />
+                </>
+              ) : (
+                <FormGroup>
+                  <Label for="workClearance">{textPlaceHolderInputs[15]}</Label>
+                  <Input
+                    // placeholder={textPlaceHolderInputs[5]}
+                    name="workClearance"
+                    type="select"
+                    value={formData.status}
+                    onChange={handleStatusChange}
+                  >
+                    <option disabled value="25">
+                      נשלח להוצלא
+                    </option>
+                    {/* <option value="0">בלמ"ס</option> */}
+                    <option value="50">התקבל במערכת</option>
+                    <option value="75">בהדפסה</option>
+                    <option value="100">מוכן לאיסוף</option>
+                    <option value="125">נאסף</option>
+                    <option value="150">העבודה נדחתה</option>
+                  </Input>
+                </FormGroup>
+              )}
               <Form style={{ textAlign: "right" }} role="form">
                 <FormGroup row className="">
                   <FormGroup>

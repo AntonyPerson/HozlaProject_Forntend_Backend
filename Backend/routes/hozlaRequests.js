@@ -13,6 +13,22 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/activeRequests").get((req, res) => {
+  HozlaRequest.find({ status: { $lte: 100 } })
+    .sort({ status: 1, createdAt: -1 })
+    .exec()
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/archivedRequests").get((req, res) => {
+  HozlaRequest.find({ status: { $gte: 125 } })
+    .sort({ status: 1, createdAt: -1 })
+    .exec()
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/getCountStatus").get((req, res) => {
   let received = 0;
   let inprint = 0;
@@ -66,7 +82,7 @@ router.route("/add").post((req, res) => {
   const workRecivedDate = Date.parse(req.body.workRecivedDate);
   const files_id = req.body.files_id;
   const status = req.body.status;
-  const order_maker_card_number = req.body.order_maker_card_number;
+  const personalnumber = req.body.personalnumber;
   const clientNote = String(req.body.clientNote);
 
   const newHozlaRequest = new HozlaRequest({
@@ -88,7 +104,7 @@ router.route("/add").post((req, res) => {
     workRecivedDate,
     files_id,
     status,
-    order_maker_card_number,
+    personalnumber,
     clientNote,
   });
 
@@ -99,6 +115,16 @@ router.route("/add").post((req, res) => {
       res.send(form.id);
     }
   });
+});
+
+router.route("/requestByPersonalnumber/:personalnumber").get((req, res) => {
+  // console.log(req.body);
+  // console.log(req.params);
+  const personalnumber = req.params.personalnumber;
+  // const personalnumber = "7654321";
+  HozlaRequest.find({ personalnumber: personalnumber })
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 router.route("/:id").get((req, res) => {
@@ -135,7 +161,7 @@ router.route("/update/:id").post((req, res) => {
       request.files_id = req.body.files_id;
       request.clientNote = String(req.body.clientNote);
       request.status = req.body.status;
-      request.order_maker_card_number = req.body.order_maker_card_number;
+      request.personalnumber = req.body.personalnumber;
 
       request
         .save()
@@ -143,6 +169,32 @@ router.route("/update/:id").post((req, res) => {
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/statusUpdate/:id").post((req, res) => {
+  // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+  // console.log(req.params.id);
+
+  HozlaRequest.findById(req.params.id)
+    .then((request) => {
+      // console.log(request.status);
+      request.status = Number(req.body.status);
+      // console.log(request.status);
+      // console.log(req.body.status);
+      if (req.body.status >= 125) {
+        request.files = [];
+      }
+      request
+        .save()
+        .then(() => res.json("HozlaRequest status updated!"))
+        .catch((err) => {
+          // console.log(err);
+
+          res.status(400).json("Error: " + err);
+        });
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+  console.groupEnd();
 });
 
 module.exports = router;

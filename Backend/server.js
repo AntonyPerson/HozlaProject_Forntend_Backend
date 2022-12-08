@@ -39,8 +39,17 @@ mongoose
     console.log("MongoDB database connection established successfully")
   )
   .catch((err) => console.log(err));
+  //user routes
+  const authRoutes = require("./routes/authentication/auth");
+  const userRoutes = require("./routes/authentication/users");
+  app.use("/api", authRoutes);
+  app.use("/api", userRoutes);
 
-//Hozla Requests routes
+//* file uploader Routes
+// const fileuploaderRoutes = require("./routes/fileuploader100/fileuploader");
+// app.use('/api',fileuploaderRoutes)
+
+//Hozla Requests routes for Client
 const hozlaRequestsRouter = require("./routes/hozlaRequests");
 app.use("/hozlaRequests", hozlaRequestsRouter);
 

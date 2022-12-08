@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-lonely-if */
 /* eslint-disable camelcase */
 /* eslint-disable prettier/prettier */
@@ -13,7 +14,7 @@
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-vars */
-
+// TODO check mult-files
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -82,6 +83,15 @@ import { DropzoneArea } from "react-mui-dropzone";
 import { DropzoneAreaBase } from "material-ui-dropzone";
 import A_paper_size_a6 from "../../assets/images/A-paper-size-a6.webp";
 
+// for file upload from Data
+import { singleFileUpload } from "Data/api";
+
+// user and auth import
+import { signin, authenticate, isAuthenticated } from "auth/index";
+const { user } = isAuthenticated();
+// console.log("Hozla Print Request Form");
+// console.log(user);
+
 export default function HozlaPrintRequestForm() {
   const currentDate = new Date();
   console.log(currentDate);
@@ -131,7 +141,7 @@ export default function HozlaPrintRequestForm() {
     fullNameReciver: "",
     workRecivedDate: "",
 
-    personalnumber: "",
+    personalnumber: user.personalnumber,
     id_files: "",
     // role: "",
 
@@ -360,7 +370,7 @@ export default function HozlaPrintRequestForm() {
     //   // toast.error(ErrorReason);
     // }
 
-    if (Date.parse(data.workRecivedDate) < currentDate) {
+    if (Date.parse(data.workRecivedDate) <= currentDate) {
       flag = false;
       ErrorReason.push("תאריך קבלת העבודה לא תיקני");
       // toast.error(ErrorReason);
@@ -408,20 +418,25 @@ export default function HozlaPrintRequestForm() {
         unit: data.unit,
         anaf: data.anaf,
         mador: data.mador,
-        phoneNumber: data.phoneNumber,
+  
         workName: data.workName,
         workClearance: data.workClearance,
         bindingType: data.bindingType,
         bindingTypeOther: data.bindingTypeOther,
         copyType: data.copyType,
         numOfCopyies: data.numOfCopyies,
+
+      phoneNumber: data.phoneNumber,
         fullNameAsker: data.fullNameAsker,
         workGivenDate: data.workGivenDate,
+
         fullNameReciver: data.fullNameReciver,
         fullNameTakein: data.fullNameTakein,
         workRecivedDate: data.workRecivedDate,
+
         personalnumber: data.personalnumber,
         // role: data.role,
+
         // files: data.files,
         files_id: res.data,
         pageType: data.pageType,
@@ -893,7 +908,7 @@ export default function HozlaPrintRequestForm() {
                       </option>
                       <option value="0">בלמ"ס</option>
                       <option value="2">סודי</option>
-                      <option value="3">סודי ביותר</option>
+                      {/* <option value="3">סודי ביותר</option> */}
                     </Input>
                   </FormGroup>
                 </FormGroup>
@@ -1328,69 +1343,6 @@ export default function HozlaPrintRequestForm() {
                       )} 
                       // ! Show img and file
                       */}
-
-                {/* <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                    הרשאה
-                  </div>
-                  <FormGroup dir="rtl">
-                    <  Input
-
-                      type="select"
-                      name="role"
-                      value={data.role}
-                      onChange={handleChange}
-                    >
-                      <option value="">הרשאה</option>
-                      <option value="0">מנהל מערכת</option>
-                      <option value="1">הרשאת גדוד</option>
-                      <option value="2">הרשאת חטיבה</option>
-                      <option value="3">הרשאת אוגדה</option>
-                      <option value="4">הרשאת פיקוד</option> 
-                    </  Input>
-
-                  </FormGroup> */}
-
-                {/* {data.role === "0" ? (
-                    <div>מנהל מערכת</div>
-                  ) : data.role === "1" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        גדוד
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={gdods} handleChange2={handleChange2} name={'gdodid'} val={data.gdodid ? data.gdodid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "2" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        חטיבה
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={hativas} handleChange2={handleChange2} name={'hativaid'} val={data.hativaid ? data.hativaid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "3" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        אוגדה
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={ogdas} handleChange2={handleChange2} name={'ogdaid'} val={data.ogdaid ? data.ogdaid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "4" ? (
-                    <>
-                      <div style={{ textAlign: "right", paddingTop: "10px" }}>
-                        פיקוד
-                      </div>
-                      <FormGroup dir="rtl" style={{ justifyContent: 'right', alignContent: 'right', textAlign: 'right' }}>
-                        <Select data={pikods} handleChange2={handleChange2} name={'pikodid'} val={data.pikodid ? data.pikodid : undefined} />
-                      </FormGroup>
-                    </>
-                  ) : data.role === "" ? (
-                    <div>נא להכניס הרשאה</div>
-                  ) : null} */}
 
                 <div className="text-center">
                   <MDButton
