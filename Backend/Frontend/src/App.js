@@ -70,10 +70,10 @@ import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
-import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
+import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -201,13 +201,14 @@ export default function App() {
                 {getRoutes(AdminRoutes)}
                 <Route path="/" element={<Navigate to="/AdminHome" />} />
                 <Route path="/Error404" element={<Error404 />} />
-                {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
-                {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
                 <Route path="/RequestForm">
                   <Route path=":formID" element={<FieldReuestFormDB />} />
                 </Route>
                 <Route path="/adminForm">
                   <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
+                </Route>
+                <Route path="/adminFeild">
+                  <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
                 </Route>
                 <Route path="*" element={<Error404 />} />
               </Routes>

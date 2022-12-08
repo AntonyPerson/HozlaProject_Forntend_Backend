@@ -31,7 +31,7 @@ import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -57,8 +57,12 @@ export default function data() {
   //     </MDTypography>
   //   </MDBox>
   // );
+  const params = useParams();
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
+  const [errorDB, setErrorDB] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [error404, setError404] = useState(false);
   const [isInfoPressed, setIsInfoPressed] = useState(false);
   const [pressedID, setpressedID] = useState("");
   const textPlaceHolderInputs = [
@@ -116,19 +120,66 @@ export default function data() {
   //     </DialogActions>
   //   </Dialog>
   // };
+  const one = "http://localhost:5000/hozlaAdminRequests/";
+  const two = "http://localhost:5000/hozlaRequests/";
 
+  const requestOne = axios.get(one);
+  const requestTwo = axios.get(two);
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/managementHoztla/`)
-      .then((response) => {
-        console.log(response.data);
-        setRequestDB(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsError(true);
+      .all([requestOne, requestTwo])
+      .then(
+        axios.spread((...responses) => {
+          const responseOne = responses[0];
+          const responseTwo = responses[1];
+          // setFormData(responseOne.data);
+          // console.log(formData);
+          setRequestDB(responseTwo.data, responseOne.data);
+          console.log(requestDB);
+          // use/access the results
+          console.log(responseOne, responseTwo);
+        })
+      )
+      .catch((errors) => {
+        // react on errors.
+        console.error(errors);
       });
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //       .then((response) => {
+  //         // console.log(`the object data`);
+  //         console.log(response.data);
+  //         console.log(params.formID);
+  //         // console.log(params.hozlaRequestID);
+
+  //         setFormData(response.data);
+  //         console.log(formData);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //         console.log(error.code);
+  //         if (error.code === "ERR_BAD_REQUEST") {
+  //           setError404(true);
+  //         } else {
+  //           setErrorDB(true);
+  //         }
+  //       });
+  // }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaRequests/`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
 
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
@@ -154,6 +205,11 @@ export default function data() {
       stutus = "הסתיימה";
       color = "mekatnar";
     } else if (value === 100) {
+      stutus = "מוכן לאיסוף";
+      color = "success";
+    }
+    // לארכיון
+    else if (value === 125) {
       stutus = "נאסף";
       color = "success";
     }
@@ -165,11 +221,13 @@ export default function data() {
     name: hozla.name,
     fileID: hozla._id,
     project: hozla.workName,
+    projectFor: hozla.projectFor,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
     // </MDTypography>
-    endDate: hozla.endDate,
+    startDate: hozla.workGivenDate.split("T")[0],
+    endDate: hozla.workRecivedDate.split("T")[0],
     status: (
       <>
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
@@ -181,7 +239,7 @@ export default function data() {
     NameRequester: hozla.fullNameAsker,
     // diliveryDate: hozla.workRecivedDate.split("T")[0],
     additionalInfo: (
-      <Link to={`/adminFieldReuestFormDB/${hozla._id}`} key={hozla._id}>
+      <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
           color="mekatnar"
@@ -197,18 +255,21 @@ export default function data() {
         </MDButton>
       </Link>
     ),
-    update: (
-      <Link to={`/adminForm/${hozla._id}`} key={hozla._id}>
-        <MDTypography
-          component="a"
-          // href={`/RequestForm/${hozla._id}`}
-          // href="/adminForm"
-          variant="inherit"
+    hozlaInfo: (
+      <Link to={`/adminFeild/${hozla.hozlaRequestID}`} key={hozla.hozlaRequestID}>
+        <MDButton
+          variant="gradient"
           color="mekatnar"
-          fontWeight="medium"
+          // onClick={() => {
+          //   // setIsInfoPressed(true);
+          //   // setpressedID(hozla._id);
+          // }}
+          circular="true"
+          iconOnly="true"
+          size="medium"
         >
-          עדכן
-        </MDTypography>
+          <Icon>edit</Icon>
+        </MDButton>
       </Link>
     ),
   }));
@@ -219,109 +280,18 @@ export default function data() {
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       // { Header: "שם", accessor: "name", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      // { Header: "שם האוסף", accessor: "name", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
-      // { Header: "שם העבודה", accessor: "project", align: "center" },
-      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
-      // { Header: "סטטוס", accessor: "status", align: "center" },
+      { Header: "שם העבודה", accessor: "project", align: "center" },
+      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
-      // { Header: "מחק", accessor: "delete", align: "center" },
-      // { Header: "ערוך", accessor: "edit", align: "center" },
+      { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
+      // { Header: "טופס הוצל``א", accessor: "hozlaInfo", align: "center" },
     ],
-    rows: [
-      {
-        fileID: "aaaaaaaaaa",
-        name: "דביר וסקר",
-        clearance: "סודי",
-        status: (
-          <>
-            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
-              {getWorkStuts(100)[0]}
-            </MDTypography>
-            <Progress variant="gradient" color={getWorkStuts(100)[1]} value={100} />
-          </>
-        ),
-        endDate: "10/11/2022",
-        startDate: "27/10/2022",
-        project: "הוצלא",
-        projectFor: "הוצלא",
-        numberID: "0000000",
-        NameRequester: "0000000",
-        delete: (
-          // <Link to="/adminFieldReuestFormDB">
-          <MDButton
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminForm"
-            variant="inherit"
-            color="error"
-            fontWeight="medium"
-          >
-            <Icon>close</Icon>
-          </MDButton>
-          // </Link>
-        ),
-        edit: (
-          <MDTypography
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminEditUser"
-            variant="inherit"
-            color="success"
-            fontWeight="medium"
-          >
-            <Icon>edit</Icon>
-          </MDTypography>
-        ),
-      },
-      {
-        fileID: "bbbbbbbb",
-        name: "אנטוני פרסון",
-        clearance: "שמור",
-        status: (
-          <>
-            <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
-              {getWorkStuts(50)[0]}
-            </MDTypography>
-            <Progress variant="gradient" color={getWorkStuts(50)[1]} value={50} />
-          </>
-        ),
-        startDate: "27/10/2022",
-        endDate: "14/11/2022",
-        numberID: "1111111",
-        project: "הוצלא",
-        projectFor: "הוצלא",
-        NameRequester: "1111111",
-        delete: (
-          // <Link to="/adminFieldReuestFormDB">
-          <MDButton
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminForm"
-            variant="inherit"
-            color="error"
-            fontWeight="medium"
-          >
-            <Icon>close</Icon>
-          </MDButton>
-          // </Link>
-        ),
-        edit: (
-          <MDTypography
-            component="a"
-            // href={`/RequestForm/${hozla._id}`}
-            // href="/adminEditUser"
-            variant="inherit"
-            color="success"
-            fontWeight="medium"
-          >
-            <Icon>edit</Icon>
-          </MDTypography>
-        ),
-      },
-    ],
+    rows: dbRows,
     dbError: isError,
     setDBerror: setIsError,
   };

@@ -12,6 +12,9 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -26,19 +29,72 @@ import MDTypography from "components/MDTypography";
 import TimelineItem from "examples/Timeline/TimelineItem";
 
 function AnnualInfoAdmin() {
-  // * data from database
-  const dataFromDB = {
-    printed: 40,
-    inprint: 10,
-    intreatment: 30,
-    waiting: 20,
+  // const params = useParams();
+  // const [formData, setFormData] = useState({});
+  // const [error404, setError404] = useState(false);
+  // const [errorDB, setErrorDB] = useState(false);
+  // // * data from database
+  const [dataFromDB, setDataFromDB] = useState({
+    countPrintInYear: 0,
+    numBeatsColourful: 0,
+    sumBeatsBlackwhite: 0,
+    sumRequestInYear: 0,
+  });
 
-    countPrintInDay: 10,
-    countPrintInYear: 3000,
-    requests: 20,
-    numBeatsPerDay: 100,
-    numBeatsPerYear: 350000,
-  };
+  const params = useParams();
+  const [formData, setFormData] = useState({});
+  useEffect(() => {
+    axios.get(`http://localhost:5000/AnnualInfoAdmin/`).then((response) => {
+      // console.log(`the object data`);
+      // console.log(response.data);
+      setFormData(response.data);
+      // formData.forEach((num) => {
+      setDataFromDB({
+        ...dataFromDB,
+        countPrintInYear: response.data.countPrintInYear,
+        numBeatsColourful: response.data.numBeatsColourful,
+        sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
+        sumRequestInYear: response.data.sumRequestInYear,
+      });
+      // });
+    });
+    // .catch((error) => {
+    //   console.log(error);
+    //   console.log(error.code);
+    //   if (error.code === "ERR_BAD_REQUEST") {
+    //     setError404(true);
+    //   } else {
+    //     setErrorDB(true);
+    //   }
+    // });
+  }, []);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/hozlaAdminRequests/`).then((response) => {
+  //     // console.log(`the object data`);
+  //     // console.log(response.data);
+  //     setFormData(response.data);
+  //     formData.forEach((nbpy) => {
+  //       setDataFromDB({
+  //         ...dataFromDB,
+  //         numBeatsPerYear: nbpy.numBeatsPerYear,
+  //         countPrintInDay: nbpy.countPrintInDay,
+  //         numBeatsPerDay: nbpy.numBeatsPerDay,
+  //         countPrintInYear: nbpy.countPrintInYear,
+  //       });
+  //     });
+  //   });
+  //   // .catch((error) => {
+  //   //   console.log(error);
+  //   //   console.log(error.code);
+  //   //   if (error.code === "ERR_BAD_REQUEST") {
+  //   //     setError404(true);
+  //   //   } else {
+  //   //     setErrorDB(true);
+  //   //   }
+  //   // });
+  // }, []);
+  console.log(formData);
+  console.log(params);
 
   return (
     <Card sx={{ height: "100%" }}>
@@ -61,32 +117,41 @@ function AnnualInfoAdmin() {
       </MDBox>
       <MDBox p={1}>
         <TimelineItem
+          color="mekatnar"
+          // icon="inventory_2"
+          icon={<Icon>print</Icon>}
+          title="כמות הדפים שהודפסו"
+          dateTime={dataFromDB.countPrintInYear}
+        />
+        {/* <TimelineItem
           color="success"
           icon={<Icon>access_time</Icon>}
           title="כמות הדפים שהודפסו היום"
           dateTime={dataFromDB.countPrintInDay}
-        />
-        <TimelineItem
-          color="mekatnar"
-          // icon="inventory_2"
-          icon={<Icon>print</Icon>}
-          title="כמות הדפים שהודפסו השנה"
-          dateTime={dataFromDB.countPrintInYear}
-        />
-        <TimelineItem
-          color="info"
-          // icon="shopping_cart"
-          icon={<Icon>access_time</Icon>}
-          title="מספר פעימות ביום"
-          dateTime={dataFromDB.numBeatsPerDay}
-        />
+        /> */}
         <TimelineItem
           color="warning"
           // icon="payment"
           icon={<Icon>opacity_sharp</Icon>}
-          title="מספר פעימות השנה"
-          dateTime={dataFromDB.numBeatsPerYear}
+          title="מספר פעימות צבעוני"
+          dateTime={dataFromDB.numBeatsColourful}
         />
+        <TimelineItem
+          color="info"
+          // icon="shopping_cart"
+          icon={<Icon>opacity_sharp</Icon>}
+          title="מספר פעימות שחור לבן"
+          dateTime={dataFromDB.sumBeatsBlackwhite}
+        />
+        <TimelineItem
+          color="success"
+          // icon="shopping_cart"
+          icon={<Icon>request_quote</Icon>}
+          title="כמות בקשות"
+          dateTime={dataFromDB.sumRequestInYear}
+          lastItem
+        />
+
         {/* <TimelineItem
           color="primary"
           icon="vpn_key"
