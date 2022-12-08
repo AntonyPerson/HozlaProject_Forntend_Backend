@@ -24,6 +24,7 @@ import {
   Col,
   Label,
 } from "reactstrap";
+import { Navigate, useParams } from "react-router-dom";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -33,6 +34,7 @@ import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
+import VerticalBarChart from "examples/Charts/BarCharts/VerticalBarChart";
 import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import AnnualInfoAdmin from "layouts/dashboard/components/AnnualInfoAdmin";
 
@@ -48,82 +50,88 @@ import MDSnackbar from "components/MDSnackbar";
 import nglogo from "assets/images/NG_VR.png";
 
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
+  // const { sales, tasks } = reportsLineChartData;
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
   const [infoSB, setInfoSB] = useState(false);
 
   const openInfoSB = () => setInfoSB(true);
   const closeInfoSB = () => setInfoSB(false);
+  const params = useParams();
+  const [formData, setFormData] = useState({});
+  const [errorDB, setErrorDB] = useState(false);
+  const [error404, setError404] = useState(false);
 
-  // * data from database
-  const dataFromDB = {
-    printed: 40,
-    inprint: 10,
-    intreatment: 30,
-    waiting: 20,
+  const [dates, setdates] = useState({});
+  const [status, setStatus] = useState({
+    received: 0,
+    archive: 0,
+    inprint: 0,
+    ended: 0,
+    readyForTakeIn: 0,
+  });
 
-    countPrintInDay: 10,
-    countPrintInWeek: 30,
-  };
+  const [anaf, setAnaf] = useState({
+    tun: 0,
+    takom: 0,
+    tom: 0,
+    sadot: 0,
+    aczaka: 0,
+    segel: 0,
+    peer: 0,
+    ergon: 0,
+    shalishot: 0,
+    other: 0,
+  });
 
-  const dataDB = requestDB.map((hozla, index) => ({
-    labels: [
-      "Jan.",
-      "Feb.",
-      "Mar.",
-      "Apr.",
-      "May.",
-      "Jun.",
-      "Jul.",
-      "Aug.",
-      "Sep.",
-      "Oct.",
-      "Nov.",
-      "Dec.",
-    ],
-    datasets: [
-      {
-        label: "כמות דפים",
-        color: "info",
-        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
-      },
-      {
-        label: "דפים צבעוניים",
-        color: "mekatnar",
-        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
-      },
-      {
-        label: "דפים שחור לבן",
-        color: "dark",
-        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
-      },
-    ],
-  }));
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5000/AdminHome`)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setRequestDB(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setIsError(true);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/hozlaRequests/getCountStatus`)
+      .then((responseStatus) => {
+        console.log(responseStatus.data);
+        setRequestDB(responseStatus.data);
+        setStatus({
+          ...status,
+          received: responseStatus.data.received,
+          archive: responseStatus.data.archive,
+          inprint: responseStatus.data.inprint,
+          ended: responseStatus.data.ended,
+          readyForTakeIn: responseStatus.data.readyForTakeIn,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsError(true);
+      });
+    axios
+      .get(`http://localhost:5000/hozlaAdminRequests/getAnafPrintCount`)
+      .then((responseAnaf) => {
+        console.log(responseAnaf.data);
+        setAnaf({
+          ...anaf,
+          tun: responseAnaf.data.tun,
+          takom: responseAnaf.data.takom,
+          tom: responseAnaf.data.tom,
+          sadot: responseAnaf.data.sadot,
+          aczaka: responseAnaf.data.aczaka,
+          segel: responseAnaf.data.segel,
+          peer: responseAnaf.data.peer,
+          ergon: responseAnaf.data.ergon,
+          shalishot: responseAnaf.data.shalishot,
+          other: responseAnaf.data.other,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsError(true);
+      });
+  }, []);
 
   const renderInfoSB = (
     <MDSnackbar
       icon="notifications"
       title="דוח נתונים"
-      content={`הודפס ${dataFromDB.printed}\n
-        בהדפסה ${dataFromDB.inprint}\n
-        בטיפול ${dataFromDB.intreatment}\n
-        ממתין ${dataFromDB.waiting}\n
-        כמות הדפסות היום ${dataFromDB.countPrintInDay}\n
-        כמות הדפסות השבוע ${dataFromDB.countPrintInWeek}\n`}
+      content={`הודפס `}
       dateTime="עכשיו"
       open={infoSB}
       onClose={closeInfoSB}
@@ -143,15 +151,22 @@ function Dashboard() {
                 title="ניהול הוצל''א יומי"
                 description="מעקב בקשות להדפסה"
                 chart={{
-                  labels: ["ממתין", "בטיפול", "בהדפסה", "הודפס"],
+                  labels: ["התקבלה", "בארכיון", "בהדפסה", "הסתיימה", "מוכן לאיסוף"],
                   datasets: {
                     label: "Projects",
-                    backgroundColors: ["dark", "info", "mekatnar", "success"],
+                    backgroundColors: ["mekatnar", "warning", "info", "dark", "success"],
+                    // data: ,
                     data: [
-                      dataFromDB.waiting,
-                      dataFromDB.intreatment,
-                      dataFromDB.inprint,
-                      dataFromDB.printed,
+                      // dbStatus
+                      // dataFromDB.waiting,
+                      // dataFromDB.intreatment,
+                      // dataFromDB.inprint,
+                      // dataFromDB.printed,
+                      `${status.received}`,
+                      `${status.archive}`,
+                      `${status.inprint}`,
+                      `${status.ended}`,
+                      `${status.readyForTakeIn}`,
                     ],
                   },
                 }}
@@ -189,50 +204,44 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>
-              <DefaultLineChart
-                dir="ltr"
+              <VerticalBarChart
                 icon={{ color: "mekatnar", component: "leaderboard" }}
                 title="דוח מנהלים"
                 description="כמות הדפסת דפים לפי ענף"
-                chart={
-                  // {dataDB}
-                  // ! replace with dataDB
-                  {
-                    labels: [
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                      "ענף תו``ן",
-                    ],
-                    datasets: [
-                      {
-                        label: "כמות דפים",
-                        color: "info",
-                        data: [70, 170, 110, 230, 320, 290, 150, 230, 120, 250],
-                      },
-                      {
-                        label: "דפים צבעוניים",
-                        color: "mekatnar",
-                        data: [30, 90, 40, 140, 290, 200, 100, 100, 60, 200],
-                      },
-                      {
-                        label: "דפים שחור לבן",
-                        color: "secondary",
-                        data: [40, 80, 70, 90, 30, 90, 50, 130, 60, 50],
-                      },
-                    ],
-                  }
-                  // !
-                }
+                chart={{
+                  labels: [
+                    "אחר",
+                    "שלישות",
+                    "אחזקה",
+                    "ענף פא``ר",
+                    "ענף ארגון",
+                    "ענף סגל",
+                    "ענף תו``ם",
+                    "ענף שדו``ת",
+                    "ענף תקו``ם",
+                    "ענף תו``ן",
+                  ],
+                  datasets: [
+                    {
+                      label: "כמות דפים",
+                      color: "mekatnar",
+                      data: [
+                        `${anaf.other}`,
+                        `${anaf.shalishot}`,
+                        `${anaf.aczaka}`,
+                        `${anaf.peer}`,
+                        `${anaf.ergon}`,
+                        `${anaf.segel}`,
+                        `${anaf.tom}`,
+                        `${anaf.sadot}`,
+                        `${anaf.takom}`,
+                        `${anaf.tun}`,
+                      ],
+                    },
+                  ],
+                }}
               />
             </Grid>
-
             {/* 
                             
                                 <ReportsBarChart

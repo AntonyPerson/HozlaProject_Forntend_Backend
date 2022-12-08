@@ -74,7 +74,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignInURL from "layouts/authentication/sign-in/sign-in-URLs/urlLayout";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
-import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
+import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
 import { signin, authenticate, isAuthenticated } from "auth/index";
 import sidenav from "assets/theme/components/sidenav";
 import AboutPage from "views/aboutpage/AboutPage";
@@ -258,6 +258,9 @@ export default function App() {
                   </Route>
                   <Route path="/adminForm">
                     <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
+                  </Route>
+                  <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
                   </Route>
                   <Route path="*" element={<Error404 />} />
                 </Routes>

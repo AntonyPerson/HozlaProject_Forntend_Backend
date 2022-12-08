@@ -31,7 +31,7 @@ import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ConstructionOutlined } from "@mui/icons-material";
 
 // Images
@@ -51,8 +51,12 @@ export default function data() {
   //     </MDTypography>
   //   </MDBox>
   // );
+  const params = useParams();
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
+  const [errorDB, setErrorDB] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [error404, setError404] = useState(false);
   const [isInfoPressed, setIsInfoPressed] = useState(false);
   const [pressedID, setpressedID] = useState("");
   const textPlaceHolderInputs = [
@@ -93,6 +97,8 @@ export default function data() {
     return diff;
   };
 
+  const requestOne = axios.get(one);
+  const requestTwo = axios.get(two);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/hozlaRequests/archivedRequests`)
@@ -119,6 +125,41 @@ export default function data() {
         setIsError(true);
       });
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //       .then((response) => {
+  //         // console.log(`the object data`);
+  //         console.log(response.data);
+  //         console.log(params.formID);
+  //         // console.log(params.hozlaRequestID);
+
+  //         setFormData(response.data);
+  //         console.log(formData);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //         console.log(error.code);
+  //         if (error.code === "ERR_BAD_REQUEST") {
+  //           setError404(true);
+  //         } else {
+  //           setErrorDB(true);
+  //         }
+  //       });
+  // }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaRequests/`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
 
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
