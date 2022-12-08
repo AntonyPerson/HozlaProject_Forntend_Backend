@@ -216,25 +216,29 @@ function signInURL() {
     </Dialog>
   );
 
-  const signInAxios = (personalnumber) => {
-    axios
-      .post(`http://localhost:5000/api/signin`, {
-        personalnumber,
-      })
+  const signInAxios = async (personalnumber) => {
+    let r_massage = "_";
+    await axios
+      .post(`http://localhost:5000/api/signin`, { personalnumber })
       .then((res) => {
+        // console.log(res.data.user);
         if (res.data.user === "DoNotExist" || res.data.user === undefined) {
-          return "DoNotExist";
+          r_massage = "DoNotExist";
+        } else {
+          authenticate(res.data);
+          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+
+          r_massage = "sucsses";
         }
-        authenticate(res.data);
-        setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-        return "sucsses";
       })
       .catch((error) => {
         console.log(error);
-        return "error";
+        r_massage = "error";
       });
+
+    return r_massage;
   };
-  const SignUpAxios = () => {
+  const SignUpAxios = async () => {
     console.log("In sign up");
     setValues({ ...values, loading: true, successmsg: false, error: false });
     const newUser = {
@@ -249,7 +253,7 @@ function signInURL() {
       email: signUpData.email,
       holzlaRequest: signUpData.holzlaRequest,
     };
-    axios
+    await axios
       .post(`http://localhost:5000/api/signup`, newUser)
       .then((res) => {
         console.log(`gotten new user from sign up`);
@@ -266,128 +270,82 @@ function signInURL() {
     // window.location.reload();
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    setValues({ ...values, loading: true, successmsg: false, error: false });
-    console.groupCollapsed("in the onSubmit function");
-    console.log(event.target.id);
-    console.log(event.target.id === "MangerDemo");
-    console.log(event.target.id === "MangerDemo" ? "1234567" : "7654321");
-    // eslint-disable-next-line prefer-const
-    let personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
-    // setValues({
-    //   ...values,
-    //   personalnumber: t,
-    // });
-    // console.log(values);
-
-    // console.log(values.personalnumber);
-    console.log(personalnumber);
-
-    axios
-      .post(`http://localhost:5000/api/signin`, { personalnumber })
-      .then((res) => {
-        console.groupCollapsed("in the axios of the onSubmit");
-        console.log("http://localhost:5000/api/signin");
-        console.group();
-        console.log(res.data);
-        console.log(res.data.user);
-        console.groupEnd();
-
-        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
-          console.groupCollapsed("inside the user creation if");
-          if (Demo) {
-            // signout();
-            console.log(`personalnumber === "1234567" ${personalnumber === "1234567"}`);
-            if (personalnumber === "1234567") {
-              console.log(`${personalnumber} in the MangerDemo`);
-              setSignUpData({
-                ...signUpData,
-                firstName: "אנטוני",
-                lastLame: "פרסון",
-                personalnumber: "1234567",
-                admin: "2",
-                unit: "מקטנאר",
-                anaf: "תון",
-                mador: "NG",
-                phoneNumber: "123456789",
-                email: "sS@gmail.com",
-              });
-            } else if (personalnumber === "7654321") {
-              console.log(`${personalnumber} in the ClientDemo`);
-              setSignUpData({
-                ...signUpData,
-                firstName: "דביר",
-                lastLame: "וסקר",
-                personalnumber: "7654321",
-                admin: "0",
-                unit: "מקטנאר",
-                anaf: "תון",
-                mador: "NG",
-                phoneNumber: "987654321",
-                email: "qQ@gmail.com",
-              });
-            }
-            console.groupEnd();
-            console.log(signUpData);
-            // SignUp();
-            /* //? set of useStae do not return a promise so you cant use async/await & the error is that the function strats before the value is being updated.
-            ?There for we are going to use a useEffect for when the SignUpData is updated and not its init defualt value.
-            */
-            console.groupEnd();
-          }
-        } else {
-          authenticate(res.data);
-          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-        }
-        //! the realod
-        window.location.reload(false);
-      })
-      .catch((error) => {
-        // setValues({ ...values, errortype: error.error, loading: false, error: true });
-        setValues({ ...values, errortype: error.error, loading: false });
-        console.log(error);
-      });
-    console.groupEnd();
-  };
-
   // hoger - need server code to make it work or fix bugs
   const passport = async (event) => {
     // console.log(response.data);
-    // http://localhost:3000/authentication/sign-in/69173dcb3ee95de869edfq10
     console.log(params.idUR);
     let admin_value = "0";
     let personalnumber_demo = "1234567";
-    if (params.idUR === "6368f702a925c8f735fa6a59") {
-      //? for the admin 2 - admin of admins
-      admin_value = "2";
-      personalnumber_demo = "1234567";
-    } else if (params.idUR === "17351e923ex28e869e06c83") {
-      //? for the admin 1 - regular admin
-      admin_value = "1";
-      personalnumber_demo = "1234567";
-    } else if (params.idUR === "69173dcb3ee95de869edfq10") {
-      //? for the admin 0 - regular user
-      admin_value = "0";
-      personalnumber_demo = "7654321";
-    }
+    // let personalnumber_demo = "7654321";
     const signInAxiosResult = await signInAxios(personalnumber_demo);
     console.log(signInAxiosResult);
     if (signInAxiosResult === "DoNotExist") {
-      // setSignUpData({
-      //   ...signUpData,
-      //   personalnumber: response.data.stam._json.cn,
-      //   admin: admin_value,
-      // });
-      setSignUpData({
-        ...signUpData,
-        personalnumber: personalnumber_demo,
-        admin: admin_value,
-      });
-      if (signInAxios(SignUpAxios()) === "sucsses") {
-        // window.location.reload(false);
+      if (params.idUR === "6368f702a925c8f735fa6a59") {
+        // http://localhost:3000/authentication/sign-in/6368f702a925c8f735fa6a59
+        //? for the admin 2 - admin of admins
+        admin_value = "2";
+        personalnumber_demo = "1234567";
+        setSignUpData({
+          ...signUpData,
+          firstName: "אנטוני",
+          lastLame: "פרסון",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "123456789",
+          email: "sS@gmail.com",
+        });
+      } else if (params.idUR === "17351e923ex28e869e06c83") {
+        // http://localhost:3000/authentication/sign-in/17351e923ex28e869e06c83
+        //? for the admin 1 - regular admin
+        admin_value = "1";
+        personalnumber_demo = "1234567";
+        setSignUpData({
+          ...signUpData,
+          firstName: "אנטוני",
+          lastLame: "פרסון",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "123456789",
+          email: "sS@gmail.com",
+        });
+      } else if (params.idUR === "69173dcb3ee95de869edfq10") {
+        //? for the admin 0 - regular user
+        // http://localhost:3000/authentication/sign-in/69173dcb3ee95de869edfq10
+        admin_value = "0";
+        personalnumber_demo = "7654321";
+        setSignUpData({
+          ...signUpData,
+          firstName: "דביר",
+          lastLame: "וסקר",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "987654321",
+          email: "qQ@gmail.com",
+        });
       }
     }
+    // setSignUpData({
+    //   ...signUpData,
+    //   personalnumber: response.data.stam._json.cn,
+    //   admin: admin_value,
+    // });
+    // setSignUpData({
+    //   ...signUpData,
+    //   personalnumber: personalnumber_demo,
+    //   admin: admin_value,
+    // });
+    // if (signInAxios(personalnumber_demo) === "sucsses") {
+    //   // window.location.reload(false);
+    // }
 
     // axios
     //   .get(`http://localhost:5000/auth/passportauth`)
@@ -431,7 +389,7 @@ function signInURL() {
     // console.log(params.idUR);
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log("signUpData:");
     console.log(signUpData);
     if (
@@ -445,7 +403,14 @@ function signInURL() {
       signUpData.phoneNumber !== "" &&
       signUpData.email !== ""
     ) {
-      SignUp();
+      // signInAxios(SignUpAxios());
+      await SignUpAxios();
+      // if ((await signInAxios(signUpData.personalnumber)) === "sucsses") {
+      // eslint-disable-next-line no-self-assign
+      window.location.href = window.location.href;
+      // window.location.reload(false);
+      // }
+      // window.location.href = window.location.href;
     }
   }, [signUpData]);
   return (
