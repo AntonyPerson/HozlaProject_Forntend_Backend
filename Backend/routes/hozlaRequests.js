@@ -182,7 +182,7 @@ router.route("/statusUpdate/:id").post((req, res) => {
       // console.log(request.status);
       // console.log(req.body.status);
       if (req.body.status >= 125) {
-        request.files = [];
+        request.files_id = "";
       }
       request
         .save()

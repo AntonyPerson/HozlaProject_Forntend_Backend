@@ -75,7 +75,7 @@ import SignInURL from "layouts/authentication/sign-in/sign-in-URLs/urlLayout";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
-import { signin, authenticate, isAuthenticated } from "auth/index";
+import { signin, authenticate, isAuthenticated, updateRefreshCount } from "auth/index";
 import sidenav from "assets/theme/components/sidenav";
 import AboutPage from "views/aboutpage/AboutPage";
 
@@ -143,6 +143,15 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+
+  useMemo(() => {
+    if (localStorage.getItem("RefreshCount") === "1") {
+      const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+      updateRefreshCount(count);
+      // eslint-disable-next-line no-self-assign
+      window.location.href = window.location.href;
+    }
+  }, [localStorage.getItem("RefreshCount")]);
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {

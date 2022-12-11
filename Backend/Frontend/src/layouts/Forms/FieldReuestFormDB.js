@@ -207,7 +207,7 @@ const FieldReuestFormDB = () => {
     return [stutus, color];
   };
   const handleStatusChange = (event) => {
-    console.groupCollapsed(` -------- handleStatusChange --------`);
+    // console.groupCollapsed(` -------- handleStatusChange --------`);
     const newStatus = Number(event.target.value);
     console.log(newStatus);
 
@@ -216,26 +216,26 @@ const FieldReuestFormDB = () => {
         status: newStatus,
       })
       .then((response) => {
-        console.groupCollapsed(`handleStatusChange -------- Axios.then`);
-        console.log(response.data);
-        console.log(params.formID);
+        // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+        // console.log(response.data);
+        // console.log(params.formID);
 
         setFormData({ ...formData, status: newStatus });
-        console.groupEnd();
+        // console.groupEnd();
       })
       .catch((error) => {
-        console.groupCollapsed(`handleStatusChange -------- Axios.error`);
+        // console.groupCollapsed(`handleStatusChange -------- Axios.error`);
 
-        console.error(error);
-        console.error(error.code);
+        // console.error(error);
+        // console.error(error.code);
         if (error.code === "ERR_BAD_REQUEST") {
           setError404(true);
         } else {
           setErrorDB(true);
         }
-        console.groupEnd();
+        // console.groupEnd();
       });
-    console.groupEnd();
+    // console.groupEnd();
   };
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">

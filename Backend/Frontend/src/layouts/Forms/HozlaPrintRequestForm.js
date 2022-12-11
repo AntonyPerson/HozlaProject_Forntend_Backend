@@ -81,13 +81,13 @@ import {
 } from "@mui/material";
 import { DropzoneArea } from "react-mui-dropzone";
 import { DropzoneAreaBase } from "material-ui-dropzone";
-import A_paper_size_a6 from "../../assets/images/A-paper-size-a6.webp";
 
 // for file upload from Data
 import { singleFileUpload } from "Data/api";
 
 // user and auth import
 import { signin, authenticate, isAuthenticated } from "auth/index";
+import A_paper_size_a6 from "../../assets/images/A-paper-size-a6.webp";
 const { user } = isAuthenticated();
 // console.log("Hozla Print Request Form");
 // console.log(user);

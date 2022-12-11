@@ -1,3 +1,4 @@
+/* eslint-disable no-self-assign */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable spaced-comment */
@@ -56,10 +57,10 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/book-bg-image.jpg";
 
-import { signin, signout, authenticate, isAuthenticated } from "auth/index";
+import { signin, signout, authenticate, isAuthenticated, updateRefreshCount } from "auth/index";
 import { CompressOutlined } from "@mui/icons-material";
 
-function signInURL() {
+function signInURL(props) {
   // const [rememberMe, setRememberMe] = useState(false);
   // const handleSetRememberMe = () => setRememberMe(!rememberMe);
   // const { user } = isAuthenticated();
@@ -255,15 +256,16 @@ function signInURL() {
     };
     await axios
       .post(`http://localhost:5000/api/signup`, newUser)
-      .then((res) => {
-        console.log(`gotten new user from sign up`);
-        console.log(`${res.data}`);
-        console.log({ personalnumber: res.data.user.personalnumber });
-        console.log(res.data.user.personalnumber);
-        return res.data.user.personalnumber;
+      .then(
+        (res) =>
+          // console.log(`gotten new user from sign up`);
+          // console.log(`${res.data}`);
+          // console.log({ personalnumber: res.data.user.personalnumber });
+          // console.log(res.data.user.personalnumber);
+          res.data.user.personalnumber
         // authenticate(res.data);
         // setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-      })
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -275,8 +277,8 @@ function signInURL() {
     // console.log(response.data);
     console.log(params.idUR);
     let admin_value = "0";
-    let personalnumber_demo = "1234567";
-    // let personalnumber_demo = "7654321";
+    // let personalnumber_demo = "1234567";
+    let personalnumber_demo = "7654321";
     const signInAxiosResult = await signInAxios(personalnumber_demo);
     console.log(signInAxiosResult);
     if (signInAxiosResult === "DoNotExist") {
@@ -332,6 +334,15 @@ function signInURL() {
           email: "qQ@gmail.com",
         });
       }
+    } else if (signInAxiosResult === "sucsses") {
+      // console.log("==========RefreshCount is 0===============");
+      // console.log(localStorage.getItem("RefreshCount"));
+      // console.log("==========RefreshCount is 1===============");
+
+      // console.log(localStorage.getItem("RefreshCount"));
+      const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+      updateRefreshCount(count);
+      // window.location.reload(false);
     }
     // setSignUpData({
     //   ...signUpData,
@@ -405,11 +416,19 @@ function signInURL() {
     ) {
       // signInAxios(SignUpAxios());
       await SignUpAxios();
-      // if ((await signInAxios(signUpData.personalnumber)) === "sucsses") {
-      // eslint-disable-next-line no-self-assign
-      window.location.href = window.location.href;
-      // window.location.reload(false);
-      // }
+      if ((await signInAxios(signUpData.personalnumber)) === "sucsses") {
+        // console.log("==========RefreshCount is 0===============");
+        // console.log(localStorage.getItem("RefreshCount"));
+        // console.log("==========RefreshCount is 1===============");
+
+        // console.log(localStorage.getItem("RefreshCount"));
+        const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+        updateRefreshCount(count);
+        // window.location.reload(false);
+        // eslint-disable-next-line no-self-assign
+        // window.location.href = window.location.href;
+        // window.location.reload(false);
+      }
       // window.location.href = window.location.href;
     }
   }, [signUpData]);
