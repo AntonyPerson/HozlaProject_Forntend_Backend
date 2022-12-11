@@ -32,6 +32,10 @@ import axios from "axios";
 import MDButton from "components/MDButton";
 import { Link } from "react-router-dom";
 
+// user and auth import
+import { signin, authenticate, isAuthenticated } from "auth/index";
+
+const { user } = isAuthenticated();
 // Images
 // import LogoAsana from "assets/images/small-logos/logo-asana.svg";
 // import logoGithub from "assets/images/small-logos/github.svg";
@@ -76,9 +80,26 @@ export default function data() {
   // const pageTypes = { A4: "A4", A3: "A3", A4b: "A4 בריסטול", A3b: "A3 בריסטול" };
   const MINUTE_MS = 100000;
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaRequests/personalnumber`, {
+  //       params: {
+  //         personalnumber: user.personalnumber,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setRequestDB(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //     });
+  // }, []);
   useEffect(() => {
+    console.log(user.personalnumber);
     axios
-      .get(`http://localhost:5000/hozlaRequests/`)
+      .get(`http://localhost:5000/hozlaRequests/requestByPersonalnumber/${user.personalnumber}`)
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
@@ -88,7 +109,6 @@ export default function data() {
         setIsError(true);
       });
   }, []);
-
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color="text" fontWeight="medium">
@@ -102,7 +122,7 @@ export default function data() {
 
   // const projectOptions = ["א", "ב", "ג", "ד", "ה", "ו"];
   const getWorkStuts = (value) => {
-    let stutus = "נשלח";
+    let stutus = "נשלח להוצלא";
     let color = "error";
     if (value === 25) {
       stutus = "נשלח להוצלא";
@@ -116,6 +136,12 @@ export default function data() {
     } else if (value === 100) {
       stutus = "מוכן לאיסוף";
       color = "success";
+    } else if (value === 125) {
+      stutus = "נאסף";
+      color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
     return [stutus, color];
   };
@@ -132,7 +158,11 @@ export default function data() {
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
           {getWorkStuts(hozla.status)[0]}
         </MDTypography>
-        <Progress variant="gradient" color={getWorkStuts(hozla.status)[1]} value={hozla.status} />
+        <Progress
+          variant="gradient"
+          color={getWorkStuts(hozla.status)[1]}
+          value={hozla.status >= 125 ? 100 : hozla.status}
+        />
       </>
     ),
     NameRequester: hozla.fullNameAsker,

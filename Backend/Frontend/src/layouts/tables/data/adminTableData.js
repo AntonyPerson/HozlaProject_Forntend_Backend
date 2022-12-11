@@ -21,7 +21,6 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Icon from "@mui/material/Icon";
-
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -31,7 +30,7 @@ import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Images
 // import LogoAsana from "assets/images/small-logos/logo-asana.svg";
@@ -50,6 +49,7 @@ export default function data() {
   //     </MDTypography>
   //   </MDBox>
   // );
+  const params = useParams();
   const [isError, setIsError] = useState(false);
   const [requestDB, setRequestDB] = useState([]);
   const [isInfoPressed, setIsInfoPressed] = useState(false);
@@ -79,7 +79,7 @@ export default function data() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/hozlaRequests/`)
+      .get(`http://localhost:5000/hozlaRequests/activeRequests`)
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
@@ -89,6 +89,27 @@ export default function data() {
         setIsError(true);
       });
   }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5000/hozlaAdminRequests/`)
+  //     .then((response) => {
+  //       // console.log(`the object data`);
+  //       console.log(response.data);
+  //       console.log(params.formID);
+
+  //       setFormData(response.data);
+
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       console.log(error.code);
+  //       if (error.code === "ERR_BAD_REQUEST") {
+  //         setError404(true);
+  //       } else {
+  //         setErrorDB(true);
+  //       }
+  //     });
+  // }, []);
 
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
@@ -105,17 +126,23 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "התקבלה";
+      stutus = "נשלח להוצלא";
       color = "error";
     } else if (value === 50) {
-      stutus = "בהדפסה";
+      stutus = "התקבל במערכת";
       color = "mekatnar";
     } else if (value === 75) {
-      stutus = "הסתיימה";
+      stutus = "בהדפסה";
       color = "mekatnar";
     } else if (value === 100) {
+      stutus = "מוכן לאיסוף";
+      color = "success";
+    } else if (value === 125) {
       stutus = "נאסף";
       color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
     return [stutus, color];
   };
@@ -137,7 +164,11 @@ export default function data() {
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
           {getWorkStuts(hozla.status)[0]}
         </MDTypography>
-        <Progress variant="gradient" color={getWorkStuts(hozla.status)[1]} value={hozla.status} />
+        <Progress
+          variant="gradient"
+          color={getWorkStuts(hozla.status)[1]}
+          value={hozla.status >= 125 ? 100 : hozla.status}
+        />
       </>
     ),
     NameRequester: hozla.fullNameAsker,
@@ -186,8 +217,8 @@ export default function data() {
       // { Header: "שם", accessor: "name", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
       { Header: "שם האוסף", accessor: "name", align: "center" },
-      { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
-      { Header: "תאריך סיום", accessor: "endDate", align: "center" },
+      { Header: "תאריך דרישת העבודה", accessor: "startDate", align: "center" },
+      { Header: "תאריך סיום העבודה", accessor: "endDate", align: "center" },
       // { Header: "שם העבודה", accessor: "project", align: "center" },
       { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
@@ -201,133 +232,3 @@ export default function data() {
     setDBerror: setIsError,
   };
 }
-
-// rows: [
-//   {
-//     // project: <Project image={LogoAsana} name="Asana" />,
-//     project: projectOptions[0],
-//     clearance:
-//       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//       clearanceOptions[0],
-//     // </MDTypography>
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     completion: <Progress color="info" value={60} />,
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[1],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[2]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[2],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[3]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[3],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[1]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[4],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[0]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-//   {
-//     project: projectOptions[5],
-//     clearance: (
-//       <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-//         {clearanceOptions[2]}
-//       </MDTypography>
-//     ),
-//     status: (
-//       <>
-//         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-//           בהדפסה
-//         </MDTypography>
-//         <Progress color="info" value={60} />
-//       </>
-//     ),
-//     additionalInfo: (
-//       <MDTypography component="a" href="#" color="text">
-//         <Icon>info</Icon>
-//       </MDTypography>
-//     ),
-//   },
-// ],

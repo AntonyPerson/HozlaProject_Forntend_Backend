@@ -2,7 +2,7 @@
 /* eslint-disable no-else-return */
 /* eslint-disable arrow-body-style */
 export const signup = (user) => {
-  return fetch(`http://localhost:8000/api/signup`, {
+  return fetch(`http://localhost:5000/api/signup`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -17,8 +17,9 @@ export const signup = (user) => {
       console.log(err);
     });
 };
+// not in use
 export const signin = (user) => {
-  return fetch(`http://localhost:8000/api/signin`, {
+  return fetch(`http://localhost:5000/api/signin`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -36,6 +37,8 @@ export const signin = (user) => {
 export const signout = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("RefreshCount");
+
     return fetch(`/api/signout`, {
       method: "GET",
     })
@@ -49,6 +52,9 @@ export const signout = () => {
 export const authenticate = (data) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("jwt", JSON.stringify(data));
+    if (localStorage.getItem("RefreshCount") === null) {
+      localStorage.setItem("RefreshCount", "0");
+    }
   }
 };
 
@@ -60,5 +66,11 @@ export const isAuthenticated = () => {
     return JSON.parse(localStorage.getItem("jwt"));
   } else {
     return false;
+  }
+};
+
+export const updateRefreshCount = (num) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("RefreshCount", num);
   }
 };

@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable consistent-return */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable no-undef */
@@ -20,6 +21,9 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+//! In the demo mode there is a problem with the buttons, you need to prees twice. once for a user creaton and then to login.
+//! i bellive the window.location.reload(false) has some thing to do with that or somthing is not being updated when it should.
+//! mayb with the card login that bug will not excict, can be only check when the server code will be given.
 
 import React, { useState, useEffect } from "react";
 
@@ -54,11 +58,14 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/book-bg-image.jpg";
 
-import { signin, authenticate, isAuthenticated } from "auth/index";
+import { signin, signout, authenticate, isAuthenticated } from "auth/index";
+import { CompressOutlined } from "@mui/icons-material";
 
 function signIn() {
   // const [rememberMe, setRememberMe] = useState(false);
   // const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  // const { user } = isAuthenticated();
+
   const [values, setValues] = useState({
     personalnumber: "",
     password: "",
@@ -67,10 +74,22 @@ function signIn() {
     successmsg: false,
     loading: false,
     NavigateToReferrer: false,
-    passportauth_worked: false,
   });
-
-  const { personalnumber, password, passportauth_worked } = values;
+  //for signing up a new client
+  const [signUpData, setSignUpData] = useState({
+    firstName: "",
+    lastLame: "",
+    personalnumber: "",
+    admin: "",
+    unit: "",
+    anaf: "",
+    mador: "",
+    phoneNumber: "",
+    email: "",
+    holzlaRequest: [],
+  });
+  const [Demo, setDemo] = useState(true);
+  // const { personalnumber, password } = values;
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
@@ -98,8 +117,18 @@ function signIn() {
     });
   };
   const NavigateUser = () => {
-    if (values.NavigateToReferrer) {
-      // return <Navigate to="/userRequestsTable" />;
+    const { user } = isAuthenticated();
+    // console.log(user);
+    if (values.NavigateToReferrer && user) {
+      // console.log(user);
+      if (user.admin === "0") {
+        //regular user
+        return <Navigate to="/userRequestsTable" />;
+      }
+      if (user.admin === "1" || user.admin === "2") {
+        //mangment
+        return <Navigate to="/AdminHome" />;
+      }
     }
   };
   const showSuccess = () => (
@@ -187,40 +216,184 @@ function signIn() {
       </MDBox>
     </Dialog>
   );
+  useEffect(() => {
+    setDemo(true);
+    // passport();
+  }, []);
+
+  const SignUp = () => {
+    console.log("In sign up");
+    setValues({ ...values, loading: true, successmsg: false, error: false });
+    const newUser = {
+      firstName: signUpData.firstName,
+      lastLame: signUpData.lastLame,
+      personalnumber: signUpData.personalnumber,
+      admin: signUpData.admin,
+      unit: signUpData.unit,
+      anaf: signUpData.anaf,
+      mador: signUpData.mador,
+      phoneNumber: signUpData.phoneNumber,
+      email: signUpData.email,
+      holzlaRequest: signUpData.holzlaRequest,
+    };
+    axios
+      .post(`http://localhost:5000/api/signup`, newUser)
+      .then((res) => {
+        console.log(`gotten new user from sign up`);
+        console.log(`${res.data}`);
+        console.log({ personalnumber: res.data.user.personalnumber });
+        console.log(res.data.user.personalnumber);
+        axios
+          .post(`http://localhost:5000/api/signin`, {
+            personalnumber: res.data.user.personalnumber,
+          })
+          .then((r) => {
+            authenticate(r.data);
+            setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // authenticate(res.data);
+        // setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // window.location.reload();
+  };
+
+  useEffect(() => {
+    console.log("signUpData:");
+    console.log(signUpData);
+    if (
+      signUpData.firstName !== "" &&
+      signUpData.lastLame !== "" &&
+      signUpData.personalnumber !== "" &&
+      signUpData.admin !== "" &&
+      signUpData.unit !== "" &&
+      signUpData.anaf !== "" &&
+      signUpData.mador !== "" &&
+      signUpData.phoneNumber !== "" &&
+      signUpData.email !== ""
+    ) {
+      SignUp();
+    }
+  }, [signUpData]);
 
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, loading: true, successmsg: false, error: false });
+    console.groupCollapsed("in the onSubmit function");
+    console.log(event.target.id);
+    console.log(event.target.id === "MangerDemo");
+    console.log(event.target.id === "MangerDemo" ? "1234567" : "7654321");
+    // eslint-disable-next-line prefer-const
+    let personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
+    // setValues({
+    //   ...values,
+    //   personalnumber: t,
+    // });
+    // console.log(values);
+
+    // console.log(values.personalnumber);
+    console.log(personalnumber);
+
     axios
-      .post(`http://localhost:5000/api/signin`, { personalnumber, password })
+      .post(`http://localhost:5000/api/signin`, { personalnumber })
       .then((res) => {
-        authenticate(res.data);
-        setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+        console.groupCollapsed("in the axios of the onSubmit");
+        console.log("http://localhost:5000/api/signin");
+        console.group();
+        console.log(res.data);
+        console.log(res.data.user);
+        console.groupEnd();
+
+        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
+          console.groupCollapsed("inside the user creation if");
+          if (Demo) {
+            // signout();
+            console.log(`personalnumber === "1234567" ${personalnumber === "1234567"}`);
+            if (personalnumber === "1234567") {
+              console.log(`${personalnumber} in the MangerDemo`);
+              setSignUpData({
+                ...signUpData,
+                firstName: "אנטוני",
+                lastLame: "פרסון",
+                personalnumber: "1234567",
+                admin: "2",
+                unit: "מקטנאר",
+                anaf: "תון",
+                mador: "NG",
+                phoneNumber: "123456789",
+                email: "sS@gmail.com",
+              });
+            } else if (personalnumber === "7654321") {
+              console.log(`${personalnumber} in the ClientDemo`);
+              setSignUpData({
+                ...signUpData,
+                firstName: "דביר",
+                lastLame: "וסקר",
+                personalnumber: "7654321",
+                admin: "0",
+                unit: "מקטנאר",
+                anaf: "תון",
+                mador: "NG",
+                phoneNumber: "987654321",
+                email: "qQ@gmail.com",
+              });
+            }
+            console.groupEnd();
+            console.log(signUpData);
+            // SignUp();
+            /* //? set of useStae do not return a promise so you cant use async/await & the error is that the function strats before the value is being updated.
+              ?There for we are going to use a useEffect for when the SignUpData is updated and not its init defualt value.
+             */
+            console.groupEnd();
+          }
+        } else {
+          authenticate(res.data);
+          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+        }
+        //! the realod
+        window.location.reload(false);
       })
       .catch((error) => {
-        setValues({ ...values, errortype: error.error, loading: false, error: true });
+        // setValues({ ...values, errortype: error.error, loading: false, error: true });
+        setValues({ ...values, errortype: error.error, loading: false });
+        console.log(error);
       });
+    console.groupEnd();
   };
 
-  // const passport = (event) => {
-  //   axios
-  //     .get(`http://localhost:5000/auth/passportauth`)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setValues({
-  //         ...values,
-  //         personalnumber: response.data.stam._json.cn,
-  //         passportauth_worked: true,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       // <Navigate to="/authentication/sign-up" />;
-  //     });
-  // };
-  // useEffect(() => {
-  //   passport();
-  // }, []);
+  // hoger - need server code to make it work or fix bugs
+  const passport = (event) => {
+    axios
+      .get(`http://localhost:5000/auth/passportauth`)
+      .then((response) => {
+        console.log(response.data);
+        setValues({
+          ...values,
+          personalnumber: response.data.stam._json.cn,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.error === "NotInTheSystem") {
+          axios
+            .get(`http://localhost:5000/auth/passportauth`)
+            .then((response) => {
+              console.log(response.data);
+              setSignUpData({ ...signUpData, personalnumber: response.data.stam._json.cn });
+              // SignUp();
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      });
+  };
 
   const signInForm = () => (
     <BasicLayout image={bgImage}>
@@ -238,7 +411,7 @@ function signIn() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            {'התחברות למערכת הוצל"א'}
+            {Demo ? 'התחברות למערכת הוצל"א דמו' : 'התחברות למערכת הוצל"א'}
           </MDTypography>
           {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={2}>
@@ -259,39 +432,38 @@ function signIn() {
           </Grid> */}
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form" onSubmit={onSubmit}>
-            {passportauth_worked ? (
-              <MDBox mb={2}>
-                <MDInput
-                  type="input"
-                  onChange={handleChange("personalnumber")}
-                  label="מספר אישי"
-                  value={personalnumber}
-                  fullWidth
-                  disabled
-                />
-              </MDBox>
-            ) : (
+          <MDBox>
+            {Demo ? (
               <>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="input"
-                    onChange={handleChange("personalnumber")}
-                    label="מספר אישי"
-                    value={personalnumber}
+                <MDBox pb={3}>
+                  <MDButton
+                    id="MangerDemo"
+                    type="submit"
+                    variant="gradient"
+                    color="mekatnar"
                     fullWidth
-                  />
+                    onClick={onSubmit}
+                  >
+                    התחברות כמנהל
+                  </MDButton>
                 </MDBox>
-                <MDBox mb={2}>
-                  <MDInput
-                    type="password"
-                    onChange={handleChange("password")}
-                    label="סיסמא"
-                    value={password}
+                <MDBox>
+                  <MDButton
+                    id="ClientDemo"
+                    type="submit"
+                    variant="gradient"
+                    color="mekatnar"
+                    onClick={onSubmit}
                     fullWidth
-                  />
+                  >
+                    התחברות לקוח
+                  </MDButton>
                 </MDBox>
               </>
+            ) : (
+              <MDTypography variant="h3" color="mekatnar" textGradient>
+                {'על מנת להתחבר למערכת הוצל"א. אנא הכנס חוגר'}
+              </MDTypography>
             )}
 
             {/* <MDBox display="flex" alignItems="center" ml={-1}>
@@ -306,12 +478,12 @@ function signIn() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox> */}
-            <MDBox mt={4} mb={1}>
+            {/* <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="mekatnar" fullWidth>
                 התחברות
               </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
+            </MDBox> */}
+            {/* <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 עוד לא נרשמתה?{" "}
                 <MDTypography
@@ -325,7 +497,7 @@ function signIn() {
                   לחץ כאן
                 </MDTypography>
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
           </MDBox>
         </MDBox>
       </Card>

@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 /* eslint-disable no-empty */
@@ -9,6 +10,8 @@
 /* eslint-disable import/no-duplicates */
 /* eslint-disable no-unused-vars */
 import react, { useEffect } from "react";
+import Popup from "reactjs-popup";
+import Icon from "@mui/material/Icon";
 import { Dialog, DialogContent } from "@mui/material";
 import { useState } from "react";
 import MDBox from "components/MDBox";
@@ -33,6 +36,12 @@ import { Navigate, useParams } from "react-router-dom";
 import MDProgress from "components/MDProgress";
 import Error404 from "views/Error404";
 import MDButton from "components/MDButton";
+import MDAlert from "components/MDAlert";
+import FileDownload from "js-file-download";
+
+import { signin, authenticate, isAuthenticated } from "auth/index";
+
+const { user } = isAuthenticated();
 
 const clearanceOptions = ['בלמ"ס', "שמור", "סודי", "סודי ביותר"];
 const bindingTypes = ["הידוק", "ספירלה", "חירור", "אחר"];
@@ -59,14 +68,22 @@ const textPlaceHolderInputs = [
   "קובץ להדפסה",
   "סוג דף",
   "תאריך קבלת העבודה",
+  "עדכון סטטוס",
+  "שם אוסף העבודה",
 ];
 const FieldReuestFormDB = () => {
   const params = useParams();
+
   const [formData, setFormData] = useState({});
   const [errorDB, setErrorDB] = useState(false);
   const [error404, setError404] = useState(false);
+  const [showFile, setShowFile] = useState(false);
+  const [downloadFile, setDownloadFile] = useState(false);
+  const [filesFromDB, setFilesFromDB] = useState([]);
 
   const [dates, setdates] = useState({});
+  const [clientNote, setClientNote] = useState("");
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/hozlaRequests/${params.formID}`)
@@ -80,6 +97,7 @@ const FieldReuestFormDB = () => {
           workGivenDate: response.data.workGivenDate.split("T")[0],
           workRecivedDate: response.data.workRecivedDate.split("T")[0],
         });
+        setClientNote(response.data.clientNote.split("\n"));
       })
       .catch((error) => {
         console.log(error);
@@ -91,6 +109,42 @@ const FieldReuestFormDB = () => {
         }
       });
   }, []);
+
+  const getFiles = () => {
+    axios
+      .get(`http://localhost:5000/api/getMultipleFiles/${formData.files_id}`)
+      .then((response) => {
+        setFilesFromDB(response.data.files);
+        console.log(`files: ${response.data}`);
+        setShowFile(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  function openFileANewWindows(filePath, fileName) {
+    // const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+    // const fileLink = document.createElement('a');
+    // fileLink.href = fileURL;
+    // const fileName = response.headers['content-disposition'].substring(22, 52);
+    // fileLink.setAttribute('download', fileName);
+    // fileLink.setAttribute('target', '_blank');
+    // document.body.appendChild(fileLink);
+    // fileLink.click();
+    // fileLink.remove();
+
+    // * no id
+    // e.preventDefault();
+    const urlPath = filePath;
+    const newUrlPath = urlPath.slice(8);
+    console.log(`Frontend ${newUrlPath}`);
+    axios
+      .get(`http://localhost:5000/api/downloadPDFFile/${newUrlPath}`, { responseType: "blob" })
+      .then((res) => {
+        FileDownload(res.data, fileName);
+      });
+  }
 
   const NavigateUser = () => {
     if (error404) {
@@ -142,14 +196,53 @@ const FieldReuestFormDB = () => {
     } else if (value === 100) {
       stutus = "מוכן לאיסוף";
       color = "success";
+    } else if (value === 125) {
+      stutus = "נאסף";
+      color = "success";
+    } else if (value === 150) {
+      stutus = "העבודה נדחתה";
+      color = "error";
     }
+
     return [stutus, color];
+  };
+  const handleStatusChange = (event) => {
+    // console.groupCollapsed(` -------- handleStatusChange --------`);
+    const newStatus = Number(event.target.value);
+    console.log(newStatus);
+
+    axios
+      .post(`http://localhost:5000/hozlaRequests/statusUpdate/${params.formID}`, {
+        status: newStatus,
+      })
+      .then((response) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+        // console.log(response.data);
+        // console.log(params.formID);
+
+        setFormData({ ...formData, status: newStatus });
+        // console.groupEnd();
+      })
+      .catch((error) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.error`);
+
+        // console.error(error);
+        // console.error(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
+        // console.groupEnd();
+      });
+    // console.groupEnd();
   };
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color={color} fontWeight="medium">
         {value}%
       </MDTypography>
+
       <MDBox ml={0.5} width="60rem">
         <MDProgress variant="gradient" color={color} value={value} />
       </MDBox>
@@ -176,19 +269,44 @@ const FieldReuestFormDB = () => {
                   טופס מספר {params.formID}{" "}
                 </MDTypography>
               </MDBox>
-              <MDTypography
-                alignItems="center"
-                component="h3"
-                color={getWorkStuts(formData.status)[1]}
-                fontWeight="medium"
-              >
-                {getWorkStuts(formData.status)[0]}
-              </MDTypography>
-              <Progress
-                variant="gradient"
-                color={getWorkStuts(formData.status)[1]}
-                value={formData.status}
-              />
+              {user.admin === "0" ? (
+                <>
+                  <MDTypography
+                    alignItems="center"
+                    component="h3"
+                    color={getWorkStuts(formData.status)[1]}
+                    fontWeight="medium"
+                  >
+                    {getWorkStuts(formData.status)[0]}
+                  </MDTypography>
+                  <Progress
+                    variant="gradient"
+                    color={getWorkStuts(formData.status)[1]}
+                    value={formData.status >= 125 ? 100 : formData.status}
+                  />
+                </>
+              ) : (
+                <FormGroup>
+                  <Label for="workClearance">{textPlaceHolderInputs[15]}</Label>
+                  <Input
+                    // placeholder={textPlaceHolderInputs[5]}
+                    name="workClearance"
+                    type="select"
+                    value={formData.status}
+                    onChange={handleStatusChange}
+                  >
+                    <option disabled value="25">
+                      נשלח להוצלא
+                    </option>
+                    {/* <option value="0">בלמ"ס</option> */}
+                    <option value="50">התקבל במערכת</option>
+                    <option value="75">בהדפסה</option>
+                    <option value="100">מוכן לאיסוף</option>
+                    <option value="125">נאסף</option>
+                    <option value="150">העבודה נדחתה</option>
+                  </Input>
+                </FormGroup>
+              )}
               <Form style={{ textAlign: "right" }} role="form">
                 <FormGroup row className="">
                   <FormGroup>
@@ -294,6 +412,31 @@ const FieldReuestFormDB = () => {
                       value={pageTypes[formData.pageType]}
                       disabled
                     />
+                    {/* <Popup
+                      trigger={
+                        <MDButton
+                          variant="gradient"
+                          color="mekatnar"
+                          circular="true"
+                          iconOnly="true"
+                          size="small"
+                        >
+                          <Icon>help_outline</Icon>
+                        </MDButton>
+                      }
+                    >
+                      <MDAlert color="mekatnar">
+                        <MDBox>
+                          <MDTypography variant="h6" color="light">A0 (84.1 * 118.9 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A3 (29.7 * 42 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A4 (21 * 29.7 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A5 (14.85 * 21 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A6 (10.5 * 14.85 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A4 בריסטול (21 * 29.7 ס"מ)</MDTypography>
+                          <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography>
+                        </MDBox>
+                      </MDAlert>
+                    </Popup> */}
                   </FormGroup>
                   <FormGroup>
                     <Label for="numOfCopyies">{textPlaceHolderInputs[8]}</Label>
@@ -336,6 +479,16 @@ const FieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
+                  <FormGroup>
+                    <Label for="fullNameTakein">{textPlaceHolderInputs[15]}</Label>
+                    <Input
+                      // placeholder={textPlaceHolderInputs[9]}
+                      name="fullNameTakein"
+                      type="text"
+                      value={formData.fullNameTakein}
+                      disabled
+                    />
+                  </FormGroup>
 
                   <FormGroup>
                     <Label for="workRecivedDate">{textPlaceHolderInputs[14]}</Label>
@@ -349,18 +502,67 @@ const FieldReuestFormDB = () => {
                   </FormGroup>
                 </FormGroup>
                 <FormGroup>
-                  {formData.files &&
-                    formData.files.map((file, index) => (
-                      <MDButton
-                        color="mekatnar"
-                        size="large"
-                        // onClick={clickSubmit}
-                        className="btn-new-blue"
-                        key={index}
-                      >
-                        {file}
-                      </MDButton>
+                  {showFile === false ? (
+                    <MDButton color="mekatnar" variant="outlined" onClick={getFiles}>
+                      פתח קבצים
+                    </MDButton>
+                  ) : (
+                    <FormText variant="body2" color="mekatnar">
+                      לחץ כדי להוריד
+                    </FormText>
+                  )}
+                  {filesFromDB &&
+                    filesFromDB.map((file, index) => (
+                      <FormGroup>
+                        <MDAlert color="mekatnar">
+                          <MDButton
+                            dir="ltr"
+                            iconOnly
+                            variant="text"
+                            onClick={() => openFileANewWindows(file.filePath, file.fileName)}
+                          >
+                            <Icon fontSize="small">download</Icon>&nbsp;
+                          </MDButton>
+                          <MDBox color="light">
+                            {/* <MDTypography variant="h6" color="light">{index}</MDTypography> */}
+                            <MDTypography variant="h6" color="light">
+                              {file.fileName}
+                            </MDTypography>
+                            <MDTypography variant="body2" color="light">
+                              {file.fileSize}
+                            </MDTypography>
+                          </MDBox>
+                        </MDAlert>
+                        {/* <MDButton
+                          color="mekatnar"
+                          size="large"
+                          // onClick={clickSubmit}
+                          className="btn-new-blue"
+                          key={index}
+                          onClick={openFileANewWindows}
+                        >
+                          <MDBox color="light">
+                            <MDTypography variant="h6" color="light">{file.fileName}</MDTypography>
+                            <MDTypography variant="body2" color="light">{file.fileSize}</MDTypography>
+                          </MDBox>
+                        </MDButton> */}
+                      </FormGroup>
                     ))}
+
+                  <FormGroup>
+                    {showFile && (
+                      <MDBox bgColor="light" borderRadius="lg" shadow="lg" opacity={3} p={2}>
+                        {clientNote.map((text) => (
+                          <MDTypography variant="body1" color="mekatnar">
+                            {clientNote !== "" ? text : "אין הערות נוספות"}
+                          </MDTypography>
+                        ))}
+                      </MDBox>
+                    )}
+                    {/* <MDTypography variant="subtitle1" color="mekatnar">
+                              {formData.textArea !== "" ? formData.textArea : "אין הערות נוספות"}
+                            </MDTypography> */}
+                  </FormGroup>
                 </FormGroup>
               </Form>
             </CardBody>
