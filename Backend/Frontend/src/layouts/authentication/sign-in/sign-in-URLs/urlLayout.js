@@ -1,3 +1,5 @@
+/* eslint-disable no-self-assign */
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable spaced-comment */
 /* eslint-disable consistent-return */
@@ -25,7 +27,7 @@ Coded by www.creative-tim.com
 import React, { useState, useEffect } from "react";
 
 // react-router-dom components
-import { Link, withRouter, Redirect, Navigate } from "react-router-dom";
+import { Link, withRouter, Redirect, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 // @mui material components
@@ -55,13 +57,14 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/book-bg-image.jpg";
 
-import { signin, signout, authenticate, isAuthenticated } from "auth/index";
+import { signin, signout, authenticate, isAuthenticated, updateRefreshCount } from "auth/index";
 import { CompressOutlined } from "@mui/icons-material";
 
-function signIn() {
+function signInURL(props) {
   // const [rememberMe, setRememberMe] = useState(false);
   // const handleSetRememberMe = () => setRememberMe(!rememberMe);
   // const { user } = isAuthenticated();
+  const params = useParams();
 
   const [values, setValues] = useState({
     personalnumber: "",
@@ -118,11 +121,11 @@ function signIn() {
     // console.log(user);
     if (values.NavigateToReferrer && user) {
       // console.log(user);
-      if (user.admin === "0") {
+      if (params.idUR === "69173dcb3ee95de869edfq10") {
         //regular user
         return <Navigate to="/userRequestsTable" />;
       }
-      if (user.admin === "1" || user.admin === "2") {
+      if (params.idUR === "6368f702a925c8f735fa6a59" || params.idUR === "17351e923ex28e869e06c83") {
         //mangment
         return <Navigate to="/AdminHome" />;
       }
@@ -213,12 +216,30 @@ function signIn() {
       </MDBox>
     </Dialog>
   );
-  useEffect(() => {
-    setDemo(true);
-    // passport();
-  }, []);
 
-  const SignUp = () => {
+  const signInAxios = async (personalnumber) => {
+    let r_massage = "_";
+    await axios
+      .post(`http://localhost:5000/api/signin`, { personalnumber })
+      .then((res) => {
+        // console.log(res.data.user);
+        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
+          r_massage = "DoNotExist";
+        } else {
+          authenticate(res.data);
+          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
+
+          r_massage = "sucsses";
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        r_massage = "error";
+      });
+
+    return r_massage;
+  };
+  const SignUpAxios = async () => {
     console.log("In sign up");
     setValues({ ...values, loading: true, successmsg: false, error: false });
     const newUser = {
@@ -233,35 +254,153 @@ function signIn() {
       email: signUpData.email,
       holzlaRequest: signUpData.holzlaRequest,
     };
-    axios
+    await axios
       .post(`http://localhost:5000/api/signup`, newUser)
-      .then((res) => {
-        console.log(`gotten new user from sign up`);
-        console.log(`${res.data}`);
-        console.log({ personalnumber: res.data.user.personalnumber });
-        console.log(res.data.user.personalnumber);
-        axios
-          .post(`http://localhost:5000/api/signin`, {
-            personalnumber: res.data.user.personalnumber,
-          })
-          .then((r) => {
-            authenticate(r.data);
-            setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
+      .then(
+        (res) =>
+          // console.log(`gotten new user from sign up`);
+          // console.log(`${res.data}`);
+          // console.log({ personalnumber: res.data.user.personalnumber });
+          // console.log(res.data.user.personalnumber);
+          res.data.user.personalnumber
         // authenticate(res.data);
         // setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-      })
+      )
       .catch((error) => {
         console.log(error);
       });
     // window.location.reload();
   };
 
+  // hoger - need server code to make it work or fix bugs
+  const passport = async (event) => {
+    // console.log(response.data);
+    console.log(params.idUR);
+    let admin_value = "0";
+    // let personalnumber_demo = "1234567";
+    let personalnumber_demo = "7654321";
+    const signInAxiosResult = await signInAxios(personalnumber_demo);
+    console.log(signInAxiosResult);
+    if (signInAxiosResult === "DoNotExist") {
+      if (params.idUR === "6368f702a925c8f735fa6a59") {
+        // http://localhost:3000/authentication/sign-in/6368f702a925c8f735fa6a59
+        //? for the admin 2 - admin of admins
+        admin_value = "2";
+        personalnumber_demo = "1234567";
+        setSignUpData({
+          ...signUpData,
+          firstName: "אנטוני",
+          lastLame: "פרסון",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "123456789",
+          email: "sS@gmail.com",
+        });
+      } else if (params.idUR === "17351e923ex28e869e06c83") {
+        // http://localhost:3000/authentication/sign-in/17351e923ex28e869e06c83
+        //? for the admin 1 - regular admin
+        admin_value = "1";
+        personalnumber_demo = "1234567";
+        setSignUpData({
+          ...signUpData,
+          firstName: "אנטוני",
+          lastLame: "פרסון",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "123456789",
+          email: "sS@gmail.com",
+        });
+      } else if (params.idUR === "69173dcb3ee95de869edfq10") {
+        //? for the admin 0 - regular user
+        // http://localhost:3000/authentication/sign-in/69173dcb3ee95de869edfq10
+        admin_value = "0";
+        personalnumber_demo = "7654321";
+        setSignUpData({
+          ...signUpData,
+          firstName: "דביר",
+          lastLame: "וסקר",
+          personalnumber: personalnumber_demo,
+          admin: admin_value,
+          unit: "מקטנאר",
+          anaf: "תון",
+          mador: "NG",
+          phoneNumber: "987654321",
+          email: "qQ@gmail.com",
+        });
+      }
+    } else if (signInAxiosResult === "sucsses") {
+      // console.log("==========RefreshCount is 0===============");
+      // console.log(localStorage.getItem("RefreshCount"));
+      // console.log("==========RefreshCount is 1===============");
+
+      // console.log(localStorage.getItem("RefreshCount"));
+      const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+      updateRefreshCount(count);
+      // window.location.reload(false);
+    }
+    // setSignUpData({
+    //   ...signUpData,
+    //   personalnumber: response.data.stam._json.cn,
+    //   admin: admin_value,
+    // });
+    // setSignUpData({
+    //   ...signUpData,
+    //   personalnumber: personalnumber_demo,
+    //   admin: admin_value,
+    // });
+    // if (signInAxios(personalnumber_demo) === "sucsses") {
+    //   // window.location.reload(false);
+    // }
+
+    // axios
+    //   .get(`http://localhost:5000/auth/passportauth`)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     console.log(params.idUR);
+    //     let admin_value = "0";
+    //     if (params.idUR === "6368f702a925c8f735fa6a59") {
+    //       //? for the admin 2 - admin of admins
+    //       admin_value = "2";
+    //     } else if (params.idUR === "17351e923ex28e869e06c83") {
+    //       //? for the admin 1 - regular admin
+    //       admin_value = "1";
+    //     } else if (params.idUR === "69173dcb3ee95de869edfq10") {
+    //       //? for the admin 0 - regular user
+    //       admin_value = "0";
+    //     }
+    //     const signInAxiosResult = signInAxios("1234567");
+    //     if (signInAxiosResult === "DoNotExist") {
+    //       // setSignUpData({
+    //       //   ...signUpData,
+    //       //   personalnumber: response.data.stam._json.cn,
+    //       //   admin: admin_value,
+    //       // });
+    //       setSignUpData({
+    //         ...signUpData,
+    //         personalnumber: "1234567",
+    //         admin: admin_value,
+    //       });
+    //       signInAxios(SignUpAxios());
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
   useEffect(() => {
+    // setDemo(true);
+
+    passport();
+    // console.log(params.idUR);
+  }, []);
+
+  useEffect(async () => {
     console.log("signUpData:");
     console.log(signUpData);
     if (
@@ -275,135 +414,36 @@ function signIn() {
       signUpData.phoneNumber !== "" &&
       signUpData.email !== ""
     ) {
-      SignUp();
+      // signInAxios(SignUpAxios());
+      await SignUpAxios();
+      if ((await signInAxios(signUpData.personalnumber)) === "sucsses") {
+        // console.log("==========RefreshCount is 0===============");
+        // console.log(localStorage.getItem("RefreshCount"));
+        // console.log("==========RefreshCount is 1===============");
+
+        // console.log(localStorage.getItem("RefreshCount"));
+        const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+        updateRefreshCount(count);
+        // window.location.reload(false);
+        // eslint-disable-next-line no-self-assign
+        // window.location.href = window.location.href;
+        // window.location.reload(false);
+      }
+      // window.location.href = window.location.href;
     }
   }, [signUpData]);
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    setValues({ ...values, loading: true, successmsg: false, error: false });
-    console.groupCollapsed("in the onSubmit function");
-    console.log(event.target.id);
-    console.log(event.target.id === "MangerDemo");
-    console.log(event.target.id === "MangerDemo" ? "1234567" : "7654321");
-    // eslint-disable-next-line prefer-const
-    let personalnumber = event.target.id === "MangerDemo" ? "1234567" : "7654321";
-    // setValues({
-    //   ...values,
-    //   personalnumber: t,
-    // });
-    // console.log(values);
-
-    // console.log(values.personalnumber);
-    console.log(personalnumber);
-
-    axios
-      .post(`http://localhost:5000/api/signin`, { personalnumber })
-      .then((res) => {
-        console.groupCollapsed("in the axios of the onSubmit");
-        console.log("http://localhost:5000/api/signin");
-        console.group();
-        console.log(res.data);
-        console.log(res.data.user);
-        console.groupEnd();
-
-        if (res.data.user === "DoNotExist" || res.data.user === undefined) {
-          console.groupCollapsed("inside the user creation if");
-          if (Demo) {
-            // signout();
-            console.log(`personalnumber === "1234567" ${personalnumber === "1234567"}`);
-            if (personalnumber === "1234567") {
-              console.log(`${personalnumber} in the MangerDemo`);
-              setSignUpData({
-                ...signUpData,
-                firstName: "אנטוני",
-                lastLame: "פרסון",
-                personalnumber: "1234567",
-                admin: "2",
-                unit: "מקטנאר",
-                anaf: "תון",
-                mador: "NG",
-                phoneNumber: "123456789",
-                email: "sS@gmail.com",
-              });
-            } else if (personalnumber === "7654321") {
-              console.log(`${personalnumber} in the ClientDemo`);
-              setSignUpData({
-                ...signUpData,
-                firstName: "דביר",
-                lastLame: "וסקר",
-                personalnumber: "7654321",
-                admin: "0",
-                unit: "מקטנאר",
-                anaf: "תון",
-                mador: "NG",
-                phoneNumber: "987654321",
-                email: "qQ@gmail.com",
-              });
-            }
-            console.groupEnd();
-            console.log(signUpData);
-            // SignUp();
-            /* //? set of useStae do not return a promise so you cant use async/await & the error is that the function strats before the value is being updated.
-              ?There for we are going to use a useEffect for when the SignUpData is updated and not its init defualt value.
-             */
-            console.groupEnd();
-          }
-        } else {
-          authenticate(res.data);
-          setValues({ ...values, loading: false, error: false, NavigateToReferrer: true });
-        }
-        //! the realod
-        window.location.reload(false);
-      })
-      .catch((error) => {
-        // setValues({ ...values, errortype: error.error, loading: false, error: true });
-        setValues({ ...values, errortype: error.error, loading: false });
-        console.log(error);
-      });
-    console.groupEnd();
-  };
-
-  // hoger - need server code to make it work or fix bugs
-  const passport = (event) => {
-    axios
-      .get(`http://localhost:5000/auth/passportauth`)
-      .then((response) => {
-        console.log(response.data);
-        setValues({
-          ...values,
-          personalnumber: response.data.stam._json.cn,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.error === "NotInTheSystem") {
-          axios
-            .get(`http://localhost:5000/auth/passportauth`)
-            .then((response) => {
-              console.log(response.data);
-              setSignUpData({ ...signUpData, personalnumber: response.data.stam._json.cn });
-              // SignUp();
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        }
-      });
-  };
-
   return (
     <>
       {/* <DashboardLayout> */}
       {/* <DashboardNavbar /> */}
       {/* <MDBox pt={6} pb={3}> */}
       {/* //! fot the pop up warning windoes */}
-      {showError()}
-      {showSuccess()}
-      {showLoading()}
+      {/* {showError()} */}
+      {/* {showSuccess()} */}
+      {/* {showLoading()} */}
       {NavigateUser()}
 
-      {signInForm()}
+      {/* {signInForm()} */}
       {/* </MDBox> */}
       {/* <Footer /> */}
       {/* </DashboardLayout> */}
@@ -411,4 +451,4 @@ function signIn() {
   );
 }
 
-export default signIn;
+export default signInURL;

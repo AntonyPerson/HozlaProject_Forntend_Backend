@@ -23,7 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect, useMemo } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 // react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -71,13 +71,17 @@ import WebsiteLoader from "components/WebsiteLoader/WebsiteLoader";
 import Error404 from "views/Error404";
 import FieldReuestFormDB from "layouts/Forms/FieldReuestFormDB";
 import SignIn from "layouts/authentication/sign-in";
+import SignInURL from "layouts/authentication/sign-in/sign-in-URLs/urlLayout";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
-import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
-import { signin, authenticate, isAuthenticated } from "auth/index";
+import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
+import { signin, authenticate, isAuthenticated, updateRefreshCount } from "auth/index";
 import sidenav from "assets/theme/components/sidenav";
+import AboutPage from "views/aboutpage/AboutPage";
 
 export default function App() {
+  const params = useParams();
+
   const [user, setUser] = useState(isAuthenticated());
   const [isAdmin, setIsAdmin] = useState(!(user.admin === "0"));
   // console.log("User in App");
@@ -139,6 +143,15 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+
+  useMemo(() => {
+    if (localStorage.getItem("RefreshCount") === "1") {
+      const count = parseInt(localStorage.getItem("RefreshCount"), 10) + 1;
+      updateRefreshCount(count);
+      // eslint-disable-next-line no-self-assign
+      window.location.href = window.location.href;
+    }
+  }, [localStorage.getItem("RefreshCount")]);
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
@@ -236,11 +249,14 @@ export default function App() {
               user.user.admin === "1" || user.user.admin === "2" ? (
                 <Routes>
                   {getRoutes(AdminRoutes)}
-                  <Route
-                    path="/authentication/sign-in"
-                    render={() => getRoutes(AdminRoutes)}
-                    element={<SignIn />}
-                  />
+
+                  <Route path="/authentication/sign-in">
+                    <Route
+                      path=":idUR"
+                      render={() => getRoutes(AdminRoutes)}
+                      element={<SignInURL />}
+                    />
+                  </Route>
                   <Route path="/" element={<Navigate to="/AdminHome" />} />
                   {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
                   <Route path="/Error404" element={<Error404 />} />
@@ -252,16 +268,17 @@ export default function App() {
                   <Route path="/adminForm">
                     <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
                   </Route>
+                  <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+                  </Route>
                   <Route path="*" element={<Error404 />} />
                 </Routes>
               ) : (
                 <Routes>
                   {getRoutes(routes)}
-                  <Route
-                    path="/authentication/sign-in"
-                    render={() => getRoutes(AdminRoutes)}
-                    element={<SignIn />}
-                  />
+                  <Route path="/authentication/sign-in">
+                    <Route path=":idUR" render={() => getRoutes(routes)} element={<SignInURL />} />
+                  </Route>
                   <Route path="/" element={<Navigate to="/userRequestsTable" />} />
                   {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
                   <Route path="/Error404" element={<Error404 />} />
@@ -273,10 +290,14 @@ export default function App() {
               )
             ) : (
               <Routes>
-                <Route path="/authentication/sign-in" element={<SignIn />} />
+                <Route path="/authentication/sign-in">
+                  <Route path=":idUR" element={<SignInURL />} />
+                </Route>
                 {/* <Route path="/Error404" element={<Error404 />} /> */}
-                <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
-                <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
+                <Route path="/about-us" element={<AboutPage />} />
+                {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+                <Route path="*" element={<Navigate to="/authentication/sign-in" />} /> */}
+                <Route path="/" element={<Navigate to="/about-us" />} />
                 {/* <Route path="*" element={<Navigate to="/Error404" />} /> */}
               </Routes>
             )}
@@ -285,6 +306,81 @@ export default function App() {
       )}
     </>
   );
+
+  //! this is the rutes where the sign-in is without URL's
+  //! Begin:
+  // {layout === "dashboard" && user.user !== undefined ? (
+  //   <>
+  //     {/* {console.groupCollapsed("Before the sidenav routing init - function")} */}
+  //     {/* {console.log(user.user)} */}
+  //     {/* {console.log(user.user.admin)} */}
+  //     {/* {console.log(user.user.admin !== "0")} */}
+  //     {/* {console.log(user.user.admin !== "0" ? AdminRoutes : routes)} */}
+  //     {/* {console.groupEnd()} */}
+  //     {/* {console.log("inside the sidenav")} */}
+  //     <Sidenav
+  //       color={sidenavColor}
+  //       brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+  //       brandName='הוצל"א'
+  //       routes={user.user.admin !== "0" ? AdminRoutes : routes}
+  //       onMouseEnter={handleOnMouseEnter}
+  //       onMouseLeave={handleOnMouseLeave}
+  //     />
+  //     <Configurator />
+  //     {configsButton}
+  //   </>
+  // ) : null}
+  // {/* {layout === "vr" && <Configurator />} */}
+  // {user.user !== undefined ? (
+  //   user.user.admin === "1" || user.user.admin === "2" ? (
+  //     <Routes>
+  //       {getRoutes(AdminRoutes)}
+  //       <Route
+  //         path="/authentication/sign-in"
+  //         render={() => getRoutes(AdminRoutes)}
+  //         element={<SignIn />}
+  //       />
+  //       <Route path="/" element={<Navigate to="/AdminHome" />} />
+  //       {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+  //       <Route path="/Error404" element={<Error404 />} />
+  //       {/* <Route path="/adminForm" element={<HozlaAdminPrintInfoForm />} /> */}
+  //       {/* <Route path="/adminFieldReuestFormDB" element={<AdminFieldReuestFormDB />} /> */}
+  //       <Route path="/RequestForm">
+  //         <Route path=":formID" element={<FieldReuestFormDB />} />
+  //       </Route>
+  //       <Route path="/adminForm">
+  //         <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
+  //       </Route>
+  //       <Route path="*" element={<Error404 />} />
+  //     </Routes>
+  //   ) : (
+  //     <Routes>
+  //       {getRoutes(routes)}
+  //       <Route
+  //         path="/authentication/sign-in"
+  //         render={() => getRoutes(AdminRoutes)}
+  //         element={<SignIn />}
+  //       />
+  //       <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+  //       {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+  //       <Route path="/Error404" element={<Error404 />} />
+  //       <Route path="/RequestForm">
+  //         <Route path=":formID" element={<FieldReuestFormDB />} />
+  //       </Route>
+  //       <Route path="*" element={<Error404 />} />
+  //     </Routes>
+  //   )
+  // ) : (
+  //   <Routes>
+  //     <Route path="/authentication/sign-in" element={<SignIn />} />
+  //     {/* <Route path="/Error404" element={<Error404 />} /> */}
+  //     <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+  //     <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
+  //     {/* <Route path="*" element={<Navigate to="/Error404" />} /> */}
+  //   </Routes>
+  // )}
+  //! End.
+
   // return direction === "rtl" ? (
   //   <CacheProvider value={rtlCache}>
   //     <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>

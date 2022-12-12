@@ -24,13 +24,13 @@ const HozlaRequestSchema = new mongoose.Schema(
     fullNameReciver: String,
     workRecivedDate: Date,
 
-    files: [String],
+    files_id: { type: String, default: "" },
     status: { type: Number, default: 25 },
     
+    clientNote: { type: String, default: "" },
     personalnumber:  { type: String, required: true },
   },
   { timestamps: true }
 );
 
 module.exports = mongoose.model("HozlaRequest", HozlaRequestSchema);
-

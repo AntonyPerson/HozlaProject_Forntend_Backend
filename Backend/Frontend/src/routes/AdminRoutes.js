@@ -49,6 +49,8 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ManagementHoztla from "layouts/tables/adminManagementTable";
 import AdminArchiveTable from "layouts/tables/adminArchiveTable";
+import HozlaPrintRequestForm from "layouts/Forms/HozlaPrintRequestForm";
+
 // import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 // import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
 
@@ -107,6 +109,33 @@ const AdminRoutes = [
     icon: <Icon fontSize="small">archive</Icon>,
     route: "/adminArchiveTable",
     component: <AdminArchiveTable />,
+  },
+  {
+    type: "divider",
+  },
+  {
+    type: "title",
+    title: "האזור האישי",
+  },
+
+  {
+    type: "collapse",
+    name: "בקשה חדשה",
+    key: "requestForm",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/requestForm",
+    component: <HozlaPrintRequestForm />,
+  },
+  {
+    type: "collapse",
+    name: "הבקשות שלי",
+    key: "userRequestsTable",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/userRequestsTable",
+    component: <RegulsrUserRequestsTable />,
+  },
+  {
+    type: "divider",
   },
   {
     type: "collapse",

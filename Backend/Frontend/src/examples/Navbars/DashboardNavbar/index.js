@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable import/newline-after-import */
@@ -56,6 +57,8 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+import soldierAvatar from "assets/images/soldier.png";
+
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import soldierAvatar from "assets/images/soldier.png";
@@ -154,8 +157,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   });
   const Signout = () => {
     signout();
-    window.location.reload(true);
     // return <Navigate to="/authentication/sign-in" />;
+    window.location.reload(true);
   };
   return (
     <AppBar

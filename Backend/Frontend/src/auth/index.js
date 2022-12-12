@@ -37,6 +37,8 @@ export const signin = (user) => {
 export const signout = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("RefreshCount");
+
     return fetch(`/api/signout`, {
       method: "GET",
     })
@@ -50,6 +52,9 @@ export const signout = () => {
 export const authenticate = (data) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("jwt", JSON.stringify(data));
+    if (localStorage.getItem("RefreshCount") === null) {
+      localStorage.setItem("RefreshCount", "0");
+    }
   }
 };
 
@@ -61,5 +66,11 @@ export const isAuthenticated = () => {
     return JSON.parse(localStorage.getItem("jwt"));
   } else {
     return false;
+  }
+};
+
+export const updateRefreshCount = (num) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("RefreshCount", num);
   }
 };

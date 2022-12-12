@@ -3,6 +3,8 @@
 /* eslint-disable camelcase */
 const router = require("express").Router();
 const HozlaRequest = require("../models/hozlaRequest.model");
+const { upload } = require("../helpers/filehelper");
+const MultipleFile = require("../models/fileuploader/multipleFile");
 
 router.route("/").get((req, res) => {
   HozlaRequest.find()
@@ -27,6 +29,40 @@ router.route("/archivedRequests").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/getCountStatus").get((req, res) => {
+  let received = 0;
+  let inprint = 0;
+  let ended = 0;
+  let readyForTakeIn = 0;
+  let archive = 0;
+  HozlaRequest.find()
+    .then((request) =>
+      //  res.json(request)
+      {
+        request.map((hozla) => {
+          if (hozla.status === 25) {
+            received += 1;
+          } else if (hozla.status === 50) {
+            inprint += 1;
+          } else if (hozla.status === 75) {
+            ended += 1;
+          } else if (hozla.status === 100) {
+            readyForTakeIn += 1;
+          } else if (hozla.status === 125) {
+            archive += 1;
+          }
+        });
+        console.log(`received: ${received}`);
+        console.log(`inprint: ${inprint}`);
+        console.log(`ended: ${ended}`);
+        console.log(`readyForTakeIn: ${readyForTakeIn}`);
+        console.log(`archive: ${archive}`);
+      }
+    )
+    .then(() => res.json({ received, archive, inprint, ended, readyForTakeIn }))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/add").post((req, res) => {
   const user_card_number = req.body.user_card_number;
   const unit = req.body.unit;
@@ -44,9 +80,10 @@ router.route("/add").post((req, res) => {
   const workGivenDate = Date.parse(req.body.workGivenDate);
   const fullNameReciver = req.body.fullNameReciver;
   const workRecivedDate = Date.parse(req.body.workRecivedDate);
-  const files = req.body.files;
+  const files_id = req.body.files_id;
   const status = req.body.status;
   const personalnumber = req.body.personalnumber;
+  const clientNote = String(req.body.clientNote);
 
   const newHozlaRequest = new HozlaRequest({
     user_card_number,
@@ -65,10 +102,12 @@ router.route("/add").post((req, res) => {
     workGivenDate,
     fullNameReciver,
     workRecivedDate,
-    files,
+    files_id,
     status,
     personalnumber,
+    clientNote,
   });
+
   const formId = newHozlaRequest.save((err, form) => {
     if (err) {
       return res.status(400).json("Error: " + err);
@@ -119,7 +158,8 @@ router.route("/update/:id").post((req, res) => {
       request.workGivenDate = Date.parse(req.body.workGivenDate);
       request.fullNameReciver = req.body.fullNameReciver;
       request.workRecivedDate = Date.parse(req.body.workRecivedDate);
-      request.files = req.body.files;
+      request.files_id = req.body.files_id;
+      request.clientNote = String(req.body.clientNote);
       request.status = req.body.status;
       request.personalnumber = req.body.personalnumber;
 
@@ -142,7 +182,7 @@ router.route("/statusUpdate/:id").post((req, res) => {
       // console.log(request.status);
       // console.log(req.body.status);
       if (req.body.status >= 125) {
-        request.files = [];
+        request.files_id = "";
       }
       request
         .save()
