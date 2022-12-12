@@ -57,7 +57,6 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
-import soldierAvatar from "assets/images/soldier.png";
 
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
