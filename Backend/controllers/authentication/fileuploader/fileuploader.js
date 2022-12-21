@@ -96,6 +96,17 @@ const multipleFileUpload = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 };
+const deleteMultiFiles = async (req, res, next) => {
+  try {
+    // router.route("/:id").delete((req, res) => {
+    MultipleFile.findByIdAndDelete(req.params.id)
+      .then(() => res.json("MultipleFile deleted."))
+      .catch((err) => res.status(400).json("Error: " + err));
+    // });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 const getallSingleFiles = async (req, res, next) => {
   try {
@@ -216,6 +227,34 @@ const downloadPDFFile = async (req, res, next) => {
   //     res.status(400).send(error.message);
   // }
 };
+const showFiles = async (req, res, next) => {
+  // const urlPath = req.params.id;
+  // console.log(`Backend ${urlPath}`);
+  const fs = require("fs");
+  const storeFiles = [];
+  try {
+    fs.readdir(`ToraHeilitFiles/`, function (err, files) {
+      //handling error
+      if (err) {
+        return console.log("Unable to scan directory: " + err);
+      }
+      //listing all files using forEach
+      files.forEach(function (file) {
+        // Do whatever you want to do with the file
+        console.log(file);
+        // return res.status(201).send(file);
+        storeFiles.push(file);
+        // res.download(file);
+      });
+      return res
+        .status(304)
+        .send(JSON.stringify({ toraHeilitFiles: storeFiles }));
+    });
+    // res.download('uploads/' + req.params.filePath);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 const downloadFilePikod = async (req, res, next) => {
   // const col = req.query.collec;
@@ -257,6 +296,8 @@ module.exports = {
   downloadFile,
   downloadPDFFile,
   getallMultipleFilesByID,
+  showFiles,
+  deleteMultiFiles,
   //
   // downloadFilePikod
 };

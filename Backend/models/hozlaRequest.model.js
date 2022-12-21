@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 //user_cars is the cadr id that was used to conect to the computer when the order was made
 const HozlaRequestSchema = new mongoose.Schema(
   {
+    typeRequest: String,
     // user_card_number: String,
+    forTypePrint: String,
     unit: String,
     anaf: String,
     mador: String,
@@ -26,6 +28,7 @@ const HozlaRequestSchema = new mongoose.Schema(
     workRecivedDate: Date,
 
     files_id: { type: String, default: "" },
+    toraHeilitVolumes: { type: Object },
     status: { type: Number, default: 25 },
 
     clientNote: { type: String, default: "" },

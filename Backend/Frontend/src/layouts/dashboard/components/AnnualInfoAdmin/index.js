@@ -41,6 +41,21 @@ function AnnualInfoAdmin() {
     sumRequestInYear: 0,
   });
 
+  const getDaysDiff = (dateToCheck) => {
+    const day = new Date().getDate();
+    const mounth = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
+    const currentDate = Date.parse(`${year}-${mounth}-${day}`);
+
+    // console.log(dateToCheck);
+    // console.log(`${year}-${mounth}-${day}`);
+    // console.log(currentDate);
+    // console.log(Date.parse(dateToCheck));
+    const diff = Math.abs(currentDate - Date.parse(dateToCheck)) / (1000 * 3600 * 24);
+    // console.log(diff);
+    return diff;
+  };
+
   const params = useParams();
   const [formData, setFormData] = useState({});
   useEffect(() => {
@@ -56,6 +71,18 @@ function AnnualInfoAdmin() {
         sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
         sumRequestInYear: response.data.sumRequestInYear,
       });
+      // change to 365
+      if (getDaysDiff(response.data.createdAt.split("T")[0]) > 3) {
+        axios
+          .delete(`http://localhost:5000/AnnualInfoAdmin/`)
+          .then((delRespone) => {
+            console.log(delRespone.data);
+          })
+          .catch((error) => {
+            console.log(error);
+            // setIsError(true);
+          });
+      }
       // });
     });
     // .catch((error) => {

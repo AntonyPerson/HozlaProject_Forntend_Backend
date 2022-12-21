@@ -65,7 +65,9 @@ router.route("/getCountStatus").get((req, res) => {
 });
 
 router.route("/add").post((req, res) => {
+  const typeRequest = req.body.typeRequest;
   const user_card_number = req.body.user_card_number;
+  const forTypePrint = req.body.forTypePrint;
   const unit = req.body.unit;
   const anaf = req.body.anaf;
   const mador = req.body.mador;
@@ -86,9 +88,12 @@ router.route("/add").post((req, res) => {
   const status = req.body.status;
   const personalnumber = req.body.personalnumber;
   const clientNote = String(req.body.clientNote);
+  const toraHeilitVolumes = req.body.toraHeilitVolumes;
 
   const newHozlaRequest = new HozlaRequest({
+    typeRequest,
     user_card_number,
+    forTypePrint,
     unit,
     anaf,
     mador,
@@ -109,6 +114,7 @@ router.route("/add").post((req, res) => {
     status,
     personalnumber,
     clientNote,
+    toraHeilitVolumes,
   });
 
   const formId = newHozlaRequest.save((err, form) => {
@@ -145,7 +151,9 @@ router.route("/:id").delete((req, res) => {
 router.route("/update/:id").post((req, res) => {
   HozlaRequest.findById(req.params.id)
     .then((request) => {
+      request.typeRequest = req.body.typeRequest;
       request.user_card_number = req.body.user_card_number;
+      request.forTypePrint = req.body.forTypePrint;
       request.unit = req.body.unit;
       request.anaf = req.body.anaf;
       request.mador = req.body.mador;
@@ -165,6 +173,7 @@ router.route("/update/:id").post((req, res) => {
       request.files_id = req.body.files_id;
       request.clientNote = String(req.body.clientNote);
       request.status = req.body.status;
+      request.toraHeilitVolumes = req.body.toraHeilitVolumes;
       request.personalnumber = req.body.personalnumber;
 
       request

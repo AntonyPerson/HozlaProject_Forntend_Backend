@@ -49,16 +49,6 @@ router.route("/getAnafPrintCount").get((req, res) => {
           other = hozla.numPages + other;
         }
       });
-      // console.log(`tun: ${tun}`);
-      // console.log(`takom: ${takom}`);
-      // console.log(`tom: ${tom}`);
-      // console.log(`sadot: ${sadot}`);
-      // console.log(`aczaka: ${aczaka}`);
-      // console.log(`segel: ${segel}`);
-      // console.log(`peer: ${peer}`);
-      // console.log(`ergon: ${ergon}`);
-      // console.log(`shalishot: ${shalishot}`);
-      // console.log(`other: ${other}`);
     })
     .then(() =>
       res.json({
@@ -152,11 +142,11 @@ router.route("/add").post((req, res) => {
   });
 });
 
-router.route("/:id").get((req, res) => {
-  HozlaAdminRequest.findById(req.params.id)
-    .then((request) => res.json(request))
-    .catch((err) => res.status(400).json("Error: " + err));
-});
+// router.route("/:id").get((req, res) => {
+//   HozlaAdminRequest.findById(req.params.id)
+//     .then((request) => res.json(request))
+//     .catch((err) => res.status(400).json("Error: " + err));
+// });
 
 router.route("/:id").delete((req, res) => {
   HozlaAdminRequest.findByIdAndDelete(req.params.id)
@@ -165,8 +155,7 @@ router.route("/:id").delete((req, res) => {
 });
 
 router.route("/:hozlaRequestID").get((req, res) => {
-  HozlaAdminRequest.find({ hozlaRequestID: req.params.hozlaRequestID })
-    .exec()
+  HozlaAdminRequest.findOne({ hozlaRequestID: req.params.hozlaRequestID })
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -191,6 +180,7 @@ router.route("/update/:id").post((req, res) => {
       // request.fullNameReciver = req.body.fullNameReciver;
       // request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       // request.files = req.body.files;
+      request.hozlaRequestID = req.body.hozlaRequestID;
       request.anaf = req.body.anaf;
       request.status = req.body.status;
       request.order_maker_card_number = req.body.order_maker_card_number;

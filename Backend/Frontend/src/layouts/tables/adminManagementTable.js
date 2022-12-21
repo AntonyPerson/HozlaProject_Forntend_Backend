@@ -47,7 +47,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { signin, authenticate, isAuthenticated } from "auth/index";
 
 const adminManagementTable = () => {
-  const tableTittle = 'ניהול הוצל"א';
+  const tableTittle = "ניהול הבקשות";
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();

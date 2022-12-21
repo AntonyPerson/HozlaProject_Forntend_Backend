@@ -45,7 +45,7 @@ import axios from "axios";
 import { Outlet } from "react-router-dom";
 
 const regulsrUserRequestsTable = () => {
-  const tableTittle = 'בקשות ההוצל"א שלי';
+  const tableTittle = "הבקשות שלי";
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();

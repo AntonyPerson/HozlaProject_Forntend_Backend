@@ -50,6 +50,7 @@ import SignUp from "layouts/authentication/sign-up";
 import ManagementHoztla from "layouts/tables/adminManagementTable";
 import AdminArchiveTable from "layouts/tables/adminArchiveTable";
 import HozlaPrintRequestForm from "layouts/Forms/HozlaPrintRequestForm";
+import ToraHeilitPrintRequestForm from "layouts/Forms/ToraHeilitPrintRequestForm";
 
 // import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 // import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
@@ -80,7 +81,7 @@ const AdminRoutes = [
   },
   {
     type: "collapse",
-    name: "ניהול הוצל''א",
+    name: "ניהול הבקשות",
     key: "managementHoztla",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/managementHoztla",
@@ -120,11 +121,19 @@ const AdminRoutes = [
 
   {
     type: "collapse",
-    name: "בקשה חדשה",
+    name: "בקשת הוצל''א",
     key: "requestForm",
     icon: <Icon fontSize="small">description</Icon>,
     route: "/requestForm",
     component: <HozlaPrintRequestForm />,
+  },
+  {
+    type: "collapse",
+    name: "בקשת תורה חילית",
+    key: "toraHeilitrequestForm",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/toraHeilitrequestForm",
+    component: <ToraHeilitPrintRequestForm />,
   },
   {
     type: "collapse",

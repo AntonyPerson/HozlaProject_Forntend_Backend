@@ -53,6 +53,7 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 //my components
 import HozlaPrintRequestForm from "layouts/Forms/HozlaPrintRequestForm";
+import ToraHeilitPrintRequestForm from "layouts/Forms/ToraHeilitPrintRequestForm";
 import AboutPage from "views/aboutpage/AboutPage";
 // import Error404 from "views/Error404";
 
@@ -67,11 +68,19 @@ const routes = [
   // },
   {
     type: "collapse",
-    name: "בקשה חדשה",
+    name: "בקשת הוצל''א",
     key: "requestForm",
     icon: <Icon fontSize="small">description</Icon>,
     route: "/requestForm",
     component: <HozlaPrintRequestForm />,
+  },
+  {
+    type: "collapse",
+    name: "בקשת תורה חילית",
+    key: "toraHeilitrequestForm",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/toraHeilitrequestForm",
+    component: <ToraHeilitPrintRequestForm />,
   },
   {
     type: "collapse",

@@ -57,8 +57,8 @@ router.route("/:id").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-router.route("/:id").delete((req, res) => {
-  AnnualInfoAdmin.findByIdAndDelete(req.params.id)
+router.route("/").delete((req, res) => {
+  AnnualInfoAdmin.findOneAndDelete()
     .then(() => res.json("AnnualInfoAdmin deleted."))
     .catch((err) => res.status(400).json("Error: " + err));
 });

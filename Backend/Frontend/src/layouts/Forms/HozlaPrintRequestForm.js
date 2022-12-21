@@ -416,6 +416,7 @@ export default function HozlaPrintRequestForm() {
       console.log("from the file axios");
       console.log(res.data);
       const requestData = {
+        typeRequest: "HozlaRequest",
         unit: data.unit,
         anaf: data.anaf,
         mador: data.mador,
@@ -1105,7 +1106,7 @@ export default function HozlaPrintRequestForm() {
                     נבחרו {files.length} קבצים
                   </MDTypography>
                   {files.length === 0 ? (
-                    <FormText color="muted">ניתן להעלאות רק קבצי PDF</FormText>
+                    <FormText color="muted">ניתן להעלאות רק קבצי pdf .jpeg .png.</FormText>
                   ) : (
                     <Container>
                       <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -1127,9 +1128,11 @@ export default function HozlaPrintRequestForm() {
                         <FormText color="muted">ניתן לגרור את הקבצים לפי הסדר</FormText>
                       </FormGroup>
                       <FormGroup>
-                        <MDInput
+                        <Label for="clientNote">הערות נוספות...</Label>
+                        <Input
                           name="clientNote"
-                          label="הערות נוספות..."
+                          type="textarea"
+                          // label=""
                           onChange={handleChangeTxtAera}
                           style={{ minWidth: 360 }}
                           multiline

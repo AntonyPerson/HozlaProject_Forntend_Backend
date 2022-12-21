@@ -11,6 +11,9 @@ const {
   downloadFile,
   downloadPDFFile,
   getallMultipleFilesByID,
+  deleteMultiFiles,
+  showFiles,
+  // uploadToraHeilitVolumes,
 } = require("../../controllers/authentication/fileuploader/fileuploader");
 
 router.post("/singleFile", upload.single("file"), singleFileUpload);
@@ -20,6 +23,10 @@ router.get("/getMultipleFiles", getallMultipleFiles);
 router.get("/getMultipleFiles/:id", getallMultipleFilesByID);
 // router.get("/downloadFile/:id", downloadFile);
 router.get("/downloadPDFFile/:id", downloadPDFFile);
+
+router.delete("/deleteMultiFiles/:id", deleteMultiFiles);
+
+// router.get("/showFiles", showFiles);
 
 // router.route("/singleFile").post((req, res) => {
 //     upload.single('file');

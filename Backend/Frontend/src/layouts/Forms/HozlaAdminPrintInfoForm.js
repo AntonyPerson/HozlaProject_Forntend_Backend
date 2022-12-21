@@ -69,6 +69,10 @@ import {
 } from "@mui/material";
 import { CompressOutlined } from "@mui/icons-material";
 
+import { signin, authenticate, isAuthenticated } from "auth/index";
+
+const { user } = isAuthenticated();
+
 export default function HozlaPrintRequestForm() {
   // const currentDate = new Date();
   // console.log(currentDate);
@@ -121,6 +125,7 @@ export default function HozlaPrintRequestForm() {
     sumBeatsBlackwhite: 0,
     sumRequestInYear: 0,
   });
+  const [text, setText] = useState();
   // const [value, setValue] = React.useState('');
 
   const textPlaceHolderInputs = [
@@ -145,7 +150,22 @@ export default function HozlaPrintRequestForm() {
         console.log(response.data);
         console.log(params.formID);
         // console.log(params.workName);
+        axios
+          .get(`http://localhost:5000/hozlaAdminRequests/${params.formID}`)
+          .then((response1) => {
+            // console.log(`the object data`);
 
+            if (response1.data !== null) {
+              setText("הטופס עודכן");
+              // console.log(twoSides);
+            } else {
+              setText();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log(error.code);
+          });
         setData(response.data);
         setData({
           ...data,
@@ -171,6 +191,7 @@ export default function HozlaPrintRequestForm() {
         //   setErrorDB(true);
         // }
       });
+
     axios
       .get(`http://localhost:5000/AnnualInfoAdmin/`)
       .then((response) => {
@@ -199,21 +220,6 @@ export default function HozlaPrintRequestForm() {
             sumRequestInYear: response.data.sumRequestInYear,
           });
         }
-
-        // console.log(adminData);
-        // adminData.forEach((a) => {
-        //   setAdminData(a.response.data);
-        // });
-        // console.log(adminData);
-        // setAdminId(response.data._id);
-        // setAdminData({
-        //   ...adminData,
-        //   numPages: response.data.numPages,
-        // });
-        // setdates({
-        //   workGivenDate: response.data.workGivenDate.split("T")[0],
-        //   workRecivedDate: response.data.workRecivedDate.split("T")[0],
-        // });
       })
       .catch((error) => {
         console.log(error);
@@ -568,8 +574,15 @@ export default function HozlaPrintRequestForm() {
                   {params.formID}
                 </MDTypography>
               </MDBox>
+              <MDBox textAlign="center">
+                <FormGroup>
+                  <MDTypography variant="h4" fontWeight="medium" color="success" mt={1}>
+                    {text}
+                  </MDTypography>
+                </FormGroup>
+              </MDBox>
               <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
-                שם העבודה: {data.anaf}
+                שם העבודה:
               </MDTypography>
               <Label>{data.workName}</Label>
 
@@ -641,7 +654,7 @@ export default function HozlaPrintRequestForm() {
                       required
                     />
                   </FormGroup>
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="printColor">{textPlaceHolderInputs[7]}</Label>
                     <Input
                       name="printColor"
@@ -652,55 +665,55 @@ export default function HozlaPrintRequestForm() {
                       <option value="bw">שחור לבן</option>
                       <option value="color">צבע</option>
                     </Input>
-                  </FormGroup>
-                  {data.printColor === "bw" ? (
-                    <FormGroup>
-                      <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
-                      <Input
-                        name="selectedBW"
-                        type="select"
-                        value={data.selectedBW}
-                        onChange={handleChange}
-                      >
-                        {/* <option value="A0BW">(84.1 x 118.9 cm) A0</option>
+                  </FormGroup> */}
+                  {/* {data.printColor === "bw" ? ( */}
+                  <FormGroup>
+                    <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
+                    <Input
+                      name="selectedBW"
+                      type="select"
+                      value={data.selectedBW}
+                      onChange={handleChange}
+                    >
+                      {/* <option value="A0BW">(84.1 x 118.9 cm) A0</option>
                         <option value="A3BW">(29.7 x 42 cm) A3</option>
                         <option value="A4BW">(21 x 29.7 cm) A4</option>
                         <option value="A5BW">(14.85 x 21cm) A5</option>
                         <option value="A6BW">(10.5 x 14.85 cm) A6</option>
                         <option value="BWA4">(21 x 29.7 cm) A4 בריסטול</option>
                         <option value="BWA3">(29.7 x 42 cm) A3 בריסטול</option> */}
-                        <option value="A0BW">A0</option>
-                        <option value="A3BW">A3</option>
-                        <option defult value="A4BW">
-                          A4
-                        </option>
-                        <option value="A5BW">A5</option>
-                        <option value="A6BW">A6</option>
-                        <option value="BWA4">A4 בריסטול</option>
-                        <option value="BWA3">A3 בריסטול</option>
-                      </Input>
-                    </FormGroup>
-                  ) : (
-                    <FormGroup>
-                      <Label for="selected">{textPlaceHolderInputs[5]}</Label>
-                      <Input
-                        name="selected"
-                        type="select"
-                        value={data.selected}
-                        onChange={handleChange}
-                      >
-                        <option value="A0">A0</option>
-                        <option value="A3">A3</option>
-                        <option defult value="A4">
-                          A4
-                        </option>
-                        <option value="A5">A5</option>
-                        <option value="A6">A6</option>
-                        <option value="A4b">A4 בריסטול</option>
-                        <option value="A3b">A3 בריסטול</option>
-                      </Input>
-                    </FormGroup>
-                  )}
+                      <option value="A0BW">A0</option>
+                      <option value="A3BW">A3</option>
+                      <option defult value="A4BW">
+                        A4
+                      </option>
+                      <option value="A5BW">A5</option>
+                      <option value="A6BW">A6</option>
+                      <option value="BWA4">A4 בריסטול</option>
+                      <option value="BWA3">A3 בריסטול</option>
+                    </Input>
+                  </FormGroup>
+                  {/* ) : ( */}
+                  <FormGroup>
+                    <Label for="selected">{textPlaceHolderInputs[5]}</Label>
+                    <Input
+                      name="selected"
+                      type="select"
+                      value={data.selected}
+                      onChange={handleChange}
+                    >
+                      <option value="A0">A0</option>
+                      <option value="A3">A3</option>
+                      <option defult value="A4">
+                        A4
+                      </option>
+                      <option value="A5">A5</option>
+                      <option value="A6">A6</option>
+                      <option value="A4b">A4 בריסטול</option>
+                      <option value="A3b">A3 בריסטול</option>
+                    </Input>
+                  </FormGroup>
+                  {/* )} */}
                   {/* <Popup
                     trigger={
                       <MDButton

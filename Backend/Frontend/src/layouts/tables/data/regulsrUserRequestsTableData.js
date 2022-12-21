@@ -25,6 +25,7 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import MDBadge from "components/MDBadge";
 // import MDAvatar from "components/MDAvatar";
 import MDProgress from "components/MDProgress";
 import { useEffect, useState } from "react";
@@ -145,6 +146,23 @@ export default function data() {
     }
     return [stutus, color];
   };
+
+  const setTypeRequest = (type) => {
+    let typeName = "";
+    let color = "mekatnar";
+    let urlRequest = "";
+    if (type === "ToraHeilit") {
+      typeName = "תורה חילית";
+      color = "info";
+      urlRequest = "toraHeilitrequestForm";
+    } else if (type === "HozlaRequest") {
+      typeName = "הוצל''א";
+      color = "success";
+      urlRequest = "RequestForm";
+    }
+    return [typeName, color, urlRequest];
+  };
+
   const dbRows = requestDB.map((hozla, index) => ({
     // project: <Project image={LogoAsana} name="Asana" />,
     fileID: hozla._id,
@@ -153,6 +171,16 @@ export default function data() {
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
     // </MDTypography>
+    typeRequest: (
+      <>
+        <MDBadge
+          badgeContent={setTypeRequest(hozla.typeRequest)[0]}
+          color={setTypeRequest(hozla.typeRequest)[1]}
+          size="sm"
+          container
+        />
+      </>
+    ),
     status: (
       <>
         <MDTypography component="p" variant="caption" color="text" fontWeight="medium">
@@ -168,7 +196,7 @@ export default function data() {
     NameRequester: hozla.fullNameAsker,
     diliveryDate: hozla.workRecivedDate.split("T")[0],
     additionalInfo: (
-      <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
+      <Link to={`/${setTypeRequest(hozla.typeRequest)[2]}/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
           color="mekatnar"
@@ -191,6 +219,7 @@ export default function data() {
     //* the tables headers
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
+      { Header: "סוג הבקשה", accessor: "typeRequest", align: "center" },
       { Header: "שם העבודה", accessor: "project", align: "center" },
       { Header: "סיווג העבודה", accessor: "clearance", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },

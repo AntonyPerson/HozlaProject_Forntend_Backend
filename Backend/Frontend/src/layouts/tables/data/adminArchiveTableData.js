@@ -103,9 +103,21 @@ export default function data() {
       .then((response) => {
         console.log(response.data);
         setRequestDB(response.data);
-
+        // TODO fsd
         response.data.forEach((element) => {
           if (getDaysDiff(element.updatedAt.split("T")[0]) >= 7) {
+            if (element.files_id) {
+              axios
+                .delete(`http://localhost:5000/api/deleteMultiFiles/${element.files_id}`)
+                .then((delfRespone) => {
+                  console.log(delfRespone.data);
+                })
+                .catch((error) => {
+                  console.log(error);
+                  // setIsError(true);
+                });
+              console.log("filesid");
+            }
             axios
               .delete(`http://localhost:5000/hozlaRequests/${element._id}`)
               .then((delRespone) => {
@@ -194,12 +206,38 @@ export default function data() {
     }
     return [stutus, color];
   };
+  const setTypeRequest = (type) => {
+    let typeName = "";
+    let color = "mekatnar";
+    let urlRequest = "";
+    if (type === "ToraHeilit") {
+      typeName = "תורה חילית";
+      color = "info";
+      urlRequest = "toraHeilitrequestForm";
+    } else if (type === "HozlaRequest") {
+      typeName = "הוצל''א";
+      color = "success";
+      urlRequest = "RequestForm";
+    }
+    return [typeName, color, urlRequest];
+  };
 
   const dbRows = requestDB.map((hozla, index) => ({
     // project: <Project image={LogoAsana} name="Asana" />,
     name: hozla.name,
+    typeRequest: (
+      <>
+        <MDBadge
+          badgeContent={setTypeRequest(hozla.typeRequest)[0]}
+          color={setTypeRequest(hozla.typeRequest)[1]}
+          size="sm"
+          container
+        />
+      </>
+    ),
     fileID: hozla._id,
     project: hozla.workName,
+    fullNameTakein: hozla.fullNameTakein,
     projectFor: hozla.projectFor,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
@@ -222,7 +260,7 @@ export default function data() {
     NameRequester: hozla.fullNameAsker,
     // diliveryDate: hozla.workRecivedDate.split("T")[0],
     additionalInfo: (
-      <Link to={`/RequestForm/${hozla._id}`} key={hozla._id}>
+      <Link to={`/${setTypeRequest(hozla.typeRequest)[2]}/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
           color="mekatnar"
@@ -239,7 +277,7 @@ export default function data() {
       </Link>
     ),
     update: (
-      <Link to={`/adminForm/${hozla._id}`} key={hozla._id}>
+      <Link to={`/adminFeild/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
           color="mekatnar"
@@ -262,13 +300,13 @@ export default function data() {
     //* the tables headers
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
-      // { Header: "שם", accessor: "name", align: "center" },
+      { Header: "סוג הבקשה", accessor: "typeRequest", align: "center" },
       { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
-      { Header: "שם האוסף", accessor: "name", align: "center" },
+      { Header: "שם האוסף", accessor: "fullNameTakein", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום", accessor: "endDate", align: "center" },
-      // { Header: "שם העבודה", accessor: "project", align: "center" },
-      { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
+      { Header: "שם העבודה", accessor: "project", align: "center" },
+      // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },

@@ -70,20 +70,22 @@ import { CompressOutlined } from "@mui/icons-material";
 export default function PrintInfoRequestFormDB() {
   const params = useParams();
   const [formData, setFormData] = useState({});
+  const [text, setText] = useState();
+  const [twoSides, setTwoSides] = useState(false);
 
   const [data, setData] = useState({
     hozlaRequestID: params.formID,
 
-    numColourfulBeats: params.numColourfulBeats,
-    numNoColourfulBeats: params.numNoColourfulBeats,
-    sumColourfulPages: params.sumColourfulPages,
-    sumNoColourfulPages: params.sumNoColourfulPages,
-    numPages: params.numPages,
-    twoSides: params.twoSides,
+    // numColourfulBeats: params.numColourfulBeats,
+    // numNoColourfulBeats: params.numNoColourfulBeats,
+    // sumColourfulPages: params.sumColourfulPages,
+    // sumNoColourfulPages: params.sumNoColourfulPages,
+    // numPages: params.numPages,
+    // twoSides: params.twoSides,
 
-    printColor: params.printColor,
-    selected: params.selected,
-    selectedBW: params.selectedBW,
+    // printColor: params.printColor,
+    // selected: params.selected,
+    // selectedBW: params.selectedBW,
 
     errortype: "",
     error: false,
@@ -111,10 +113,22 @@ export default function PrintInfoRequestFormDB() {
       .get(`http://localhost:5000/hozlaAdminRequests/${params.formID}`)
       .then((response) => {
         // console.log(`the object data`);
-        console.log(response.data);
-        console.log(params.formID);
-        setFormData(response.data);
-        setData(response.data);
+
+        if (response.data !== null) {
+          console.log(response.data);
+          console.log(params.formID);
+          setFormData(response.data);
+          if (response.data.twoSides === true) {
+            setTwoSides(true);
+          } else if (response.data.twoSides === false) {
+            setTwoSides(false);
+          }
+          // console.log(twoSides);
+        } else {
+          setText("הטופס לא עודכן");
+        }
+
+        // setData(response.data);
         setData({
           ...data,
           errortype: "",
@@ -433,24 +447,50 @@ export default function PrintInfoRequestFormDB() {
                   טופס הוצל"א{" "}
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
+              <MDBox textAlign="center">
+                <FormGroup>
+                  <MDTypography variant="h4" fontWeight="medium" color="error" mt={1}>
+                    {text}
+                  </MDTypography>
+                </FormGroup>
+              </MDBox>
+              {/* <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
                 שם העבודה{" "}
               </MDTypography>
-              <Label>פרטים נוספים על ההדפסה</Label>
+              <Label>פרטים נוספים על ההדפסה</Label> */}
               <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      // defaultChecked
-                      // checked={data.twoSides}
-                      value={data.twoSides}
-                      onChange={handleChangeCheckbox}
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  }
-                  label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                  labelPlacement="start"
-                />
+                {twoSides === "true" ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        // defaultChecked
+                        // checked={data.twoSides}
+                        // value={twoSides}
+                        // onChange={handleChangeCheckbox}
+                        inputProps={{ "aria-label": "controlled" }}
+                        disabled
+                        checked
+                      />
+                    }
+                    label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                    labelPlacement="start"
+                  />
+                ) : (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        // defaultChecked
+                        // checked={data.twoSides}
+                        // value={twoSides}
+                        // onChange={handleChangeCheckbox}
+                        inputProps={{ "aria-label": "controlled" }}
+                        disabled
+                      />
+                    }
+                    label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
+                    labelPlacement="start"
+                  />
+                )}
               </FormGroup>
               <Form style={{ textAlign: "right" }} role="form">
                 <FormGroup row className="">
@@ -460,8 +500,8 @@ export default function PrintInfoRequestFormDB() {
                       name="numColourfulBeats"
                       type="number"
                       min="0"
-                      value={data.numColourfulBeats}
-                      onChange={handleChangeColourfulBeat}
+                      value={formData.numColourfulBeats}
+                      // onChange={handleChangeColourfulBeat}
                       disabled
                     />
                   </FormGroup>
@@ -471,8 +511,8 @@ export default function PrintInfoRequestFormDB() {
                       name="numNoColourfulBeats"
                       type="number"
                       min="0"
-                      value={data.numNoColourfulBeats}
-                      onChange={handleNoChangeColourfulBeat}
+                      value={formData.numNoColourfulBeats}
+                      // onChange={handleNoChangeColourfulBeat}
                       disabled
                     />
                   </FormGroup>
@@ -482,8 +522,8 @@ export default function PrintInfoRequestFormDB() {
                       name="sumColourfulPages"
                       type="number"
                       min="0"
-                      value={data.sumColourfulPages}
-                      onChange={handleChangeColourfulPage}
+                      value={formData.sumColourfulPages}
+                      // onChange={handleChangeColourfulPage}
                       disabled
                     />
                   </FormGroup>
@@ -493,8 +533,8 @@ export default function PrintInfoRequestFormDB() {
                       name="sumNoColourfulPages"
                       type="number"
                       min="0"
-                      value={data.sumNoColourfulPages}
-                      onChange={handleNoChangeColourfulPage}
+                      value={formData.sumNoColourfulPages}
+                      // onChange={handleNoChangeColourfulPage}
                       disabled
                     />
                   </FormGroup>
@@ -504,47 +544,47 @@ export default function PrintInfoRequestFormDB() {
                       name="numPages"
                       type="number"
                       min="1"
-                      value={data.numPages}
-                      onChange={handleChange}
+                      value={formData.numPages}
+                      // onChange={handleChange}
                       // required
                       disabled
                     />
                   </FormGroup>
 
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="printColor">{textPlaceHolderInputs[7]}</Label>
                     <Input
                       name="printColor"
                       type="text"
-                      value={data.printColor}
-                      onChange={handleChange}
+                      value={formData.printColor}
+                      // onChange={handleChange}
+                      disabled
+                    />
+                  </FormGroup> */}
+
+                  {/* {data.printColor === "bw" ? ( */}
+                  <FormGroup>
+                    <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
+                    <Input
+                      name="selectedBW"
+                      type="text"
+                      value={formData.selectedBW}
+                      // onChange={handleChange}
                       disabled
                     />
                   </FormGroup>
-
-                  {data.printColor === "bw" ? (
-                    <FormGroup>
-                      <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
-                      <Input
-                        name="selectedBW"
-                        type="text"
-                        value={data.selectedBW}
-                        // onChange={handleChange}
-                        disabled
-                      />
-                    </FormGroup>
-                  ) : (
-                    <FormGroup>
-                      <Label for="selected">{textPlaceHolderInputs[5]}</Label>
-                      <Input
-                        name="selected"
-                        type="text"
-                        value={data.selected}
-                        onChange={handleChange}
-                        disabled
-                      />
-                    </FormGroup>
-                  )}
+                  {/* ) : ( */}
+                  <FormGroup>
+                    <Label for="selected">{textPlaceHolderInputs[5]}</Label>
+                    <Input
+                      name="selected"
+                      type="text"
+                      value={formData.selected}
+                      // onChange={handleChange}
+                      disabled
+                    />
+                  </FormGroup>
+                  {/* )} */}
                 </FormGroup>
                 {/* <FormGroup>
                   <Label for="הערות">הערות</Label>

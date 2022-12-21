@@ -146,7 +146,7 @@ function Dashboard() {
             <Grid item xs={12} md={6} lg={8}>
               <DefaultDoughnutChart
                 icon={{ color: "mekatnar", component: "leaderboard" }}
-                title="ניהול הוצל''א יומי"
+                title="ניהול הוצל''א"
                 description="מעקב בקשות להדפסה"
                 chart={{
                   labels: ["התקבלה", "בעבודה", "בהדפסה", "מוכן לאיסוף"],

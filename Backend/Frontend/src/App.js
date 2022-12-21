@@ -74,6 +74,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignInURL from "layouts/authentication/sign-in/sign-in-URLs/urlLayout";
 
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
+import ToraHeilitFieldReuestFormDB from "layouts/Forms/ToraHeilitFieldReuestFormDB";
 import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
 import { signin, authenticate, isAuthenticated } from "auth/index";
 import sidenav from "assets/theme/components/sidenav";
@@ -256,6 +257,9 @@ export default function App() {
                   <Route path="/RequestForm">
                     <Route path=":formID" element={<FieldReuestFormDB />} />
                   </Route>
+                  <Route path="/toraHeilitrequestForm">
+                    <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
+                  </Route>
                   <Route path="/adminForm">
                     <Route path=":formID" element={<HozlaAdminPrintInfoForm />} />
                   </Route>
@@ -275,6 +279,9 @@ export default function App() {
                   <Route path="/Error404" element={<Error404 />} />
                   <Route path="/RequestForm">
                     <Route path=":formID" element={<FieldReuestFormDB />} />
+                  </Route>
+                  <Route path="/toraHeilitrequestForm">
+                    <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
                   </Route>
                   <Route path="*" element={<Error404 />} />
                 </Routes>
