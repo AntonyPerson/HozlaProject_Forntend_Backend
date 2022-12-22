@@ -276,7 +276,7 @@ export default function data() {
         </MDButton>
       </Link>
     ),
-    update: (
+    hozlaInfo: (
       <Link to={`/adminFeild/${hozla._id}`} key={hozla._id}>
         <MDButton
           variant="gradient"
@@ -310,7 +310,7 @@ export default function data() {
       { Header: "סטטוס", accessor: "status", align: "center" },
       { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
-      { Header: "עדכן", accessor: "update", align: "center" },
+      { Header: "פרטי הוצלא", accessor: "hozlaInfo", align: "center" },
     ],
 
     rows: dbRows,

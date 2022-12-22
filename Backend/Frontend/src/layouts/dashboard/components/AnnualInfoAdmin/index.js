@@ -59,41 +59,47 @@ function AnnualInfoAdmin() {
   const params = useParams();
   const [formData, setFormData] = useState({});
   useEffect(() => {
-    axios.get(`http://localhost:5000/AnnualInfoAdmin/`).then((response) => {
-      // console.log(`the object data`);
-      // console.log(response.data);
-      setFormData(response.data);
-      // formData.forEach((num) => {
-      setDataFromDB({
-        ...dataFromDB,
-        countPrintInYear: response.data.countPrintInYear,
-        numBeatsColourful: response.data.numBeatsColourful,
-        sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
-        sumRequestInYear: response.data.sumRequestInYear,
+    axios
+      .get(`http://localhost:5000/hozlaAdminRequests/getAnnualInfo`)
+      .then((response) => {
+        // console.log(`the object data`);
+        // console.log(response.data);
+        setFormData(response.data);
+        // formData.forEach((num) => {
+        setDataFromDB({
+          ...dataFromDB,
+          countPrintInYear: response.data.countPrintInYear,
+          numBeatsColourful: response.data.numBeatsColourful,
+          sumBeatsBlackwhite: response.data.sumBeatsBlackwhite,
+          sumRequestInYear: response.data.sumRequestInYear,
+        });
+        axios.get(`http://localhost:5000/hozlaAdminRequests/first/Doc`).then((res) => {
+          // console.log(`the object data`);
+          console.log(getDaysDiff(res.data.createdAt.split("T")[0]));
+
+          // change to 365
+          if (getDaysDiff(res.data.createdAt.split("T")[0]) > 365) {
+            axios
+              .post(`http://localhost:5000/hozlaAdminRequests/deleteAllDoc`)
+              .then((delRespone) => {
+                console.log(delRespone.data);
+              })
+              .catch((error) => {
+                console.log(error);
+                // setIsError(true);
+              });
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+        // if (error.code === "ERR_BAD_REQUEST") {
+        //   setError404(true);
+        // } else {
+        //   setErrorDB(true);
+        // }
       });
-      // change to 365
-      if (getDaysDiff(response.data.createdAt.split("T")[0]) > 3) {
-        axios
-          .delete(`http://localhost:5000/AnnualInfoAdmin/`)
-          .then((delRespone) => {
-            console.log(delRespone.data);
-          })
-          .catch((error) => {
-            console.log(error);
-            // setIsError(true);
-          });
-      }
-      // });
-    });
-    // .catch((error) => {
-    //   console.log(error);
-    //   console.log(error.code);
-    //   if (error.code === "ERR_BAD_REQUEST") {
-    //     setError404(true);
-    //   } else {
-    //     setErrorDB(true);
-    //   }
-    // });
   }, []);
   // useEffect(() => {
   //   axios.get(`http://localhost:5000/hozlaAdminRequests/`).then((response) => {

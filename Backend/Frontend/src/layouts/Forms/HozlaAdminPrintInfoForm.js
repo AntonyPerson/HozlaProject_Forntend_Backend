@@ -113,6 +113,22 @@ export default function HozlaPrintRequestForm() {
     selected: "A4",
     selectedBW: "none",
 
+    A0BW: false,
+    A3BW: false,
+    A4BW: false,
+    A5BW: false,
+    A6BW: false,
+    BWA4: false,
+    BWA3: false,
+
+    A0: false,
+    A3: false,
+    A4: true,
+    A5: false,
+    A6: false,
+    A4b: false,
+    A3b: false,
+
     errortype: "",
     error: false,
     successmsg: false,
@@ -259,6 +275,19 @@ export default function HozlaPrintRequestForm() {
       });
     }
   }
+  // function ChangeCheckboxTypePage(evt) {
+  //   const { name } = evt.target;
+  //   const nameData = JSON.parse("data." + name);
+  //   console.log(nameData);
+  //   if (nameData === true) {
+  //     setData({ ...data, [evt.target]: false });
+  //   } else if (nameData === false) {
+  //     setData({ ...data, [evt.target]: true });
+  //   }
+  //   //
+  //   console.log(data);
+  //   //
+  // }
 
   function handleChangeColourfulBeat(evt) {
     const { value } = evt.target;
@@ -383,57 +412,77 @@ export default function HozlaPrintRequestForm() {
       // numPages: adminData.numPages + Math.floor(data.numPages),
     };
     console.log(adminRequestData);
+    if (text === "הטופס עודכן") {
+      axios
+        .post(`http://localhost:5000/hozlaAdminRequests/update/${params.formID}`, requestData)
+        .then((res1) => {
+          // console.log(`the object data`);
+          setData({
+            ...data,
+            work_id: res1.data,
+            loading: false,
+            error: false,
+            successmsg: true,
+            NavigateToReferrer: false,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.code);
+        });
+    } else {
+      axios
+        .post(`http://localhost:5000/hozlaAdminRequests/add`, requestData)
+        .then((res) => {
+          setData({
+            ...data,
+            work_id: res.data,
+            loading: false,
+            error: false,
+            successmsg: true,
+            NavigateToReferrer: false,
+          });
+          // toast.success(`הטופס נשלח בהצלחה`);
+          // history.push(`/signin`);
+          console.log(res.data);
+        })
+        .catch((error) => {
+          // console.log(error);
+          setData({
+            ...data,
+            errortype: error.response,
+            loading: false,
+            error: true,
+            NavigateToReferrer: false,
+          });
+        });
+    }
 
-    axios
-      .post(`http://localhost:5000/hozlaAdminRequests/add`, requestData)
-      .then((res) => {
-        setData({
-          ...data,
-          work_id: res.data,
-          loading: false,
-          error: false,
-          successmsg: true,
-          NavigateToReferrer: false,
-        });
-        // toast.success(`הטופס נשלח בהצלחה`);
-        // history.push(`/signin`);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        // console.log(error);
-        setData({
-          ...data,
-          errortype: error.response,
-          loading: false,
-          error: true,
-          NavigateToReferrer: false,
-        });
-      });
-    axios
-      .post(`http://localhost:5000/AnnualInfoAdmin/update`, adminRequestData)
-      .then((res) => {
-        setData({
-          ...data,
-          work_id: res.data,
-          loading: false,
-          error: false,
-          successmsg: true,
-          NavigateToReferrer: false,
-        });
-        // toast.success(`הטופס נשלח בהצלחה`);
-        // history.push(`/signin`);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        // console.log(error);
-        setData({
-          ...data,
-          errortype: error.response,
-          loading: false,
-          error: true,
-          NavigateToReferrer: false,
-        });
-      });
+    // axios
+    //   .post(`http://localhost:5000/AnnualInfoAdmin/update`, adminRequestData)
+    //   .then((res) => {
+    //     setData({
+    //       ...data,
+    //       work_id: res.data,
+    //       loading: false,
+    //       error: false,
+    //       successmsg: true,
+    //       NavigateToReferrer: false,
+    //     });
+    //     // toast.success(`הטופס נשלח בהצלחה`);
+    //     // history.push(`/signin`);
+    //     console.log(res.data);
+    //   })
+    //   .catch((error) => {
+    //     // console.log(error);
+    //     setData({
+    //       ...data,
+    //       errortype: error.response,
+    //       loading: false,
+    //       error: true,
+    //       NavigateToReferrer: false,
+    //     });
+    //   });
   };
   const handleCloseSuccsecModal = () => {
     setData({ ...data, loading: false, error: false, successmsg: false, NavigateToReferrer: true });
@@ -654,6 +703,106 @@ export default function HozlaPrintRequestForm() {
                       required
                     />
                   </FormGroup>
+                  {/* <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          name="A0BW"
+                          value={data.A0BW}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="A0BW">A0BW</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="A3BW"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.A3BW}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="A3BW">A3BW</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="A4BW"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.A4BW}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="A4BW">A4BW</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="A5BW"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.A5BW}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="A5BW">A5BW</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="A6BW"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.A6BW}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="A6BW">A6BW</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="BWA4"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.BWA4}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="BWA4">BWA4</MDTypography>}
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="BWA3"
+                          // defaultChecked
+                          // checked={data.twoSides}
+                          value={data.BWA3}
+                          onChange={ChangeCheckboxTypePage}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label={<MDTypography for="BWA3">BWA3</MDTypography>}
+                      labelPlacement="start"
+                    />
+                  </FormGroup> */}
                   {/* <FormGroup>
                     <Label for="printColor">{textPlaceHolderInputs[7]}</Label>
                     <Input

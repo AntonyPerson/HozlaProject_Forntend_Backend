@@ -340,7 +340,7 @@ export default function HozlaPrintRequestForm() {
     },
     {
       volumeType: "ע' 2 טו",
-      volumeName: "איתור תקלות אכזרית",
+      volumeName: "איתור תקלות צמ''ה",
       numOfCopies: 0,
     },
     {

@@ -213,6 +213,23 @@ export default function data() {
         </MDButton>
       </Link>
     ),
+    hozlaInfo: (
+      <Link to={`/adminFeild/${hozla._id}`} key={hozla._id}>
+        <MDButton
+          variant="gradient"
+          color="mekatnar"
+          // onClick={() => {
+          //   // setIsInfoPressed(true);
+          //   // setpressedID(hozla._id);
+          // }}
+          circular="true"
+          iconOnly="true"
+          size="medium"
+        >
+          <Icon>edit</Icon>
+        </MDButton>
+      </Link>
+    ),
   }));
   console.log(`isError ${isError}`);
   return {
@@ -226,6 +243,7 @@ export default function data() {
       { Header: "שם המזמין", accessor: "NameRequester", align: "center" },
       { Header: "תאריך קבלה מבוקש", accessor: "diliveryDate", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
+      { Header: "פרטי הוצלא", accessor: "hozlaInfo", align: "center" },
     ],
 
     rows: dbRows,

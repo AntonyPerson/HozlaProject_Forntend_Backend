@@ -71,7 +71,7 @@ export default function PrintInfoRequestFormDB() {
   const params = useParams();
   const [formData, setFormData] = useState({});
   const [text, setText] = useState();
-  const [twoSides, setTwoSides] = useState(false);
+  const [twoSides, setTwoSides] = useState("true");
 
   const [data, setData] = useState({
     hozlaRequestID: params.formID,
@@ -118,12 +118,12 @@ export default function PrintInfoRequestFormDB() {
           console.log(response.data);
           console.log(params.formID);
           setFormData(response.data);
-          if (response.data.twoSides === true) {
-            setTwoSides(true);
-          } else if (response.data.twoSides === false) {
-            setTwoSides(false);
+          if (response.data.twoSides === "true") {
+            setTwoSides("true");
+          } else if (response.data.twoSides === "false") {
+            setTwoSides("false");
           }
-          // console.log(twoSides);
+          console.log(twoSides);
         } else {
           setText("הטופס לא עודכן");
         }
@@ -446,6 +446,9 @@ export default function PrintInfoRequestFormDB() {
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
                   טופס הוצל"א{" "}
                 </MDTypography>
+                <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                  {params.formID}
+                </MDTypography>
               </MDBox>
               <MDBox textAlign="center">
                 <FormGroup>
@@ -454,46 +457,47 @@ export default function PrintInfoRequestFormDB() {
                   </MDTypography>
                 </FormGroup>
               </MDBox>
-              {/* <MDTypography variant="h4" fontWeight="medium" color="black" mt={1}>
-                שם העבודה{" "}
-              </MDTypography>
-              <Label>פרטים נוספים על ההדפסה</Label> */}
-              <FormGroup>
-                {twoSides === "true" ? (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        // defaultChecked
-                        // checked={data.twoSides}
-                        // value={twoSides}
-                        // onChange={handleChangeCheckbox}
-                        inputProps={{ "aria-label": "controlled" }}
-                        disabled
-                        checked
-                      />
-                    }
-                    label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                    labelPlacement="start"
-                  />
-                ) : (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        // defaultChecked
-                        // checked={data.twoSides}
-                        // value={twoSides}
-                        // onChange={handleChangeCheckbox}
-                        inputProps={{ "aria-label": "controlled" }}
-                        disabled
-                      />
-                    }
-                    label={<MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>}
-                    labelPlacement="start"
-                  />
-                )}
-              </FormGroup>
+
               <Form style={{ textAlign: "right" }} role="form">
                 <FormGroup row className="">
+                  <FormGroup>
+                    {twoSides === "true" ? (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // defaultChecked
+                            // checked={data.twoSides}
+                            // value={twoSides}
+                            // onChange={handleChangeCheckbox}
+                            inputProps={{ "aria-label": "controlled" }}
+                            disabled
+                            checked
+                          />
+                        }
+                        label={
+                          <MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>
+                        }
+                        labelPlacement="start"
+                      />
+                    ) : (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // defaultChecked
+                            // checked={data.twoSides}
+                            // value={twoSides}
+                            // onChange={handleChangeCheckbox}
+                            inputProps={{ "aria-label": "controlled" }}
+                            disabled
+                          />
+                        }
+                        label={
+                          <MDTypography for="twoSides">{textPlaceHolderInputs[8]}</MDTypography>
+                        }
+                        labelPlacement="start"
+                      />
+                    )}
+                  </FormGroup>
                   <FormGroup>
                     <Label for="numColourfulBeats">{textPlaceHolderInputs[3]}</Label>
                     <Input

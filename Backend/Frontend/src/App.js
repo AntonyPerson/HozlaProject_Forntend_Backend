@@ -283,6 +283,9 @@ export default function App() {
                   <Route path="/toraHeilitrequestForm">
                     <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
                   </Route>
+                  <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+                  </Route>
                   <Route path="*" element={<Error404 />} />
                 </Routes>
               )

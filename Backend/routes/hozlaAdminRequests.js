@@ -13,6 +13,39 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/getAnnualInfo").get((req, res) => {
+  let countPrintInYear = 0;
+  let numBeatsColourful = 0;
+  let sumBeatsBlackwhite = 0;
+  let sumRequestInYear = 0;
+  HozlaAdminRequest.find()
+    .then((request) => {
+      request.map((hozla) => {
+        // if (hozla.numPages) {
+        countPrintInYear = Math.round(hozla.numPages) + countPrintInYear;
+        // }
+        // if (hozla.numColourfulBeats) {
+        numBeatsColourful =
+          Math.round(hozla.numColourfulBeats) + numBeatsColourful;
+        // }
+        // if (hozla.sumNoColourfulPages) {
+        sumBeatsBlackwhite =
+          Math.round(hozla.sumNoColourfulPages) + sumBeatsBlackwhite;
+        // }
+        sumRequestInYear += 1;
+      });
+    })
+    .then(() =>
+      res.json({
+        countPrintInYear,
+        numBeatsColourful,
+        sumBeatsBlackwhite,
+        sumRequestInYear,
+      })
+    )
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/getAnafPrintCount").get((req, res) => {
   let tun = 0;
   let takom = 0;
@@ -154,14 +187,27 @@ router.route("/:id").delete((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/deleteAllDoc").post((req, res) => {
+  HozlaAdminRequest.deleteMany()
+    .then(() => res.json("HozlaRequest deleted."))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.route("/:hozlaRequestID").get((req, res) => {
   HozlaAdminRequest.findOne({ hozlaRequestID: req.params.hozlaRequestID })
     .then((request) => res.json(request))
     .catch((err) => res.status(400).json("Error: " + err));
 });
+router.route("/first/Doc").get((req, res) => {
+  HozlaAdminRequest.findOne()
+    .then((request) => res.json(request))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
 
-router.route("/update/:id").post((req, res) => {
-  HozlaAdminRequest.findById(req.params.id)
+router.route("/update/:hozlaRequestID").post((req, res) => {
+  HozlaAdminRequest.findOne({
+    hozlaRequestID: req.params.hozlaRequestID,
+  })
     .then((request) => {
       request.user_card_number = req.body.user_card_number;
       // request.unit = req.body.unit;
@@ -180,7 +226,7 @@ router.route("/update/:id").post((req, res) => {
       // request.fullNameReciver = req.body.fullNameReciver;
       // request.workRecivedDate = Date.parse(req.body.workRecivedDate);
       // request.files = req.body.files;
-      request.hozlaRequestID = req.body.hozlaRequestID;
+      // request.hozlaRequestID = req.body.hozlaRequestID;
       request.anaf = req.body.anaf;
       request.status = req.body.status;
       request.order_maker_card_number = req.body.order_maker_card_number;
