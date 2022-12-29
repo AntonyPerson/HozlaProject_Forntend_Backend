@@ -192,13 +192,14 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         component="img"
         src={mekatnarLogo}
         alt="mekatnarLogo"
-        width="50px"
+        width="70px"
         alignSelf="center"
         sx={{
           marginTop: "auto",
+          marginBottom: "2rem",
         }}
       />
-      <MDBox
+      {/* <MDBox
         component="img"
         src={NGTeamLogo}
         alt="NGTeamLogo"
@@ -208,7 +209,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           marginTop: "2rem",
           marginBottom: "2rem",
         }}
-      />
+      /> */}
     </SidenavRoot>
   );
 }

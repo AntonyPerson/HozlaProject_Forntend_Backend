@@ -5,6 +5,7 @@ const router = require("express").Router();
 const HozlaRequest = require("../models/hozlaRequest.model");
 const { upload } = require("../helpers/filehelper");
 const MultipleFile = require("../models/fileuploader/multipleFile");
+// const referenceId = 1;
 
 router.route("/").get((req, res) => {
   HozlaRequest.find()
@@ -89,6 +90,7 @@ router.route("/add").post((req, res) => {
   const personalnumber = req.body.personalnumber;
   const clientNote = String(req.body.clientNote);
   const toraHeilitVolumes = req.body.toraHeilitVolumes;
+  const propPrints = req.body.propPrints;
 
   const newHozlaRequest = new HozlaRequest({
     typeRequest,
@@ -115,6 +117,7 @@ router.route("/add").post((req, res) => {
     personalnumber,
     clientNote,
     toraHeilitVolumes,
+    propPrints,
   });
 
   const formId = newHozlaRequest.save((err, form) => {
@@ -175,10 +178,92 @@ router.route("/update/:id").post((req, res) => {
       request.status = req.body.status;
       request.toraHeilitVolumes = req.body.toraHeilitVolumes;
       request.personalnumber = req.body.personalnumber;
+      request.propPrints = req.body.propPrints;
 
       request
         .save()
         .then(() => res.json("HozlaRequest updated!"))
+        .catch((err) => res.status(400).json("Error: " + err));
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+router.route("/updateNameReciver/:id").post((req, res) => {
+  HozlaRequest.findById(req.params.id)
+    .then((request) => {
+      request.fullNameReciver = req.body.fullNameReciver;
+      request
+        .save()
+        .then(() => res.json("HozlaRequest updated!"))
+        .catch((err) => res.status(400).json("Error: " + err));
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/sameRequest/:id").get((req, res) => {
+  const getDaysDiff = (dateToCheck) => {
+    const day = new Date().getDate();
+    const mounth = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
+    const currentDate = Date.parse(`${year}-${mounth}-${day}`);
+
+    // console.log(dateToCheck);
+    // console.log(`${year}-${mounth}-${day}`);
+    // console.log(currentDate);
+    // console.log(Date.parse(dateToCheck));
+    const diff =
+      Math.abs(currentDate - Date.parse(dateToCheck)) / (1000 * 3600 * 24);
+    // console.log(diff);
+    return diff;
+  };
+  // let message = "";
+  // var unit = "";
+  HozlaRequest.findById(req.params.id)
+    .then((request) => {
+      const unitName = request.unit;
+      const dataToraHeilit = request.toraHeilitVolumes;
+      const day = request.workGivenDate.getDate();
+      const mounth = request.workGivenDate.getMonth() + 1;
+      const year = request.workGivenDate.getFullYear();
+      const dateSent = Date.parse(`${year}-${mounth}-${day}`);
+
+      let message = false;
+      // console.log(unitName);
+      // console.log(dataToraHeilit);
+      HozlaRequest.find({ unit: unitName, toraHeilitVolumes: dataToraHeilit })
+        .then((requestData) => {
+          requestData.map((tora) => {
+            const day = tora.workGivenDate.getDate();
+            const mounth = tora.workGivenDate.getMonth() + 1;
+            const year = tora.workGivenDate.getFullYear();
+            const dateTora = Date.parse(`${year}-${mounth}-${day}`);
+            const diff =
+              Math.abs(dateSent - Date.parse(tora.workGivenDate)) /
+              (1000 * 3600 * 24);
+            if (
+              // tora.toraHeilitVolumes === dataToraHeilit &&
+              tora.id !== req.params.id &&
+              dateTora <= dateSent &&
+              diff <= 365
+            ) {
+              console.log("Same Data");
+              console.log(diff);
+              // unit = tora.unit;
+              message = true;
+            }
+          });
+          console.log(dateSent);
+
+          {
+            message === true
+              ? res.json({ message: "בקשה זו כבר נשלחה בשנה האחרונה" })
+              : res.json({ message: "" });
+          }
+          // console.log(`received: ${received}`);
+          // console.log(`inprint: ${inprint}`);
+          // console.log(`ended: ${ended}`);
+          // console.log(`readyForTakeIn: ${readyForTakeIn}`);
+          // console.log(`archive: ${archive}`);
+        })
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));

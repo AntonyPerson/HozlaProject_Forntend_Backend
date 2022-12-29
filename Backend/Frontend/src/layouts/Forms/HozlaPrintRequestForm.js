@@ -34,6 +34,7 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -166,13 +167,13 @@ export default function HozlaPrintRequestForm() {
     loading: false,
     NavigateToReferrer: false,
   });
-  const [propPrint, setPropPrint] = useState({
-    nameFile: "",
-    props: {
-      propPageType: "A4",
-      propCopyType: "b&w2",
-    },
-  });
+  const [propPrint, setPropPrint] = useState([]); // {
+  // nameFile: ``,
+  // props: {
+  // propPageType: "A4",
+  // propCopyType: "b&w2",
+  // },
+  // },
   // const [textArea, setTextArea] = useState("");
   const [files, setFiles] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -189,12 +190,12 @@ export default function HozlaPrintRequestForm() {
     "שיטת כריכה",
     "שיטת  צילום",
     "כמות עותקים",
-    "שם מוסר העבודה",
+    "שם מזמין העבודה",
     "תאריך מסירת העבודה",
     "שם מקבל העבודה",
     "קובץ להדפסה",
     "סוג דף",
-    "תאריך קבלת העבודה",
+    "תאריך נדרש לקבלת העבודה",
     "שם אוסף העבודה",
   ];
   useEffect(() => {
@@ -204,16 +205,23 @@ export default function HozlaPrintRequestForm() {
 
   const handleUploadFiles = (uploadFiles) => {
     const uploaded = [...files];
+
     let limitExceeded = false;
-    uploadFiles.some((filePush) => {
+    uploadFiles.some((filePush, index) => {
       if (uploaded.findIndex((f) => f.name === filePush.name) === -1) {
         uploaded.push(filePush);
-        // setData({
-        //   ...data,
-        //   [propPrint.nameFile]: `${file.name}`,
-        //   [propPrint.props.propCopyType]: "b&w2",
-        //   [propPrint.props.propPageType]: "A4",
-        // });
+        const newfield = { nameFile: `${filePush.name}`, propCopyType: "---", propPageType: "---" };
+
+        setPropPrint([...propPrint, newfield]);
+        // setPropPrint([
+        //   {
+        //     ...propPrint[index],
+        //     nameFile: `${filePush.name}`,
+        //     propCopyType: "b&w2",
+        //     propPageType: "A4",
+        //   },
+        // ]);
+        console.log(propPrint);
         // console.log("file name: " + data.propPrint.nameFile);
         // setPropPrint({ ...propPrint, nameFile: filePush.name });
         // setTextArea({ ...textArea, nameFiletxt: filePush.name });
@@ -266,6 +274,26 @@ export default function HozlaPrintRequestForm() {
     const { value } = evt.target;
     setData({ ...data, [evt.target.name]: value });
   }
+  const handleChangeNumPrintTH = (index) => (evt) => {
+    // const { name } = evt.target;
+    // setToraHeilitVolume({ ...toraHeilitVolume, [evt.target.name]: value });
+    const newPropPrint = [...propPrint]; // copying the old datas array
+    // a deep copy is not needed as we are overriding the whole object below, and not setting a property of it. this does not mutate the state.
+    newPropPrint[index].propPageType = evt.target.value; // replace e.target.value with whatever you want to change it to
+
+    setPropPrint(newPropPrint);
+    console.log(newPropPrint);
+  };
+  const handleChangeCopyPrintTH = (index) => (evt) => {
+    // const { name } = evt.target;
+    // setToraHeilitVolume({ ...toraHeilitVolume, [evt.target.name]: value });
+    const newPropPrint = [...propPrint]; // copying the old datas array
+    // a deep copy is not needed as we are overriding the whole object below, and not setting a property of it. this does not mutate the state.
+    newPropPrint[index].propCopyType = evt.target.value; // replace e.target.value with whatever you want to change it to
+
+    setPropPrint(newPropPrint);
+    console.log(newPropPrint);
+  };
   // const UploadFile = async (filenameindb) => {
   //   const formData = new FormData();
   //   formData.append("files", multipleFiles);
@@ -360,17 +388,22 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("לא צויין תאריך מסירת העבודה");
       // toast.error(ErrorReason);
     }
-    if (data.fullNameReciver === "") {
-      flag = false;
-      ErrorReason.push("לא צויין שם מקבל העבודה");
-      // toast.error(ErrorReason);
-    }
+    // if (data.fullNameReciver === "") {
+    //   flag = false;
+    //   ErrorReason.push("לא צויין שם מקבל העבודה");
+    //   // toast.error(ErrorReason);
+    // }
     // if (Date.parse(data.workGivenDate) < currentDate) {
     //   flag = false;
     //   ErrorReason.push("תאריך מסירת העבודה לא תיקני");
     //   // toast.error(ErrorReason);
     // }
-
+    propPrint.forEach((prop) => {
+      if (prop.propCopyType === "---" || prop.propPageType === "---") {
+        flag = false;
+        ErrorReason.push("פרטי הדפסה חסרים");
+      }
+    });
     if (Date.parse(data.workRecivedDate) <= currentDate) {
       flag = false;
       ErrorReason.push("תאריך קבלת העבודה לא תיקני");
@@ -378,7 +411,7 @@ export default function HozlaPrintRequestForm() {
     }
     if (data.workRecivedDate === "") {
       flag = false;
-      ErrorReason.push("לא צויין תאריך קבלת העבודה ");
+      ErrorReason.push("לא צויין תאריך נדרש לקבלת העבודה ");
       // toast.error(ErrorReason);
     }
     if (files.length === 0) {
@@ -441,6 +474,7 @@ export default function HozlaPrintRequestForm() {
 
         // files: data.files,
         files_id: res.data,
+        propPrints: JSON.stringify(propPrint),
         pageType: data.pageType,
         ordernum: data.ordernum,
         clientNote: data.clientNote,
@@ -485,36 +519,100 @@ export default function HozlaPrintRequestForm() {
             //   return
             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
               <FormGroup>
-                <MDAlert color="mekatnar">
-                  <MDButton
-                    dir="ltr"
-                    iconOnly
-                    variant="text"
-                    // onClick={deleteFile1(el.id)}
-                    onClick={() => {
-                      if (i > -1) {
-                        setFiles((currentFile) =>
-                          files.filter((oneFile, oneIndex) => oneIndex !== i)
-                        );
-                      }
-                    }}
-                    // onClick={handleDelete}
-                    // onClick={handleRemove}
+                <MDBox bgColor="light" opacity={5} shadow="lg" variant="contained" p={1}>
+                  <MDAlert color="mekatnar">
+                    <MDButton
+                      dir="ltr"
+                      iconOnly
+                      variant="text"
+                      // onClick={deleteFile1(el.id)}
+                      onClick={() => {
+                        if (i > -1) {
+                          setFiles((currentFile) =>
+                            files.filter((oneFile, oneIndex) => oneIndex !== i)
+                          );
+                          setPropPrint((currentProp) =>
+                            propPrint.filter((oneProp, onePIndex) => onePIndex !== i)
+                          );
+                        }
+                      }}
+                      // onClick={handleDelete}
+                      // onClick={handleRemove}
 
-                    // onClick={() => fileRemove(el)}
-                  >
-                    <Icon fontSize="small">delete</Icon>&nbsp;
-                  </MDButton>
-                  <MDBox>
-                    <MDTypography variant="h6" color="light">
-                      {el.name}
-                    </MDTypography>
-                    <MDTypography variant="body2" color="light">
-                      {el.size} MB
-                    </MDTypography>
-                  </MDBox>
-                </MDAlert>
-                {/* <TextareaAutosize
+                      // onClick={() => fileRemove(el)}
+                    >
+                      <Icon fontSize="small">delete</Icon>&nbsp;
+                    </MDButton>
+                    <MDBox>
+                      <MDTypography variant="h6" color="light">
+                        {el.name}
+                      </MDTypography>
+                      <MDTypography variant="body2" color="light">
+                        {el.size} MB
+                      </MDTypography>
+                    </MDBox>
+                  </MDAlert>
+                  <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid item xs={6}>
+                      <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
+                      <Input
+                        // placeholder={textPlaceHolderInputs[7]}
+                        name="copyType"
+                        type="select"
+                        value={propPrint[i].propCopyType}
+                        onChange={handleChangeCopyPrintTH(i)}
+                      >
+                        <option defult value="---">
+                          ---
+                        </option>
+                        <option value="b&w2">שחור לבן דו צדדי</option>
+                        <option value="color1">צבעוני יחיד</option>
+                        <option value="color2">צבעוני דו צדדי</option>
+                        <option value="b&w1">שחור לבן יחיד</option>
+                      </Input>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Label for="pageType">{textPlaceHolderInputs[13]}</Label>
+                      <Input
+                        name="pageType"
+                        type="select"
+                        value={propPrint[i].propPageType}
+                        onChange={handleChangeNumPrintTH(i)}
+                      >
+                        <option defult value="---">
+                          ---
+                        </option>
+                        <option value="A0">A0</option>
+                        <option value="A3">A3</option>
+                        <option value="A4">A4</option>
+                        <option value="A5">A5</option>
+                        <option value="A6">A6</option>
+                        <option value="A4b">A4 בריסטול</option>
+                        <option value="A3b">A3 בריסטול</option>
+                      </Input>
+                    </Grid>
+                  </Grid>
+                  {/* {el.id !== propPrint[i].index && (
+
+                 )} */}
+                  {/* <FormGroup>
+                  <Label for="clientNote">הערות נוספות...</Label>
+                  <Input
+                    name="clientNote"
+                    type="textarea"
+                    // label=""
+                    onChange={handleChangeTxtAera}
+                    style={{ minWidth: 360 }}
+                    multiline
+                    rows={3}
+                    // contrast
+                    value={data.textAreaValue}
+                    // value={() => {
+                    //   setTextArea({ ...textArea, txt: filePush.name });
+                    // }}
+                  />
+                </FormGroup> */}
+                  {/* <TextareaAutosize
                   minLength={1}
                   maxRows={2}
                   aria-label="maximum height"
@@ -522,7 +620,7 @@ export default function HozlaPrintRequestForm() {
                   style={{ minWidth: 380 }}
                 /> */}
 
-                {/* <MDInput
+                  {/* <MDInput
                   label={el.name}
                   onChange={handleChangeTxtAera}
                   style={{ minWidth: 360 }}
@@ -534,7 +632,7 @@ export default function HozlaPrintRequestForm() {
                   // }}
                 /> */}
 
-                {/* <textarea
+                  {/* <textarea
                 name="textAreaValue"
                 rows={3} cols={55}
                 value={data.textAreaValue}
@@ -542,78 +640,74 @@ export default function HozlaPrintRequestForm() {
                 placeholder="הערות הדפסה">
                 {data.textAreaValue}
               </textarea> */}
-                {/* <MDButton onClick={handleClickOpen} color="mekatnar" variant="text" size="medium">
-                בחר אפשרות הדפסה
-              </MDButton>
-              <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>
-                  הגדר אפשרות הדפסה עבור:
-                  <MDTypography variant="h6" color="mekatnar">
-                    {el.name}
-                  </MDTypography>
-                </DialogTitle>
+                  {/* <MDButton onClick={handleClickOpen} color="mekatnar" variant="text" size="medium">
+                    בחר אפשרות הדפסה
+                  </MDButton>
+                  <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+                    <DialogTitle>
+                      הגדר אפשרות הדפסה עבור:
+                      <MDTypography variant="h6" color="mekatnar">
+                        {propPrint[i].nameFile}
+                      </MDTypography>
+                    </DialogTitle>
 
-                <DialogContent>
-                  <Box component="form" sx={{ display: "flex", flexWrap: "wrap" }}>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                      <Label for={`${propPrint.nameFile}"copyType"`}>
-                        {textPlaceHolderInputs[7]}
-                      </Label>
-                      <Input
-                        name={`${propPrint.nameFile}"copyType"`}
-                        // name={data.propPrint.nameFile}
-                        type="select"
-                        value={propPrint.props.propCopyType}
-                        onChange={handleChangePropPrintFile}
-                      >
-                        <option defult value="b&w2">
-                          שחור לבן דו צדדי
-                        </option>
-                        <option value="color1">צבעוני יחיד</option>
-                        <option value="color2">צבעוני דו צדדי</option>
-                        <option value="b&w1">שחור לבן יחיד</option>
-                      </Input>
-                    </FormControl>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                      <Label for={`${propPrint.nameFile}"pageType"`}>
-                        {textPlaceHolderInputs[13]}
-                      </Label>
-                      <Input
-                        name={`${propPrint.nameFile}"pageType"`}
-                        type="select"
-                        value={propPrint.props.propPageType}
-                        onChange={handleChangePropPrintFile}
-                      >
-                        <option value={`${propPrint.props.propPageType}A0`}>A0</option>
-                        <option value={`${propPrint.props.propPageType}A3`}>A3</option>
-                        <option defult value={`${propPrint.props.propPageType}A4`}>
-                          A4
-                        </option>
-                        <option value={`${propPrint.props.propPageType}A5`}>A5</option>
-                        <option value={`${propPrint.props.propPageType}A6`}>A6</option>
-                        <option value={`${propPrint.props.propPageType}A4b`}>A4 בריסטול</option>
-                        <option value={`${propPrint.props.propPageType}A3b`}>A3 בריסטול</option>
-                      </Input>
-                    </FormControl>
-                  </Box>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>ביטול</Button>
-                  <Button onClick={handleClose}>אישור</Button>
-                </DialogActions>
-              </Dialog> */}
+                    <DialogContent>
+                      <Box component="form" sx={{ display: "flex", flexWrap: "wrap" }}>
+                        <FormControl sx={{ m: 1, minWidth: 120 }}>
+                          <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
+                          <Input
+                            // placeholder={textPlaceHolderInputs[7]}
+                            name="copyType"
+                            type="select"
+                            value={propPrint[i].propCopyType}
+                            onChange={handleChangeCopyPrintTH(i)}
+                          >
+                            <option value="---">---</option>
+                            <option value="b&w2">שחור לבן דו צדדי</option>
+                            <option value="color1">צבעוני יחיד</option>
+                            <option value="color2">צבעוני דו צדדי</option>
+                            <option value="b&w1">שחור לבן יחיד</option>
+                          </Input>
+                        </FormControl>
+                        <FormControl sx={{ m: 1, minWidth: 120 }}>
+                          <Label for="pageType">{textPlaceHolderInputs[13]}</Label>
+                          <Input
+                            name="pageType"
+                            type="select"
+                            value={propPrint[i].propPageType}
+                            onChange={handleChangeNumPrintTH(i)}
+                          >
+                            <option value="---">---</option>
+                            <option value="A0">A0</option>
+                            <option value="A3">A3</option>
+                            <option value="A4">A4</option>
+                            <option value="A5">A5</option>
+                            <option value="A6">A6</option>
+                            <option value="A4b">A4 בריסטול</option>
+                            <option value="A3b">A3 בריסטול</option>
+                          </Input>
+                        </FormControl>
+                      </Box>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>ביטול</Button>
+                      <Button onClick={handleClose}>אישור</Button>
+                    </DialogActions>
+                  </Dialog> */}
+                </MDBox>
               </FormGroup>
             </div>
           )
+
           // }
         }
       </Draggable>
     )
     // }
   );
-  useEffect(() => {
-    console.log(`You clicked ${dataFiles} times`);
-  }, [dataFiles]);
+  // useEffect(() => {
+  //   console.log(`You clicked ${dataFiles} times`);
+  // }, [dataFiles]);
 
   const handleCloseSuccsecModal = () => {
     setData({ ...data, loading: false, error: false, successmsg: false, NavigateToReferrer: true });
@@ -660,7 +754,7 @@ export default function HozlaPrintRequestForm() {
 
         <DialogContent>
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            מספר אסמכתא: {data.work_id}
+            מספר אסמכתא: {/* {data.work_id} */} {parseInt(data.work_id.slice(-4), 36)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
             <Link style={{ color: "white" }} to="/userRequestsTable">
@@ -759,13 +853,18 @@ export default function HozlaPrintRequestForm() {
     if (!res.destination) return;
     // const filesCopy = [...files];
     const filesCopy = Array.from(files);
+    const propPrintCopy = [...propPrint];
 
     const [reorderedItem] = filesCopy.splice(res.source.index, 1);
+    const [reorderedItemProp] = propPrintCopy.splice(res.source.index, 1);
+
     filesCopy.splice(res.destination.index, 0, reorderedItem);
+    propPrintCopy.splice(res.destination.index, 0, reorderedItemProp);
 
     setFiles(filesCopy);
+    setPropPrint(propPrintCopy);
   };
-  const handleClickOpen = () => {
+  const handleClickOpen = (evt) => {
     setOpen(true);
   };
 
@@ -1061,7 +1160,8 @@ export default function HozlaPrintRequestForm() {
                       name="fullNameReciver"
                       type="text"
                       value={data.fullNameReciver}
-                      onChange={handleChange}
+                      // onChange={handleChange}
+                      disabled
                     />
                   </FormGroup>
 
@@ -1095,8 +1195,16 @@ export default function HozlaPrintRequestForm() {
 
                     <Input
                       type="file"
-                      multiple
-                      accept="application/pdf, image/png, image/jpeg"
+                      // multiple
+                      accept="application/pdf,
+                       image/png,
+                       image/jpeg,
+                        application/vnd.ms-excel,
+                         application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, 
+                         application/vnd.ms-powerpoint, 
+                         application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                         application/msword,
+                         application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                       onChange={handleFileEvent}
                       // disabled={fileLimit}
                     />
@@ -1106,11 +1214,13 @@ export default function HozlaPrintRequestForm() {
                     נבחרו {files.length} קבצים
                   </MDTypography>
                   {files.length === 0 ? (
-                    <FormText color="muted">ניתן להעלאות רק קבצי pdf .jpeg .png.</FormText>
+                    <FormText color="muted">
+                      ניתן להעלאות קבצי xlsx .xls .pptx .ppt .doc .docx .jpeg .jpg .png .pdf.
+                    </FormText>
                   ) : (
                     <Container>
                       <DragDropContext onDragEnd={handleOnDragEnd}>
-                        <Droppable droppableId="items">
+                        <Droppable droppableId="files">
                           {
                             (provided) => (
                               // {
@@ -1127,7 +1237,7 @@ export default function HozlaPrintRequestForm() {
                       <FormGroup>
                         <FormText color="muted">ניתן לגרור את הקבצים לפי הסדר</FormText>
                       </FormGroup>
-                      <FormGroup>
+                      {/* <FormGroup>
                         <Label for="clientNote">הערות נוספות...</Label>
                         <Input
                           name="clientNote"
@@ -1143,7 +1253,7 @@ export default function HozlaPrintRequestForm() {
                           //   setTextArea({ ...textArea, txt: filePush.name });
                           // }}
                         />
-                      </FormGroup>
+                      </FormGroup> */}
                       <FormGroup>
                         <MDButton
                           dir="ltr"
@@ -1154,6 +1264,7 @@ export default function HozlaPrintRequestForm() {
                           // onClick={handleRemove}
                           onClick={() => {
                             setFiles([]);
+                            setPropPrint([]);
                           }}
                           // onClick={() => fileRemove(el)}
                         >

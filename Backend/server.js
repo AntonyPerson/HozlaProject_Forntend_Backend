@@ -65,6 +65,10 @@ app.use("/api", fileuploaderRoutes);
 const AnnualInfoAdmin = require("./routes/AnnualInfoAdmin");
 app.use("/AnnualInfoAdmin", AnnualInfoAdmin);
 
+// Tora Heilit
+const toraHeilit = require("./routes/toraHeilit");
+app.use("/toraHeilit", toraHeilit);
+
 if (process.env.NODE_ENV === "production") {
   //set static folder
   app.use(express.static("frontend/build"));

@@ -4,6 +4,7 @@
 /* eslint-disable no-empty */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-console */
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
@@ -38,6 +39,7 @@ import Error404 from "views/Error404";
 import MDButton from "components/MDButton";
 import MDAlert from "components/MDAlert";
 import FileDownload from "js-file-download";
+import Grid from "@mui/material/Grid";
 
 import { signin, authenticate, isAuthenticated } from "auth/index";
 
@@ -62,12 +64,12 @@ const textPlaceHolderInputs = [
   "שיטת כריכה",
   "שיטת  צילום",
   "כמות עותקים",
-  "שם מוסר העבודה",
+  "שם מזמין העבודה",
   "תאריך מסירת העבודה",
   "שם מקבל העבודה",
   "קובץ להדפסה",
   "סוג דף",
-  "תאריך קבלת העבודה",
+  "תאריך נדרש לקבלת העבודה",
   "עדכון סטטוס",
   "שם אוסף העבודה",
 ];
@@ -83,6 +85,10 @@ const FieldReuestFormDB = () => {
 
   const [dates, setdates] = useState({});
   const [clientNote, setClientNote] = useState("");
+  const [data, setData] = useState({
+    fullNameReciver: "",
+  });
+  const [propPrint, setPropPrint] = useState();
 
   useEffect(() => {
     axios
@@ -98,6 +104,8 @@ const FieldReuestFormDB = () => {
           workRecivedDate: response.data.workRecivedDate.split("T")[0],
         });
         setClientNote(response.data.clientNote.split("\n"));
+        setPropPrint(JSON.parse(response.data.propPrints));
+        console.log(propPrint);
       })
       .catch((error) => {
         console.log(error);
@@ -150,6 +158,10 @@ const FieldReuestFormDB = () => {
       return <Navigate to="/Error404" />;
     }
   };
+  function handleChange(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+  }
   const showError = () => (
     <Dialog
       open={errorDB}
@@ -180,6 +192,7 @@ const FieldReuestFormDB = () => {
       </MDBox>
     </Dialog>
   );
+
   const getWorkStuts = (value) => {
     let stutus = "נשלח";
     let color = "error";
@@ -236,6 +249,35 @@ const FieldReuestFormDB = () => {
       });
     console.groupEnd();
   };
+
+  const updateNameReciver = () => {
+    const NameReciver = {
+      fullNameReciver: data.fullNameReciver,
+    };
+    axios
+      .post(`http://localhost:5000/hozlaRequests/updateNameReciver/${params.formID}`, NameReciver)
+      .then((response) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+        // console.log(response.data);
+        // console.log(params.formID);
+        setData({ ...data, fullNameReciver: response.data.fullNameReciver });
+        setFormData({ ...formData, fullNameReciver: response.data.fullNameReciver });
+        // setFormData({ ...formData, status: newStatus });
+        console.groupEnd();
+      })
+      .catch((error) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.error`);
+
+        console.error(error);
+        console.error(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
+        console.groupEnd();
+      });
+  };
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color={color} fontWeight="medium">
@@ -265,7 +307,7 @@ const FieldReuestFormDB = () => {
                 textAlign="center"
               >
                 <MDTypography variant="h2" fontWeight="medium" color="white" mt={1}>
-                  טופס מספר {params.formID}{" "}
+                  טופס מספר {/* {params.formID} */} {parseInt(params.formID.slice(-4), 36)}
                 </MDTypography>
               </MDBox>
               {user.admin === "0" ? (
@@ -295,7 +337,7 @@ const FieldReuestFormDB = () => {
                     onChange={handleStatusChange}
                   >
                     <option disabled value="25">
-                      נשלח להוצלא
+                      בקשה נשלחה
                     </option>
                     {/* <option value="0">בלמ"ס</option> */}
                     <option value="50">התקבל במערכת</option>
@@ -478,16 +520,50 @@ const FieldReuestFormDB = () => {
                   </FormGroup>
                 </FormGroup>
                 <FormGroup row className="">
-                  <FormGroup>
-                    <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[11]}
-                      name="fullNameReciver"
-                      type="text"
-                      value={formData.fullNameReciver}
-                      disabled
-                    />
-                  </FormGroup>
+                  {user.admin === "0" ? (
+                    <FormGroup>
+                      <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
+                      <Input
+                        // placeholder={textPlaceHolderInputs[11]}
+                        name="fullNameReciver"
+                        type="text"
+                        value={formData.fullNameReciver}
+                        // onChange={handleChange}
+                        disabled
+                      />
+                    </FormGroup>
+                  ) : (
+                    <FormGroup>
+                      <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
+                      <Input
+                        // placeholder={textPlaceHolderInputs[11]}
+                        name="fullNameReciver"
+                        type="text"
+                        value={
+                          data.fullNameReciver !== ""
+                            ? data.fullNameReciver
+                            : formData.fullNameReciver
+                        }
+                        onChange={handleChange}
+                        // disabled
+                      />
+                      {data.fullNameReciver === "" ? (
+                        <MDTypography variant="h6" color="success">
+                          עדכן את שם האוסף
+                        </MDTypography>
+                      ) : (
+                        <MDButton
+                          onClick={updateNameReciver}
+                          variant="gradient"
+                          color="success"
+                          size="small"
+                        >
+                          עדכן
+                        </MDButton>
+                      )}
+                    </FormGroup>
+                  )}
+
                   <FormGroup>
                     <Label for="workRecivedDate">{textPlaceHolderInputs[14]}</Label>
                     <Input
@@ -512,26 +588,69 @@ const FieldReuestFormDB = () => {
                   {filesFromDB &&
                     filesFromDB.map((file, index) => (
                       <FormGroup>
-                        <MDAlert color="mekatnar">
-                          <MDButton
-                            dir="ltr"
-                            iconOnly
-                            variant="text"
-                            onClick={() => openFileANewWindows(file.filePath, file.fileName)}
-                          >
-                            <Icon fontSize="small">download</Icon>&nbsp;
-                          </MDButton>
-                          <MDBox color="light">
-                            {/* <MDTypography variant="h6" color="light">{index}</MDTypography> */}
-                            <MDTypography variant="h6" color="light">
-                              {file.fileName}
-                            </MDTypography>
-                            <MDTypography variant="body2" color="light">
-                              {file.fileSize}
-                            </MDTypography>
-                          </MDBox>
-                        </MDAlert>
-                        {/* <MDButton
+                        <MDBox bgColor="light" opacity={5} shadow="lg" variant="contained" p={1}>
+                          <MDAlert color="mekatnar">
+                            <MDButton
+                              dir="ltr"
+                              iconOnly
+                              variant="text"
+                              onClick={() => openFileANewWindows(file.filePath, file.fileName)}
+                            >
+                              <Icon fontSize="small">download</Icon>&nbsp;
+                            </MDButton>
+                            <MDBox color="light">
+                              {/* <MDTypography variant="h6" color="light">{index}</MDTypography> */}
+                              <MDTypography variant="h6" color="light">
+                                {file.fileName}
+                              </MDTypography>
+                              <MDTypography variant="body2" color="light">
+                                {file.fileSize}
+                              </MDTypography>
+                            </MDBox>
+                          </MDAlert>
+                          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            <Grid item xs={6}>
+                              <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
+                              <Input
+                                // placeholder={textPlaceHolderInputs[7]}
+                                name="copyType"
+                                type="select"
+                                value={propPrint[index].propCopyType}
+                                // onChange={handleChangeCopyPrintTH(i)}
+                                disabled
+                              >
+                                <option defult value="---">
+                                  ---
+                                </option>
+                                <option value="b&w2">שחור לבן דו צדדי</option>
+                                <option value="color1">צבעוני יחיד</option>
+                                <option value="color2">צבעוני דו צדדי</option>
+                                <option value="b&w1">שחור לבן יחיד</option>
+                              </Input>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Label for="pageType">{textPlaceHolderInputs[13]}</Label>
+                              <Input
+                                name="pageType"
+                                type="select"
+                                value={propPrint[index].propPageType}
+                                // onChange={handleChangeNumPrintTH(i)}
+                                disabled
+                              >
+                                <option defult value="---">
+                                  ---
+                                </option>
+                                <option value="A0">A0</option>
+                                <option value="A3">A3</option>
+                                <option value="A4">A4</option>
+                                <option value="A5">A5</option>
+                                <option value="A6">A6</option>
+                                <option value="A4b">A4 בריסטול</option>
+                                <option value="A3b">A3 בריסטול</option>
+                              </Input>
+                            </Grid>
+                          </Grid>
+                          {/* <MDButton
                           color="mekatnar"
                           size="large"
                           // onClick={clickSubmit}
@@ -544,6 +663,7 @@ const FieldReuestFormDB = () => {
                             <MDTypography variant="body2" color="light">{file.fileSize}</MDTypography>
                           </MDBox>
                         </MDButton> */}
+                        </MDBox>
                       </FormGroup>
                     ))}
 

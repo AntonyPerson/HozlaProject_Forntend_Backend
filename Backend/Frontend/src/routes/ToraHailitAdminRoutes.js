@@ -51,6 +51,7 @@ import ManagementHoztla from "layouts/tables/adminManagementTable";
 import AdminArchiveTable from "layouts/tables/adminArchiveTable";
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
+import ToraHeilitPrintRequestForm from "layouts/Forms/ToraHeilitPrintRequestForm";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -70,20 +71,37 @@ const AdminRoutes = [
   // },
   {
     type: "collapse",
-    name: "דף הבית",
-    key: "AdminHome",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/AdminHome",
-    component: <AdminHome />,
+    name: "בקשת תורה חילית",
+    key: "toraHeilitrequestForm",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/toraHeilitrequestForm",
+    component: <ToraHeilitPrintRequestForm />,
   },
   {
     type: "collapse",
-    name: "ניהול הוצל''א",
-    key: "managementHoztla",
+    name: "הבקשות שלי",
+    key: "userRequestsTable",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/managementHoztla",
-    component: <ManagementHoztla />,
+    route: "/userRequestsTable",
+    component: <RegulsrUserRequestsTable />,
   },
+
+  // {
+  //   type: "collapse",
+  //   name: "דף הבית",
+  //   key: "AdminHome",
+  //   icon: <Icon fontSize="small">dashboard</Icon>,
+  //   route: "/AdminHome",
+  //   component: <AdminHome />,
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "ניהול הוצל''א",
+  //   key: "managementHoztla",
+  //   icon: <Icon fontSize="small">table_view</Icon>,
+  //   route: "/managementHoztla",
+  //   component: <ManagementHoztla />,
+  // },
   // {
   //   type: "collapse",
   //   name: "טופס הוצל''א",
@@ -100,14 +118,14 @@ const AdminRoutes = [
   //   route: "/adminFeild",
   //   component: <AdminFeildPrintInfoFormDB />,
   // },
-  {
-    type: "collapse",
-    name: "ארכיון",
-    key: "adminArchiveTable",
-    icon: <Icon fontSize="small">archive</Icon>,
-    route: "/adminArchiveTable",
-    component: <AdminArchiveTable />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "ארכיון",
+  //   key: "adminArchiveTable",
+  //   icon: <Icon fontSize="small">archive</Icon>,
+  //   route: "/adminArchiveTable",
+  //   component: <AdminArchiveTable />,
+  // },
   {
     type: "collapse",
     name: "אודות",

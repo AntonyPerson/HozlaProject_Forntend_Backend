@@ -149,7 +149,7 @@ function Dashboard() {
                 title="ניהול הוצל''א"
                 description="מעקב בקשות להדפסה"
                 chart={{
-                  labels: ["התקבלה", "בעבודה", "בהדפסה", "מוכן לאיסוף"],
+                  labels: ["נשלחו", "התקבלו", "בהדפסה", "מוכן לאיסוף"],
                   datasets: {
                     label: "Projects",
                     backgroundColors: ["mekatnar", "info", "dark", "success"],

@@ -66,6 +66,7 @@ import {
   TextField,
 } from "@mui/material";
 import { CompressOutlined } from "@mui/icons-material";
+import Select from "react-select";
 
 export default function PrintInfoRequestFormDB() {
   const params = useParams();
@@ -93,6 +94,8 @@ export default function PrintInfoRequestFormDB() {
     loading: false,
     redirectToReferrer: false,
   });
+  const [selectedBWOptions, setSelectedBWOptions] = useState();
+  const [selectedOptions, setSelectedOptions] = useState();
   // const [value, setValue] = React.useState('');
 
   const textPlaceHolderInputs = [
@@ -127,7 +130,8 @@ export default function PrintInfoRequestFormDB() {
         } else {
           setText("הטופס לא עודכן");
         }
-
+        setSelectedBWOptions(JSON.parse(response.data.selectedBW));
+        setSelectedOptions(JSON.parse(response.data.selected));
         // setData(response.data);
         setData({
           ...data,
@@ -353,7 +357,7 @@ export default function PrintInfoRequestFormDB() {
 
         <DialogContent>
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            מספר אסמכתא: {data.work_id}
+            מספר אסמכתא: {/* {data.work_id} */} {parseInt(data.work_id.slice(-4), 36)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
             <Link style={{ color: "white" }} to="/managementHoztla">
@@ -444,10 +448,10 @@ export default function PrintInfoRequestFormDB() {
                 textAlign="center"
               >
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  טופס הוצל"א{" "}
+                  טופס מספר{" "}
                 </MDTypography>
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  {params.formID}
+                  {/* {params.formID} */} {parseInt(params.formID.slice(-4), 36)}
                 </MDTypography>
               </MDBox>
               <MDBox textAlign="center">
@@ -569,24 +573,26 @@ export default function PrintInfoRequestFormDB() {
                   {/* {data.printColor === "bw" ? ( */}
                   <FormGroup>
                     <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
-                    <Input
+                    <Select value={selectedBWOptions} isMulti isDisabled />
+                    {/* <Input
                       name="selectedBW"
                       type="text"
                       value={formData.selectedBW}
                       // onChange={handleChange}
                       disabled
-                    />
+                    /> */}
                   </FormGroup>
                   {/* ) : ( */}
                   <FormGroup>
                     <Label for="selected">{textPlaceHolderInputs[5]}</Label>
-                    <Input
+                    <Select value={selectedOptions} isMulti isDisabled />
+                    {/* <Input
                       name="selected"
                       type="text"
                       value={formData.selected}
                       // onChange={handleChange}
                       disabled
-                    />
+                    /> */}
                   </FormGroup>
                   {/* )} */}
                 </FormGroup>

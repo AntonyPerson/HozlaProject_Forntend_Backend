@@ -126,7 +126,7 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "נשלח להוצלא";
+      stutus = "בקשה נשלחה";
       color = "error";
     } else if (value === 50) {
       stutus = "התקבל במערכת";
@@ -162,6 +162,9 @@ export default function data() {
     }
     return [typeName, color, urlRequest];
   };
+  // const convertNum = (num) => {
+  //   parseInt()
+  // }
 
   const dbRows = requestDB.map((hozla, index) => ({
     // project: <Project image={LogoAsana} name="Asana" />,
@@ -176,9 +179,10 @@ export default function data() {
         />
       </>
     ),
-    fileID: hozla._id,
+    fileID: parseInt(hozla._id.slice(-4), 36),
     project: hozla.workName,
     projectFor: hozla.projectFor,
+    unit: hozla.unit,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
@@ -241,14 +245,15 @@ export default function data() {
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       { Header: "סוג הבקשה", accessor: "typeRequest", align: "center" },
-      { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      { Header: "שם המזמין", accessor: "NameRequester", align: "center" },
       { Header: "שם האוסף", accessor: "fullNameTakein", align: "center" },
+      { Header: "יחידה", accessor: "unit", align: "center" },
       { Header: "תאריך דרישת העבודה", accessor: "startDate", align: "center" },
       { Header: "תאריך סיום העבודה", accessor: "endDate", align: "center" },
       { Header: "שם העבודה", accessor: "project", align: "center" },
       // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
-      { Header: "סיווג", accessor: "clearance", align: "center" },
+      // { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
       { Header: "עדכן", accessor: "update", align: "center" },
     ],

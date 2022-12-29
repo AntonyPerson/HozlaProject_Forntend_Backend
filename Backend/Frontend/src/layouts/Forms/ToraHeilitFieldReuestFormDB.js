@@ -6,6 +6,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable no-unused-vars */
@@ -38,6 +39,8 @@ import Error404 from "views/Error404";
 import MDButton from "components/MDButton";
 import MDAlert from "components/MDAlert";
 import FileDownload from "js-file-download";
+import Grid from "@mui/material/Grid";
+import MDBadge from "components/MDBadge";
 
 import { signin, authenticate, isAuthenticated } from "auth/index";
 
@@ -69,12 +72,12 @@ const textPlaceHolderInputs = [
   "שיטת כריכה",
   "שיטת  צילום",
   "כמות עותקים",
-  "שם מוסר העבודה",
+  "שם מזמין העבודה",
   "תאריך מסירת העבודה",
   "שם מקבל העבודה",
   "קובץ להדפסה",
   "סוג דף",
-  "תאריך קבלת העבודה",
+  "תאריך נדרש לקבלת העבודה",
   "עדכון סטטוס",
   "שם אוסף העבודה",
   "עבור",
@@ -92,6 +95,21 @@ const ToraHeilitFieldReuestFormDB = () => {
 
   const [dates, setdates] = useState({});
   const [toraHeilitVolume, setToraHeilitVolume] = useState([]);
+  const [toraHeilitStatus, setToraHeilitStatus] = useState([]);
+  // const [toraHeilit, setToraHeilit] = useState([]);
+  const [data, setData] = useState({
+    fullNameReciver: "",
+
+    error: false,
+    successmsg: false,
+    loading: false,
+    NavigateToReferrer: false,
+  });
+
+  const [text, setText] = useState({
+    unit: "",
+    message: "",
+  });
   const [clientNote, setClientNote] = useState("");
 
   useEffect(() => {
@@ -108,18 +126,47 @@ const ToraHeilitFieldReuestFormDB = () => {
           workRecivedDate: response.data.workRecivedDate.split("T")[0],
         });
         setToraHeilitVolume(JSON.parse(response.data.toraHeilitVolumes));
-        console.log(toraHeilitVolume);
+        // console.log(toraHeilitVolume);
         // setClientNote(response.data.clientNote.split("\n"));
+        axios
+          .get(`http://localhost:5000/hozlaRequests/sameRequest/${params.formID}`)
+          .then((res) => {
+            console.log(res.data);
+            setText({
+              ...text,
+              message: res.data.message,
+            });
+          });
       })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.code);
-        if (error.code === "ERR_BAD_REQUEST") {
-          setError404(true);
-        } else {
-          setErrorDB(true);
-        }
+      .catch((err) => {
+        console.log(err);
       });
+
+    // axios
+    //   .get(`http://localhost:5000/toraHeilit/`)
+    //   .then((res) => {
+    //     setToraHeilitStatus(JSON.parse(res.data.toraHeilitVolumes));
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     console.log(error.code);
+    //     if (error.code === "ERR_BAD_REQUEST") {
+    //       setError404(true);
+    //     } else {
+    //       setErrorDB(true);
+    //     }
+    //   });
+    // toraHeilitVolume.forEach((hozla, index) => {
+    //   toraHeilitStatus.forEach((update) => {
+    //     if (hozla.volumeType === update.volumeType) {
+    //       console.log(hozla.volumeType);
+    //       console.log(update.volumeType);
+    //       // const newStatus = update.statusVol;
+    //       console.log(update.statusVol);
+    //       setToraHeilitVolume({ ...toraHeilitVolume[index], statusVol: update.statusVol });
+    //     }
+    //   });
+    // });
     // axios.get(`http://localhost:5000/api/showFiles`).then((res) => {
     //   console.log(res.data);
     //   setToraHeilitFiles(res.data.toraHeilitFiles);
@@ -162,11 +209,18 @@ const ToraHeilitFieldReuestFormDB = () => {
     //     FileDownload(res.data, fileName);
     //   });
   }
+  function handleChange(evt) {
+    const { value } = evt.target;
+    setData({ ...data, [evt.target.name]: value });
+  }
 
   const NavigateUser = () => {
     if (error404) {
       return <Navigate to="/Error404" />;
     }
+  };
+  const handleCloseSuccsecModal = () => {
+    setData({ ...data, loading: false, error: false, successmsg: false, NavigateToReferrer: true });
   };
   const showError = () => (
     <Dialog
@@ -198,6 +252,46 @@ const ToraHeilitFieldReuestFormDB = () => {
       </MDBox>
     </Dialog>
   );
+  const showSuccess = () => (
+    <Dialog
+      open={data.successmsg}
+      onClose={handleCloseSuccsecModal}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <MDBox
+        variant="gradient"
+        bgColor="mekatnar"
+        coloredShadow="mekatnar"
+        borderRadius="l"
+        // mx={2}
+        // mt={2}
+        p={3}
+        // mb={2}
+        textAlign="center"
+      >
+        <MDTypography variant="h1" fontWeight="medium" color="white" mt={1}>
+          עודכן שם מקבל העבודה
+        </MDTypography>
+        <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+          {formData.fullNameReciver}
+        </MDTypography>
+
+        <DialogContent>
+          <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+            <MDButton
+              variant="outlined"
+              onClick={() => {
+                setData({ ...data, successmsg: false });
+              }}
+            >
+              סגור
+            </MDButton>
+          </MDTypography>
+        </DialogContent>
+      </MDBox>
+    </Dialog>
+  );
   const getWorkStuts = (value) => {
     let stutus = "נשלח";
     let color = "error";
@@ -222,6 +316,17 @@ const ToraHeilitFieldReuestFormDB = () => {
     }
 
     return [stutus, color];
+  };
+  const hozlaConfirm = (value, maxNum) => {
+    let confirm = "";
+    if (value > 2 && maxNum === 2) {
+      confirm = "נדרש אישור מדור תורה";
+    } else if (value > 10 && maxNum === 10) {
+      confirm = "נדרש אישור מדור תורה";
+    } else {
+      confirm = "";
+    }
+    return [confirm];
   };
   const handleStatusChange = (event) => {
     console.groupCollapsed(` -------- handleStatusChange --------`);
@@ -254,6 +359,42 @@ const ToraHeilitFieldReuestFormDB = () => {
       });
     console.groupEnd();
   };
+  const updateNameReciver = () => {
+    const NameReciver = {
+      fullNameReciver: data.fullNameReciver,
+    };
+    axios
+      .post(`http://localhost:5000/hozlaRequests/updateNameReciver/${params.formID}`, NameReciver)
+      .then((response) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.then`);
+        // console.log(response.data);
+        // console.log(params.formID);
+
+        setFormData({ ...formData, fullNameReciver: response.data.fullNameReciver });
+        setData({
+          ...data,
+          fullNameReciver: response.data.fullNameReciver,
+          loading: false,
+          error: false,
+          successmsg: true,
+          NavigateToReferrer: false,
+        });
+        // setFormData({ ...formData, status: newStatus });
+        console.groupEnd();
+      })
+      .catch((error) => {
+        // console.groupCollapsed(`handleStatusChange -------- Axios.error`);
+
+        console.error(error);
+        console.error(error.code);
+        if (error.code === "ERR_BAD_REQUEST") {
+          setError404(true);
+        } else {
+          setErrorDB(true);
+        }
+        console.groupEnd();
+      });
+  };
   const Progress = ({ color, value }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color={color} fontWeight="medium">
@@ -283,7 +424,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                 textAlign="center"
               >
                 <MDTypography variant="h2" fontWeight="medium" color="white" mt={1}>
-                  טופס מספר {params.formID}{" "}
+                  טופס מספר {/* {params.formID} */} {parseInt(params.formID.slice(-4), 36)}
                 </MDTypography>
               </MDBox>
               {user.admin === "0" ? (
@@ -313,7 +454,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                     onChange={handleStatusChange}
                   >
                     <option disabled value="25">
-                      נשלח להוצלא
+                      בקשה נשלחה
                     </option>
                     {/* <option value="0">בלמ"ס</option> */}
                     <option value="50">התקבל במערכת</option>
@@ -347,7 +488,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                       disabled
                     />
                   </FormGroup>
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="anaf">{textPlaceHolderInputs[1]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[1]}
@@ -366,7 +507,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                       value={formData.mador}
                       disabled
                     />
-                  </FormGroup>
+                  </FormGroup> */}
                   <FormGroup>
                     <Label for="phoneNumber">{textPlaceHolderInputs[3]}</Label>
                     <Input
@@ -379,7 +520,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                     />
                   </FormGroup>
 
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="workName">{textPlaceHolderInputs[4]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[4]}
@@ -388,8 +529,8 @@ const ToraHeilitFieldReuestFormDB = () => {
                       value={formData.workName}
                       disabled
                     />
-                  </FormGroup>
-                  <FormGroup>
+                  </FormGroup> */}
+                  {/* <FormGroup>
                     <Label for="workClearance">{textPlaceHolderInputs[5]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[5]}
@@ -398,10 +539,10 @@ const ToraHeilitFieldReuestFormDB = () => {
                       disabled
                       value={clearanceOptions[formData.workClearance]}
                     />
-                  </FormGroup>
+                  </FormGroup> */}
                 </FormGroup>
                 <FormGroup row className="">
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="bindingType">{textPlaceHolderInputs[6]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[6]}
@@ -418,9 +559,9 @@ const ToraHeilitFieldReuestFormDB = () => {
                         disabled
                       />
                     )}
-                  </FormGroup>
+                  </FormGroup> */}
 
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="copyType">{textPlaceHolderInputs[7]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[7]}
@@ -439,42 +580,7 @@ const ToraHeilitFieldReuestFormDB = () => {
                       value={pageTypes[formData.pageType]}
                       disabled
                     />
-                    {/* <Popup
-                      trigger={
-                        <MDButton
-                          variant="gradient"
-                          color="mekatnar"
-                          circular="true"
-                          iconOnly="true"
-                          size="small"
-                        >
-                          <Icon>help_outline</Icon>
-                        </MDButton>
-                      }
-                    >
-                      <MDAlert color="mekatnar">
-                        <MDBox>
-                          <MDTypography variant="h6" color="light">A0 (84.1 * 118.9 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A3 (29.7 * 42 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A4 (21 * 29.7 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A5 (14.85 * 21 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A6 (10.5 * 14.85 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A4 בריסטול (21 * 29.7 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography>
-                        </MDBox>
-                      </MDAlert>
-                    </Popup> */}
-                  </FormGroup>
-                  {/* <FormGroup>
-                    <Label for="numOfCopyies">{textPlaceHolderInputs[8]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[8]}
-                      name="numOfCopyies"
-                      type="number"
-                      min="1"
-                      value={formData.numOfCopyies}
-                      disabled
-                    />
+                    
                   </FormGroup> */}
                 </FormGroup>
 
@@ -506,16 +612,47 @@ const ToraHeilitFieldReuestFormDB = () => {
                   </FormGroup>
                 </FormGroup>
                 <FormGroup row className="">
-                  <FormGroup>
-                    <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[11]}
-                      name="fullNameReciver"
-                      type="text"
-                      value={formData.fullNameReciver}
-                      disabled
-                    />
-                  </FormGroup>
+                  {user.admin === "0" ? (
+                    <FormGroup>
+                      <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
+                      <Input
+                        // placeholder={textPlaceHolderInputs[11]}
+                        name="fullNameReciver"
+                        type="text"
+                        value={formData.fullNameReciver}
+                        // onChange={handleChange}
+                        disabled
+                      />
+                    </FormGroup>
+                  ) : (
+                    <FormGroup>
+                      <Label for="fullNameReciver">{textPlaceHolderInputs[11]}</Label>
+                      <Input
+                        // placeholder={textPlaceHolderInputs[11]}
+                        name="fullNameReciver"
+                        type="text"
+                        value={
+                          data.fullNameReciver !== ""
+                            ? data.fullNameReciver
+                            : formData.fullNameReciver
+                        }
+                        onChange={handleChange}
+                        // disabled
+                      />
+                      {data.fullNameReciver === "" ? (
+                        <MDTypography variant="h6">עדכן את שם האוסף</MDTypography>
+                      ) : (
+                        <MDButton
+                          onClick={updateNameReciver}
+                          variant="gradient"
+                          color="success"
+                          size="small"
+                        >
+                          עדכן
+                        </MDButton>
+                      )}
+                    </FormGroup>
+                  )}
                   <FormGroup>
                     <Label for="workRecivedDate">{textPlaceHolderInputs[14]}</Label>
                     <Input
@@ -529,18 +666,33 @@ const ToraHeilitFieldReuestFormDB = () => {
                 </FormGroup>
                 <FormGroup row>
                   {toraHeilitVolume.map((volume, index) => (
-                    <Container>
+                    // <Container>
+                    <Grid item xs={6} sm={4} md={4} key={index} spacing={3}>
                       <FormGroup>
                         <MDTypography variant="h6" color="mekatnar">
                           {volume.volumeType}:
                         </MDTypography>
                         <MDBox bgColor="light" opacity={5} shadow="lg" variant="contained" p={1}>
+                          {/* {volume.statusVol === "100" ? (
+                            <MDBadge
+                              badgeContent="בתהליך עדכון"
+                              variant="contained"
+                              color="error"
+                              size="lg"
+                            />
+                          ) : (
+                            <MDBadge
+                              badgeContent="ניתן להזמין"
+                              variant="contained"
+                              color="success"
+                              size="lg"
+                            />
+                          )} */}
                           <MDAlert color="mekatnar">
                             <MDTypography variant="h6" color="light">
                               {volume.volumeName}
                             </MDTypography>
                           </MDAlert>
-
                           <Input
                             // placeholder={textPlaceHolderInputs[8]}
                             name={volume.numOfCopies}
@@ -550,9 +702,13 @@ const ToraHeilitFieldReuestFormDB = () => {
                             disabled
                             // onChange={handleChangeNumPrintTH(index)}
                           />
+                          <MDTypography variant="h6" color="mekatnar">
+                            {hozlaConfirm(volume.numOfCopies, volume.maxNumConfirm)[0]}
+                          </MDTypography>
                         </MDBox>
                       </FormGroup>
-                    </Container>
+                    </Grid>
+                    // </Container>
                   ))}
                   {/* {showFile === false ? (
                     <MDButton color="mekatnar" variant="outlined" onClick={getFiles}>
@@ -599,6 +755,14 @@ const ToraHeilitFieldReuestFormDB = () => {
                     )} 
                   </FormGroup> */}
                 </FormGroup>
+                {text.message !== "" && (
+                  <FormGroup>
+                    <MDAlert color="error" dismissible>
+                      <Icon fontSize="small">announcement</Icon>&nbsp;
+                      {text.message} מ{formData.unit}
+                    </MDAlert>
+                  </FormGroup>
+                )}
               </Form>
             </CardBody>
           </Card>
@@ -613,6 +777,7 @@ const ToraHeilitFieldReuestFormDB = () => {
       {showError()}
       {NavigateUser()}
       {formTamplate()}
+      {showSuccess()}
       <Footer />
     </DashboardLayout>
   );

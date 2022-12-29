@@ -51,7 +51,7 @@ import axios from "axios";
 import { Outlet, Link } from "react-router-dom";
 
 const adminArchiveTable = () => {
-  const tableTittle = 'ארכיון';
+  const tableTittle = "ארכיון";
 
   const [dbError, setDbError] = useState(false);
   //   const { columns, rows } = authorsTableData();
@@ -98,7 +98,6 @@ const adminArchiveTable = () => {
     </Dialog>
   );
 
-
   const table = () => (
     <MDBox pt={6} pb={3}>
       <Grid container spacing={6}>
@@ -134,7 +133,7 @@ const adminArchiveTable = () => {
                 </MDTypography>
               ) : (
                 <MDTypography mx={30} variant="h3" color="mekatnar" textGradient={true}>
-                  לא קיימות בקשות הוצלא בחשבונך
+                  לא קיימות בקשות בחשבונך
                 </MDTypography>
               )}
             </MDBox>

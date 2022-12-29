@@ -277,25 +277,26 @@ function signInURL() {
     let admin_value = "0";
     let personalnumber_demo = "1234567";
     // let personalnumber_demo = "7654321";
+    // let personalnumber_demo = "1111111";
     const signInAxiosResult = await signInAxios(personalnumber_demo);
     console.log(signInAxiosResult);
     if (signInAxiosResult === "DoNotExist") {
-      if (params.idUR === "6391dddacd06a443b7deb26f") {
-        // http://localhost:3000/authentication/sign-in/6391dddacd06a443b7deb26f
+      if (params.idUR === "63a88daab2041824828bca75") {
+        // http://localhost:3000/authentication/sign-in/63a88daab2041824828bca75
         //? for the admin 2 - admin of admins
         admin_value = "2";
         personalnumber_demo = "1234567";
         setSignUpData({
           ...signUpData,
-          firstName: "אנטוני",
-          lastLame: "פרסון",
+          firstName: "דביר",
+          lastLame: "וסקר",
           personalnumber: personalnumber_demo,
           admin: admin_value,
           unit: "מקטנאר",
           anaf: "תון",
           mador: "NG",
           phoneNumber: "123456789",
-          email: "sS@gmail.com",
+          email: "qQ@gmail.com",
         });
       } else if (params.idUR === "17351e923ex28e869e06c83") {
         // http://localhost:3000/authentication/sign-in/17351e923ex28e869e06c83
@@ -314,15 +315,15 @@ function signInURL() {
           phoneNumber: "123456789",
           email: "sS@gmail.com",
         });
-      } else if (params.idUR === "6391e985ff8a0d15304343fa") {
+      } else if (params.idUR === "63a89bf56fb66d277d41bcae") {
         //? for the admin 0 - regular user
-        // http://localhost:3000/authentication/sign-in/6391e985ff8a0d15304343fa
+        // http://localhost:3000/authentication/sign-in/63a89bf56fb66d277d41bcae
         admin_value = "0";
         personalnumber_demo = "7654321";
         setSignUpData({
           ...signUpData,
-          firstName: "דביר",
-          lastLame: "וסקר",
+          firstName: "אנטוני",
+          lastLame: "פרסון",
           personalnumber: personalnumber_demo,
           admin: admin_value,
           unit: "מקטנאר",
@@ -332,6 +333,24 @@ function signInURL() {
           email: "qQ@gmail.com",
         });
       }
+      // else if (params.idUR === "1111111") {
+      //   // http://localhost:3000/authentication/sign-in/17351e923ex28e869e06c83
+      //   //? for the admin 1 - regular admin
+      //   admin_value = "3";
+      //   personalnumber_demo = "1111111";
+      //   setSignUpData({
+      //     ...signUpData,
+      //     firstName: "אנטוני",
+      //     lastLame: "פרסון",
+      //     personalnumber: personalnumber_demo,
+      //     admin: admin_value,
+      //     unit: "מקטנאר",
+      //     anaf: "תון",
+      //     mador: "NG",
+      //     phoneNumber: "123456789",
+      //     email: "sS@gmail.com",
+      //   });
+      // }
     }
     // setSignUpData({
     //   ...signUpData,

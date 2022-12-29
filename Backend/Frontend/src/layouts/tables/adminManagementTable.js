@@ -129,7 +129,7 @@ const adminManagementTable = () => {
                 </MDTypography>
               ) : (
                 <MDTypography mx={30} variant="h3" color="mekatnar" textGradient={true}>
-                  לא קיימות בקשות הוצלא בחשבונך
+                  לא קיימות בקשות בחשבונך
                 </MDTypography>
               )}
             </MDBox>

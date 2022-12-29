@@ -23,12 +23,24 @@ const filefilter = (req, file, cb) => {
   if (
     file.mimetype === "application/pdf" ||
     // || file.mimetype === "application/msword"
-    //     || file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.mimetype === 'application/vnd.rar'
+    //     || file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    // || file.mimetype === 'application/vnd.rar'
     //     || file.mimetype === 'application/zip'
     file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/png"
+    file.mimetype === "image/png" ||
+    file.mimetype === "application/vnd.ms-excel" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    file.mimetype === "application/vnd.ms-powerpoint" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
+    file.mimetype === "application/msword" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     // || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    //     || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.template' || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'
+    //     || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    // || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.template'
+    // || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'
   ) {
     cb(null, true);
   } else {

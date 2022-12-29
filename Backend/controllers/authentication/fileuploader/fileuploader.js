@@ -1,6 +1,7 @@
 "use strict";
 const SingleFile = require("../../../models/fileuploader/singleFile");
 const MultipleFile = require("../../../models/fileuploader/multipleFile");
+const { request } = require("http");
 //new
 // const Pikod = require("../../models/units/pikod");
 // const Assessment = require("../../models/assessment/assessment");
@@ -97,6 +98,24 @@ const multipleFileUpload = async (req, res, next) => {
   }
 };
 const deleteMultiFiles = async (req, res, next) => {
+  const fs = require("fs");
+  // const fileName = req.params.name;
+  const directoryPath = "./";
+
+  try {
+    MultipleFile.findById(req.params.id).then((request) => {
+      request.files.map((file) => {
+        var filePath = directoryPath + file.filePath;
+        if (filePath !== undefined) {
+          fs.unlinkSync(directoryPath + file.filePath);
+        } else {
+          console.log("undifinded");
+        }
+      });
+    });
+  } catch (error) {
+    res.status(500).send("Could not delete the file. " + error);
+  }
   try {
     // router.route("/:id").delete((req, res) => {
     MultipleFile.findByIdAndDelete(req.params.id)

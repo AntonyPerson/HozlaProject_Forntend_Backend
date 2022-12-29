@@ -54,6 +54,7 @@ import createCache from "@emotion/cache";
 import routes from "routes/userRoutes";
 import AdminRoutes from "routes/AdminRoutes";
 import ToraHailitAdminRoutes from "routes/ToraHailitAdminRoutes";
+import userToraHeilit from "routes/userToraHeilit";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -76,6 +77,7 @@ import SignInURL from "layouts/authentication/sign-in/sign-in-URLs/urlLayout";
 import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 import ToraHeilitFieldReuestFormDB from "layouts/Forms/ToraHeilitFieldReuestFormDB";
 import AdminFeildPrintInfoFormDB from "layouts/Forms/AdminFeildPrintInfoFormDB";
+import ToraHeilitVolumeAdmin from "layouts/Forms/ToraHeilitVolumeAdmin";
 import { signin, authenticate, isAuthenticated } from "auth/index";
 import sidenav from "assets/theme/components/sidenav";
 import AboutPage from "views/aboutpage/AboutPage";
@@ -207,6 +209,49 @@ export default function App() {
       setLoading(false);
     }, 3500);
   }, []);
+  const usersRoutes = () => {
+    if (user.user.admin === "0") {
+      <Routes>
+        {getRoutes(routes)}
+        <Route path="/authentication/sign-in">
+          <Route path=":idUR" render={() => getRoutes(routes)} element={<SignInURL />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+        {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+        <Route path="/Error404" element={<Error404 />} />
+        <Route path="/RequestForm">
+          <Route path=":formID" element={<FieldReuestFormDB />} />
+        </Route>
+        {/* <Route path="/toraHeilitrequestForm">
+                    <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
+                  </Route> */}
+        {/* <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+                  </Route> */}
+        <Route path="*" element={<Error404 />} />
+      </Routes>;
+    } else if (user.user.admin === "3") {
+      <Routes>
+        {getRoutes(routes)}
+        <Route path="/authentication/sign-in">
+          <Route path=":idUR" render={() => getRoutes(routes)} element={<SignInURL />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+        {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+        <Route path="/Error404" element={<Error404 />} />
+        {/* <Route path="/RequestForm">
+                    <Route path=":formID" element={<FieldReuestFormDB />} />
+                  </Route> */}
+        <Route path="/toraHeilitrequestForm">
+          <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
+        </Route>
+        {/* <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+                  </Route> */}
+        <Route path="*" element={<Error404 />} />
+      </Routes>;
+    }
+  };
   return (
     <>
       {loading ? (
@@ -228,7 +273,22 @@ export default function App() {
                   color={sidenavColor}
                   brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
                   brandName='הוצל"א'
-                  routes={user.user.admin !== "0" ? AdminRoutes : routes}
+                  // // hozla
+                  // routes={
+                  //   user.user.admin !== "0"
+                  //     ? AdminRoutes
+                  //     : user.user.admin === "0"
+                  //     ? routes
+                  //     : userToraHeilit
+                  // }
+                  // tora heilit
+                  routes={
+                    user.user.admin !== "0"
+                      ? AdminRoutes
+                      : user.user.admin === "0"
+                      ? userToraHeilit
+                      : routes
+                  }
                   onMouseEnter={handleOnMouseEnter}
                   onMouseLeave={handleOnMouseLeave}
                 />
@@ -266,9 +326,13 @@ export default function App() {
                   <Route path="/adminFeild">
                     <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
                   </Route>
+                  <Route path="/toraHeilit" element={<ToraHeilitVolumeAdmin />} />
                   <Route path="*" element={<Error404 />} />
                 </Routes>
-              ) : (
+              ) : // Hozla
+              // user.user.admin === "0" ? (
+              // Tora helit
+              user.user.admin !== "0" ? (
                 <Routes>
                   {getRoutes(routes)}
                   <Route path="/authentication/sign-in">
@@ -280,16 +344,59 @@ export default function App() {
                   <Route path="/RequestForm">
                     <Route path=":formID" element={<FieldReuestFormDB />} />
                   </Route>
+                  {/* <Route path="/toraHeilitrequestForm">
+                    <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
+                  </Route> */}
+                  {/* <Route path="/adminFeild">
+                    <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+                  </Route> */}
+                  <Route path="*" element={<Error404 />} />
+                </Routes>
+              ) : (
+                <Routes>
+                  {getRoutes(userToraHeilit)}
+                  <Route path="/authentication/sign-in">
+                    <Route
+                      path=":idUR"
+                      render={() => getRoutes(userToraHeilit)}
+                      element={<SignInURL />}
+                    />
+                  </Route>
+                  <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+                  {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+                  <Route path="/Error404" element={<Error404 />} />
+                  {/* <Route path="/RequestForm">
+                    <Route path=":formID" element={<FieldReuestFormDB />} />
+                  </Route> */}
                   <Route path="/toraHeilitrequestForm">
                     <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
                   </Route>
-                  <Route path="/adminFeild">
+                  {/* <Route path="/adminFeild">
                     <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
-                  </Route>
+                  </Route> */}
                   <Route path="*" element={<Error404 />} />
                 </Routes>
               )
             ) : (
+              // <Routes>
+              //   {getRoutes(routes)}
+              //   <Route path="/authentication/sign-in">
+              //     <Route path=":idUR" render={() => getRoutes(routes)} element={<SignInURL />} />
+              //   </Route>
+              //   <Route path="/" element={<Navigate to="/userRequestsTable" />} />
+              //   {/* <Route path="/" element={<Navigate to="/authentication/sign-in" />} /> */}
+              //   <Route path="/Error404" element={<Error404 />} />
+              //   <Route path="/RequestForm">
+              //     <Route path=":formID" element={<FieldReuestFormDB />} />
+              //   </Route>
+              //   <Route path="/toraHeilitrequestForm">
+              //     <Route path=":formID" element={<ToraHeilitFieldReuestFormDB />} />
+              //   </Route>
+              //   {/* <Route path="/adminFeild">
+              //     <Route path=":formID" element={<AdminFeildPrintInfoFormDB />} />
+              //   </Route> */}
+              //   <Route path="*" element={<Error404 />} />
+              // </Routes>
               <Routes>
                 <Route path="/authentication/sign-in">
                   <Route path=":idUR" element={<SignInURL />} />

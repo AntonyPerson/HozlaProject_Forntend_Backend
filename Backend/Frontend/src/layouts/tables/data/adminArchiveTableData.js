@@ -105,8 +105,11 @@ export default function data() {
         setRequestDB(response.data);
         // TODO fsd
         response.data.forEach((element) => {
-          if (getDaysDiff(element.updatedAt.split("T")[0]) >= 7) {
-            if (element.files_id) {
+          if (
+            getDaysDiff(element.updatedAt.split("T")[0]) >= 7 &&
+            element.typeRequest === "HozlaRequest"
+          ) {
+            if (element.files_id !== undefined) {
               axios
                 .delete(`http://localhost:5000/api/deleteMultiFiles/${element.files_id}`)
                 .then((delfRespone) => {
@@ -118,6 +121,20 @@ export default function data() {
                 });
               console.log("filesid");
             }
+            axios
+              .delete(`http://localhost:5000/hozlaRequests/${element._id}`)
+              .then((delRespone) => {
+                console.log(delRespone.data);
+              })
+              .catch((error) => {
+                console.log(error);
+                // setIsError(true);
+              });
+          } else if (
+            // change 1 to 730
+            getDaysDiff(element.updatedAt.split("T")[0]) >= 730 &&
+            element.typeRequest === "ToraHeilit"
+          ) {
             axios
               .delete(`http://localhost:5000/hozlaRequests/${element._id}`)
               .then((delRespone) => {
@@ -186,7 +203,7 @@ export default function data() {
     let stutus = "נשלח";
     let color = "error";
     if (value === 25) {
-      stutus = "נשלח להוצלא";
+      stutus = "בקשה נשלחה";
       color = "error";
     } else if (value === 50) {
       stutus = "התקבל במערכת";
@@ -235,10 +252,11 @@ export default function data() {
         />
       </>
     ),
-    fileID: hozla._id,
+    fileID: parseInt(hozla._id.slice(-4), 36),
     project: hozla.workName,
     fullNameTakein: hozla.fullNameTakein,
     projectFor: hozla.projectFor,
+    unit: hozla.unit,
     clearance:
       // <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
       clearanceOptions[parseInt(hozla.workClearance, 10)],
@@ -301,14 +319,15 @@ export default function data() {
     columns: [
       { Header: "אסמכתא", accessor: "fileID", align: "center" },
       { Header: "סוג הבקשה", accessor: "typeRequest", align: "center" },
-      { Header: "שם המבקש", accessor: "NameRequester", align: "center" },
+      { Header: "שם המזמין", accessor: "NameRequester", align: "center" },
       { Header: "שם האוסף", accessor: "fullNameTakein", align: "center" },
+      { Header: "יחידה", accessor: "unit", align: "center" },
       { Header: "תאריך קבלה", accessor: "startDate", align: "center" },
-      { Header: "תאריך סיום", accessor: "endDate", align: "center" },
+      { Header: "תאריך דרישת העבודה", accessor: "endDate", align: "center" },
       { Header: "שם העבודה", accessor: "project", align: "center" },
       // { Header: "עבור העבודה", accessor: "projectFor", align: "center" },
       { Header: "סטטוס", accessor: "status", align: "center" },
-      { Header: "סיווג", accessor: "clearance", align: "center" },
+      // { Header: "סיווג", accessor: "clearance", align: "center" },
       { Header: "פרטים נוספים", accessor: "additionalInfo", align: "center" },
       { Header: "פרטי הוצלא", accessor: "hozlaInfo", align: "center" },
     ],

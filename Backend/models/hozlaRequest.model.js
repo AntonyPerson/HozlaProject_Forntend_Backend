@@ -28,6 +28,7 @@ const HozlaRequestSchema = new mongoose.Schema(
     workRecivedDate: Date,
 
     files_id: { type: String, default: "" },
+    propPrints: { type: Object },
     toraHeilitVolumes: { type: Object },
     status: { type: Number, default: 25 },
 

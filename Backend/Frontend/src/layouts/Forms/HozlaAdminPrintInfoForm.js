@@ -67,6 +67,7 @@ import {
   Modal,
   TextField,
 } from "@mui/material";
+import Select from "react-select";
 import { CompressOutlined } from "@mui/icons-material";
 
 import { signin, authenticate, isAuthenticated } from "auth/index";
@@ -113,21 +114,21 @@ export default function HozlaPrintRequestForm() {
     selected: "A4",
     selectedBW: "none",
 
-    A0BW: false,
-    A3BW: false,
-    A4BW: false,
-    A5BW: false,
-    A6BW: false,
-    BWA4: false,
-    BWA3: false,
+    // A0BW: false,
+    // A3BW: false,
+    // A4BW: false,
+    // A5BW: false,
+    // A6BW: false,
+    // BWA4: false,
+    // BWA3: false,
 
-    A0: false,
-    A3: false,
-    A4: true,
-    A5: false,
-    A6: false,
-    A4b: false,
-    A3b: false,
+    // A0: false,
+    // A3: false,
+    // A4: true,
+    // A5: false,
+    // A6: false,
+    // A4b: false,
+    // A3b: false,
 
     errortype: "",
     error: false,
@@ -155,6 +156,38 @@ export default function HozlaPrintRequestForm() {
     "סוג הדפסה:",
     "דו צדדי",
   ];
+  const [selectedBWOptions, setSelectedBWOptions] = useState();
+  const [selectedOptions, setSelectedOptions] = useState();
+
+  // Array of all options
+  const optionBWList = [
+    { value: "A0BW", label: "A0" },
+    { value: "A3BW", label: "A3" },
+    { value: "A4BW", label: "A4" },
+    { value: "A5BW", label: "A5" },
+    { value: "A6BW", label: "A6" },
+    { value: "BWA4", label: "A4 בריסטול" },
+    { value: "BWA3", label: "A3 בריסטול" },
+  ];
+  const optionList = [
+    { value: "A0BW", label: "A0" },
+    { value: "A3BW", label: "A3" },
+    { value: "A4BW", label: "A4" },
+    { value: "A5BW", label: "A5" },
+    { value: "A6BW", label: "A6" },
+    { value: "BWA4", label: "A4 בריסטול" },
+    { value: "BWA3", label: "A3 בריסטול" },
+  ];
+
+  // Function triggered on selection
+  function handleBWSelect(dataOption) {
+    setSelectedBWOptions(dataOption);
+    // console.log(selectedBWOptions);
+  }
+  function handleSelect(dataOption) {
+    setSelectedOptions(dataOption);
+    // console.log(selectedOptions);
+  }
 
   //takes the data drom the DB and gives inital values to the useState data, each time the page gets rendred/refreshed
   useEffect(() => {
@@ -356,7 +389,12 @@ export default function HozlaPrintRequestForm() {
       console.log("undefined");
     }
 
-    if (data.selected === "none" && data.selectedBW === "none") {
+    // if (data.selected === "none" && data.selectedBW === "none") {
+    //   flag = false;
+    //   ErrorReason.push("סוג צילום לא צויין");
+    //   //toast.error(ErrorReason);
+    // }
+    if (selectedBWOptions === undefined && selectedOptions === undefined) {
       flag = false;
       ErrorReason.push("סוג צילום לא צויין");
       //toast.error(ErrorReason);
@@ -388,8 +426,8 @@ export default function HozlaPrintRequestForm() {
       numPages: data.numPages,
       numColourfulBeats: Math.floor(data.numColourfulBeats),
       numNoColourfulBeats: Math.floor(data.numNoColourfulBeats),
-      selected: data.selected,
-      selectedBW: data.selectedBW,
+      selected: JSON.stringify(selectedOptions),
+      selectedBW: JSON.stringify(selectedBWOptions),
       twoSides: data.twoSides,
       hozlaRequestID: params.formID,
       workName: data.workName,
@@ -529,7 +567,7 @@ export default function HozlaPrintRequestForm() {
 
         <DialogContent>
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            מספר אסמכתא:{/*  {data.work_id}*/} {params.formID}
+            מספר אסמכתא:{/* {params.formID} */} {parseInt(params.formID.slice(-4), 36)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
             <Link style={{ color: "white" }} to="/managementHoztla">
@@ -540,6 +578,7 @@ export default function HozlaPrintRequestForm() {
       </MDBox>
     </Dialog>
   );
+
   const showError = () => (
     <Dialog
       open={data.error}
@@ -617,10 +656,10 @@ export default function HozlaPrintRequestForm() {
                 textAlign="center"
               >
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  טופס הוצל"א
+                  טופס מספר
                 </MDTypography>
                 <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  {params.formID}
+                  {/* {params.formID} */} {parseInt(params.formID.slice(-4), 36)}
                 </MDTypography>
               </MDBox>
               <MDBox textAlign="center">
@@ -818,19 +857,22 @@ export default function HozlaPrintRequestForm() {
                   {/* {data.printColor === "bw" ? ( */}
                   <FormGroup>
                     <Label for="selectedBW">{textPlaceHolderInputs[6]}</Label>
-                    <Input
+                    <Select
+                      options={optionBWList}
+                      placeholder="בחר..."
+                      value={selectedBWOptions}
+                      onChange={handleBWSelect}
+                      isSearchable
+                      isMulti
+                    />
+                  </FormGroup>
+                  {/* <Input
                       name="selectedBW"
                       type="select"
                       value={data.selectedBW}
                       onChange={handleChange}
                     >
-                      {/* <option value="A0BW">(84.1 x 118.9 cm) A0</option>
-                        <option value="A3BW">(29.7 x 42 cm) A3</option>
-                        <option value="A4BW">(21 x 29.7 cm) A4</option>
-                        <option value="A5BW">(14.85 x 21cm) A5</option>
-                        <option value="A6BW">(10.5 x 14.85 cm) A6</option>
-                        <option value="BWA4">(21 x 29.7 cm) A4 בריסטול</option>
-                        <option value="BWA3">(29.7 x 42 cm) A3 בריסטול</option> */}
+                     
                       <option value="A0BW">A0</option>
                       <option value="A3BW">A3</option>
                       <option defult value="A4BW">
@@ -840,12 +882,9 @@ export default function HozlaPrintRequestForm() {
                       <option value="A6BW">A6</option>
                       <option value="BWA4">A4 בריסטול</option>
                       <option value="BWA3">A3 בריסטול</option>
-                    </Input>
-                  </FormGroup>
+                    </Input> */}
                   {/* ) : ( */}
-                  <FormGroup>
-                    <Label for="selected">{textPlaceHolderInputs[5]}</Label>
-                    <Input
+                  {/* <Input
                       name="selected"
                       type="select"
                       value={data.selected}
@@ -860,7 +899,19 @@ export default function HozlaPrintRequestForm() {
                       <option value="A6">A6</option>
                       <option value="A4b">A4 בריסטול</option>
                       <option value="A3b">A3 בריסטול</option>
-                    </Input>
+                    </Input> */}
+                  <FormGroup>
+                    <Label for="selected">{textPlaceHolderInputs[5]}</Label>
+
+                    <Select
+                      isRtl={false}
+                      options={optionList}
+                      placeholder="בחר..."
+                      value={selectedOptions}
+                      onChange={handleSelect}
+                      isSearchable
+                      isMulti
+                    />
                   </FormGroup>
                   {/* )} */}
                   {/* <Popup

@@ -74,14 +74,14 @@ const routes = [
     route: "/requestForm",
     component: <HozlaPrintRequestForm />,
   },
-  {
-    type: "collapse",
-    name: "בקשת תורה חילית",
-    key: "toraHeilitrequestForm",
-    icon: <Icon fontSize="small">description</Icon>,
-    route: "/toraHeilitrequestForm",
-    component: <ToraHeilitPrintRequestForm />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "בקשת תורה חילית",
+  //   key: "toraHeilitrequestForm",
+  //   icon: <Icon fontSize="small">description</Icon>,
+  //   route: "/toraHeilitrequestForm",
+  //   component: <ToraHeilitPrintRequestForm />,
+  // },
   {
     type: "collapse",
     name: "הבקשות שלי",

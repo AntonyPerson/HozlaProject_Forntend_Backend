@@ -45,6 +45,8 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Upload } from "antd-upload";
+import Grid from "@mui/material/Grid";
+import MDBadge from "components/MDBadge";
 // import { multipleFilesUpload } from "../../data/api";
 
 import {
@@ -177,178 +179,7 @@ export default function HozlaPrintRequestForm() {
   });
   // const [textArea, setTextArea] = useState("");
   const [files, setFiles] = useState([]);
-  const [toraHeilitVolume, setToraHeilitVolume] = useState([
-    {
-      volumeType: "כרך 1",
-      volumeName: "מערך הטנ''א בגדוד",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 2",
-      volumeName: "מערך הטנ''א בחטיבה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 3",
-      volumeName: "מערך הטנ''א באוגדה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 4",
-      volumeName: "מערך הטנ''א בגיס",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 5",
-      volumeName: "אגד טנ''א ארצי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 6",
-      volumeName: "מערך הטנ''א בפיקוד",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 7",
-      volumeName: "מערך הטנ''א בזרועות ובאגפים",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 8",
-      volumeName: "מערך הטנ''א במטכ''ל ובמרכזים",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 10",
-      volumeName: "מערך החלפים והמכללים",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 12",
-      volumeName: "אחזקת צמ''ח",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "כרך 13",
-      volumeName: "הטנ''א בצורות הקרב השונות",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 2",
-      volumeName: "מדדי שחיקה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 4",
-      volumeName: "פנקס קודים לדיווח אחזקתי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 5",
-      volumeName: "פנקס קודים טנ''א לחלפים",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 6",
-      volumeName: "פנקס שליטה למחטפ/מפקד כיתה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 7",
-      volumeName: "פנקס שליטה לטנ''א גדודי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "טנ''ח 8",
-      volumeName: "חוברת תבניות לרמות השונות",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 10",
-      volumeName: "פנקס משואה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2",
-      volumeName: "חוברת ניתוח תקלות משביתות בצל''ם עיקרי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 א",
-      volumeName: "איתור תקלות אוטומבטיבי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ב",
-      volumeName: "איתור תקלות צריח",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ג",
-      volumeName: "איתור תקלות בקרה ותצפית",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ד",
-      volumeName: "איתור תקלות מ''י",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ה",
-      volumeName: "איתור תקלות מערכת גיל",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ו",
-      volumeName: "איתור תקלות רכב מבצעי",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ח",
-      volumeName: "פנקס כיס תחמושת",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 ט",
-      volumeName: "איתור תקלות נמ''ר",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 י",
-      volumeName: "הנעה - מרכבה סימן 4",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 יא",
-      volumeName: "איתור תקלות נק''ל",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 יב",
-      volumeName: "איתור תקלות נגמ''ש",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 יג",
-      volumeName: "איתור תקלות אוטומטיבי תומ''ת",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 יד",
-      volumeName: "איתור תקלות אכזרית",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 טו",
-      volumeName: "איתור תקלות צמ''ה",
-      numOfCopies: 0,
-    },
-    {
-      volumeType: "ע' 2 טז",
-      volumeName: "איתור תקלות גנרטורים",
-      numOfCopies: 0,
-    },
-  ]);
+  const [toraHeilitVolume, setToraHeilitVolume] = useState([]);
   const [open, setOpen] = React.useState(false);
   const { getRootProps, getInputProps } = useDropzone({});
   const inputRef = React.useRef(null);
@@ -364,12 +195,12 @@ export default function HozlaPrintRequestForm() {
     "שיטת כריכה",
     "שיטת  צילום",
     "כמות עותקים",
-    "שם מוסר העבודה",
+    "שם מזמין העבודה",
     "תאריך מסירת העבודה",
     "שם מקבל העבודה",
     "קובץ להדפסה",
     "סוג דף",
-    "תאריך קבלת העבודה",
+    "תאריך נדרש לקבלת העבודה",
     "שם אוסף העבודה",
     "עבור",
   ];
@@ -377,6 +208,19 @@ export default function HozlaPrintRequestForm() {
   //   // Update the document title using the browser API
   //   console.log(`You upload ${files.length} files`);
   // });
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/toraHeilit/`)
+      .then((response) => {
+        // console.log(`the object data`);
+        // console.log(`tora ${JSON.parse(response.data.toraHeilitVolumes)}`);
+        setToraHeilitVolume(JSON.parse(response.data.toraHeilitVolumes));
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.code);
+      });
+  }, []);
 
   const handleUploadFiles = (uploadFiles) => {
     const uploaded = [...files];
@@ -447,6 +291,17 @@ export default function HozlaPrintRequestForm() {
     // setToraHeilitVolume({ ...toraHeilitVolume, numOfCopies: numPrintList });
     console.log(toraHeilitVolume);
   };
+  const hozlaConfirm = (value, maxNum) => {
+    let confirm = "";
+    if (value > 2 && maxNum === 2) {
+      confirm = "נדרש אישור מדור תורה";
+    } else if (value > 10 && maxNum === 10) {
+      confirm = "נדרש אישור מדור תורה";
+    } else {
+      confirm = "";
+    }
+    return [confirm];
+  };
   function addNumPrintTH() {
     // const { value } = evt.target;
     setData([{ [data.PrintTH.numPrint]: 0 }]);
@@ -469,17 +324,31 @@ export default function HozlaPrintRequestForm() {
     }
   };
   const arrayRequestVolume = () => {
-    let num = 0;
     toraHeilitVolume.forEach((volume, index) => {
       if (volume.numOfCopies > 0) {
-        requestVolume.push(volume);
-      } else {
-        num += 1;
+        const volObj = {
+          volumeType: volume.volumeType,
+          volumeName: volume.volumeName,
+          numOfCopies: volume.numOfCopies,
+          maxNumConfirm: volume.maxNumConfirm,
+        };
+        requestVolume.push(volObj);
+        // requestVolume.push(volume);
       }
-      // return setToraHeilitVolume(requestVolume);
     });
-    console.log(`num ${num} , requestVolume ${requestVolume}`);
+    // setArrayVolume(requestVolume);
+    console.log(`requestVolume ${requestVolume}`);
   };
+  // const setArrayVolume = (setRequestVolume) => {
+  //   setRequestVolume.forEach((setVol) => {
+  //     for (const key in setVol) {
+  //       console.log(`${key}: ${setVol[key]}`);
+  //     }
+  //     // delete setVol.statusVol;
+  //     // delete setVol.maxNumConfirm;
+  //   });
+  //   console.log(setRequestVolume);
+  // };
 
   const CheckSignUpForm = (event) => {
     event.preventDefault();
@@ -491,33 +360,33 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("יחידה לא צויין");
       // toast.error(ErrorReason);
     }
-    if (data.anaf === "") {
-      flag = false;
-      ErrorReason.push("ענף לא צויין ");
-      // toast.error(ErrorReason);
-    }
-    if (data.mador === "") {
-      flag = false;
-      ErrorReason.push("מדור לא צויין ");
-      // toast.error(ErrorReason);
-    }
+    // if (data.anaf === "") {
+    //   flag = false;
+    //   ErrorReason.push("ענף לא צויין ");
+    //   // toast.error(ErrorReason);
+    // }
+    // if (data.mador === "") {
+    //   flag = false;
+    //   ErrorReason.push("מדור לא צויין ");
+    //   // toast.error(ErrorReason);
+    // }
     if (data.phoneNumber === "") {
       flag = false;
       ErrorReason.push("נייד לא צויין ");
       // toast.error(ErrorReason);
     }
-    if (data.workName === "") {
-      flag = false;
-      ErrorReason.push("שם העבודה לא צויין ");
-      // toast.error(ErrorReason);
-    }
-    if (data.bindingType === "3") {
-      if (data.bindingTypeOther === "") {
-        flag = false;
-        ErrorReason.push("השיטת הכריכה לא צויינה ");
-        // toast.error(ErrorReason);
-      }
-    }
+    // if (data.workName === "") {
+    //   flag = false;
+    //   ErrorReason.push("שם העבודה לא צויין ");
+    //   // toast.error(ErrorReason);
+    // }
+    // if (data.bindingType === "3") {
+    //   if (data.bindingTypeOther === "") {
+    //     flag = false;
+    //     ErrorReason.push("השיטת הכריכה לא צויינה ");
+    //     // toast.error(ErrorReason);
+    //   }
+    // }
 
     // if (data.numOfCopyies === "") {
     //   flag = false;
@@ -534,11 +403,11 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("לא צויין תאריך מסירת העבודה");
       // toast.error(ErrorReason);
     }
-    if (data.fullNameReciver === "") {
-      flag = false;
-      ErrorReason.push("לא צויין שם מקבל העבודה");
-      // toast.error(ErrorReason);
-    }
+    // if (data.fullNameReciver === "") {
+    //   flag = false;
+    //   ErrorReason.push("לא צויין שם מקבל העבודה");
+    //   // toast.error(ErrorReason);
+    // }
     // if (Date.parse(data.workGivenDate) < currentDate) {
     //   flag = false;
     //   ErrorReason.push("תאריך מסירת העבודה לא תיקני");
@@ -550,11 +419,11 @@ export default function HozlaPrintRequestForm() {
       ErrorReason.push("תאריך קבלת העבודה לא תיקני");
       // toast.error(ErrorReason);
     }
-    if (data.workRecivedDate === "") {
-      flag = false;
-      ErrorReason.push("לא צויין תאריך קבלת העבודה ");
-      // toast.error(ErrorReason);
-    }
+    // if (data.workRecivedDate === "") {
+    //   flag = false;
+    //   ErrorReason.push("לא צויין תאריך קבלת העבודה ");
+    //   // toast.error(ErrorReason);
+    // }
     if (requestVolume.length === 0) {
       flag = false;
       ErrorReason.push("לא הוזן כמות עותקים ");
@@ -587,14 +456,14 @@ export default function HozlaPrintRequestForm() {
       typeRequest: "ToraHeilit",
       forTypePrint: data.forTypePrint,
       unit: data.unit,
-      anaf: data.anaf,
-      mador: data.mador,
+      // anaf: data.anaf,
+      // mador: data.mador,
 
-      workName: data.workName,
-      workClearance: data.workClearance,
-      bindingType: data.bindingType,
-      bindingTypeOther: data.bindingTypeOther,
-      copyType: data.copyType,
+      workName: "תורה חילית",
+      // workClearance: data.workClearance,
+      // bindingType: data.bindingType,
+      // bindingTypeOther: data.bindingTypeOther,
+      // copyType: data.copyType,
       numOfCopyies: data.numOfCopyies,
 
       phoneNumber: data.phoneNumber,
@@ -610,7 +479,7 @@ export default function HozlaPrintRequestForm() {
 
       // files: data.files,
       // files_id: res.data,
-      pageType: data.pageType,
+      // pageType: data.pageType,
       ordernum: data.ordernum,
       clientNote: data.clientNote,
       toraHeilitVolumes: JSON.stringify(requestVolume),
@@ -834,7 +703,7 @@ export default function HozlaPrintRequestForm() {
 
         <DialogContent>
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            מספר אסמכתא: {data.work_id}
+            מספר אסמכתא: {parseInt(data.work_id.slice(-4), 36)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
             <Link style={{ color: "white" }} to="/userRequestsTable">
@@ -998,7 +867,7 @@ export default function HozlaPrintRequestForm() {
   const ToraHeilitPrintRequestForm = () => (
     <Container className="" dir="rtl">
       <Row className="justify-content-center">
-        <Col lg="6" md="7">
+        <Col lg="6" md="8">
           <Card className="shadow border-0">
             <CardBody className="px-lg-8 py-lg-10">
               <MDBox
@@ -1046,7 +915,7 @@ export default function HozlaPrintRequestForm() {
                       onChange={handleChange}
                     />
                   </FormGroup>
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="anaf">{textPlaceHolderInputs[1]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[1]}
@@ -1065,7 +934,7 @@ export default function HozlaPrintRequestForm() {
                       value={data.mador}
                       onChange={handleChange}
                     />
-                  </FormGroup>
+                  </FormGroup> */}
                   <FormGroup>
                     <Label for="phoneNumber">{textPlaceHolderInputs[3]}</Label>
                     <Input
@@ -1077,7 +946,7 @@ export default function HozlaPrintRequestForm() {
                       maxLength={10}
                     />
                   </FormGroup>
-                  <FormGroup>
+                  {/* <FormGroup>
                     <Label for="workName">{textPlaceHolderInputs[4]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[4]}
@@ -1086,8 +955,8 @@ export default function HozlaPrintRequestForm() {
                       value={data.workName}
                       onChange={handleChange}
                     />
-                  </FormGroup>
-                  <FormGroup>
+                  </FormGroup> */}
+                  {/* <FormGroup>
                     <Label for="workClearance">{textPlaceHolderInputs[5]}</Label>
                     <Input
                       // placeholder={textPlaceHolderInputs[5]}
@@ -1101,11 +970,10 @@ export default function HozlaPrintRequestForm() {
                       </option>
                       <option value="0">בלמ"ס</option>
                       <option value="2">סודי</option>
-                      {/* <option value="3">סודי ביותר</option> */}
                     </Input>
-                  </FormGroup>
+                  </FormGroup> */}
                 </FormGroup>
-                <FormGroup row className="">
+                {/* <FormGroup row className="">
                   <FormGroup>
                     <Label for="bindingType">{textPlaceHolderInputs[6]}</Label>
                     <Input
@@ -1180,35 +1048,15 @@ export default function HozlaPrintRequestForm() {
                       }
                     >
                       <MDAlert color="mekatnar">
-                        {/* <MDBox> */}
                         <img
                           src={A_paper_size_a6}
                           alt="פרטי סוג דף"
                           style={{ width: 350, height: 250 }}
                         />
-                        {/* <MDTypography variant="h6" color="light">A0 (84.1 * 118.9 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A3 (29.7 * 42 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A4 (21 * 29.7 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A5 (14.85 * 21 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A6 (10.5 * 14.85 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A4 בריסטול (21 * 29.7 ס"מ)</MDTypography>
-                          <MDTypography variant="h6" color="light">A3 בריסטול (29.7 * 42 ס"מ)</MDTypography> */}
-                        {/* </MDBox> */}
                       </MDAlert>
                     </Popup>
                   </FormGroup>
-                  {/* <FormGroup>
-                    <Label for="numOfCopyies">{textPlaceHolderInputs[8]}</Label>
-                    <Input
-                      // placeholder={textPlaceHolderInputs[8]}
-                      name="numOfCopyies"
-                      type="number"
-                      min="1"
-                      value={data.numOfCopyies}
-                      onChange={handleChange}
-                    />
-                  </FormGroup> */}
-                </FormGroup>
+                </FormGroup> */}
 
                 <FormGroup row className="">
                   <FormGroup>
@@ -1252,7 +1100,8 @@ export default function HozlaPrintRequestForm() {
                       name="fullNameReciver"
                       type="text"
                       value={data.fullNameReciver}
-                      onChange={handleChange}
+                      // onChange={handleChange}
+                      disabled
                     />
                   </FormGroup>
 
@@ -1276,12 +1125,21 @@ export default function HozlaPrintRequestForm() {
                     {toraHeilitFiles.length}
                   </MDTypography> */}
                   {toraHeilitVolume.map((volume, index) => (
-                    <Container>
+                    // <Container>
+                    <Grid item xs={6} sm={4} md={4} key={index} spacing={3}>
                       <FormGroup>
                         <MDTypography variant="h6" color="mekatnar">
                           {volume.volumeType}:
                         </MDTypography>
                         <MDBox bgColor="light" opacity={5} shadow="lg" variant="contained" p={1}>
+                          {volume.statusVol === "100" && (
+                            <MDBadge
+                              badgeContent="בתהליך עדכון"
+                              variant="contained"
+                              color="error"
+                              size="lg"
+                            />
+                          )}
                           <MDAlert color="mekatnar">
                             <MDTypography variant="h6" color="light">
                               {volume.volumeName}
@@ -1296,9 +1154,13 @@ export default function HozlaPrintRequestForm() {
                             value={volume.numOfCopies}
                             onChange={handleChangeNumPrintTH(index)}
                           />
+                          <MDTypography variant="h6" color="mekatnar">
+                            {hozlaConfirm(volume.numOfCopies, volume.maxNumConfirm)[0]}
+                          </MDTypography>
                         </MDBox>
                       </FormGroup>
-                    </Container>
+                    </Grid>
+                    // </Container>
                   ))}
                 </FormGroup>
 

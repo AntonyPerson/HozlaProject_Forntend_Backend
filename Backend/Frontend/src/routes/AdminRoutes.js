@@ -51,6 +51,7 @@ import ManagementHoztla from "layouts/tables/adminManagementTable";
 import AdminArchiveTable from "layouts/tables/adminArchiveTable";
 import HozlaPrintRequestForm from "layouts/Forms/HozlaPrintRequestForm";
 import ToraHeilitPrintRequestForm from "layouts/Forms/ToraHeilitPrintRequestForm";
+import ToraHeilitVolumeAdmin from "layouts/Forms/ToraHeilitVolumeAdmin";
 
 // import HozlaAdminPrintInfoForm from "layouts/Forms/HozlaAdminPrintInfoForm";
 // import AdminFieldReuestFormDB from "layouts/Forms/adminFieldReuestFormDB";
@@ -110,6 +111,14 @@ const AdminRoutes = [
     icon: <Icon fontSize="small">archive</Icon>,
     route: "/adminArchiveTable",
     component: <AdminArchiveTable />,
+  },
+  {
+    type: "collapse",
+    name: "תורה חילית",
+    key: "toraHeilit",
+    icon: <Icon fontSize="small">library_books</Icon>,
+    route: "/toraHeilit",
+    component: <ToraHeilitVolumeAdmin />,
   },
   {
     type: "divider",

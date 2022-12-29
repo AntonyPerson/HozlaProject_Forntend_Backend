@@ -50,7 +50,10 @@ function TeamNGComp() {
         <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
           המערכת פותחה ע"י
         </MDTypography>
-        <MDBox component="img" src={teamNGogo} alt="hozlaLogo" width="5rem" alignSelf="center" />
+        <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+          צוות NG
+        </MDTypography>
+        {/* <MDBox component="img" src={teamNGogo} alt="hozlaLogo" width="5rem" alignSelf="center" /> */}
       </MDBox>
       <MDBox pt={4} pb={3} px={3}>
         <MDTypography variant="h5" fontWeight="medium" mt={1}>
