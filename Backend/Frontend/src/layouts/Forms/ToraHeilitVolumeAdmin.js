@@ -34,6 +34,8 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -1039,6 +1041,35 @@ export default function HozlaPrintRequestForm() {
                             <option value="0">ניתן להזמין</option>
                             <option value="100">תורה בתהליך עדכון</option>
                           </Input>
+                          {/* {volume.statusVol === "100" ? (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  // defaultChecked
+                                  checked="false"
+                                  value="100"
+                                  onChange={handleStatusChange(index)}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              }
+                              label={<MDTypography for="twoSides">בתהליך עדכון</MDTypography>}
+                              labelPlacement="start"
+                            />
+                          ) : (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  // defaultChecked
+                                  checked="false"
+                                  value="0"
+                                  onChange={handleStatusChange(index)}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              }
+                              label={<MDTypography for="twoSides">בתהליך עדכון</MDTypography>}
+                              labelPlacement="start"
+                            />
+                          )} */}
 
                           {/* {volume.numOfCopies > 2 && index < 11 && (
                             <MDTypography variant="h6" color="mekatnar">
