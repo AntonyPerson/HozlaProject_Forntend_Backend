@@ -156,8 +156,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   });
   const Signout = () => {
     signout();
-    window.location.reload(true);
     // return <Navigate to="/authentication/sign-in" />;
+    window.location.reload(true);
   };
   return (
     <AppBar
